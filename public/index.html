@@ -2,8 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Welcome to Firebase Hosting</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Tian Brown, Brant Eckert, and Zhen Yi Pan" />
+    <meta
+      name="description"
+      content="Twin Game created by Tian Brown, Brant Eckert, and Zhen Yi Pan for CSE 380 (Spring 2021) at Stony Brook University."
+    />
+    <meta
+      name="keywords"
+      content="Tian Brown, Brant Eckert, Zhen Yi Pan, CSE 380, Game Development, Twin, Stony Brook University"
+    />
+    <title>Twin</title>
+
+    <!--Stylesheets-->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/cover.css" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/8.3.2/firebase-app.js"></script>
@@ -22,63 +48,81 @@
       to avoid connecting the SDK to running emulators.
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <!-- <style media="screen">
-      body { 
-        background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; 
-      }
-      #message {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-      }
-      #benchmarks {
-        padding-top: 3%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center; 
-      }
-      .benchmarkButton {
-        padding: 1%;
-        font-size: 24px;
-        margin-bottom: 1%;
-      }
-    </style> -->
   </head>
-  <body>
-    <div id="message">
-      <h1>Twin</h1>
-      <h2>by Tian Brown, Brant Eckert & Zhen Yi Pan</h2>
-      <h4>CSE 380 Spring 2021 - Professor Richard McKenna</h4>
+
+  <body class="text-center">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="index.html"><strong>Twin &nbsp;</strong></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Game</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Benchmarks
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="benchmark1.html">Benchmark 1</a>
+              <a class="dropdown-item" href="benchmark2.html">Benchmark 2</a>
+              <a class="dropdown-item" href="benchmark3.html">Benchmark 3</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!--Content-->
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <main role="main" class="inner cover mt-5">
+        <img src="images/logo/logo@3x.png" alt="Twin logo" class="logo mt-5" />
+        <br />
+        <p class="lead">
+          Twin is a game about a fractured person, a soul and body separated
+          from each other, trying to find each other again. It’s a game about a
+          person finding themself, and navigating the quite literal obstacles in
+          their quest to find themselves again.
+        </p>
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-secondary">Play Game</a>
+        </p>
+      </main>
     </div>
-    <div id="benchmarks">
-      <button
-        class="benchmarkButton"
-        onclick="window.location.href='/benchmark1.html';"
-      >
-        View Benchmark 1 Page
-      </button>
-      <button
-        class="benchmarkButton"
-        onclick="window.location.href='/benchmark2.html';"
-      >
-        View Benchmark 2 Page
-      </button>
-      <button
-        class="benchmarkButton"
-        onclick="window.location.href='/benchmark3.html';"
-      >
-        View Benchmark 3 Page
-      </button>
-      <button
-        class="benchmarkButton"
-        onclick="window.location.href='/benchmark4.html';"
-      >
-        View Benchmark 4 Page
-      </button>
-    </div>
+
+    <br /><br />
+
+    <!--Footer-->
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted"
+          >&copy; 2021 Tian Brown, Brant Eckert, and Zhen Yi Pan</span
+        >
+      </div>
+    </footer>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -121,5 +165,22 @@
         }
       });
     </script>
+
+    <!--Scripts-->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
