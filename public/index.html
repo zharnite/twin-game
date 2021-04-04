@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Welcome to Firebase Hosting</title>
 
     <!-- update the version number as needed -->
@@ -23,7 +23,7 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
-    <style media="screen">
+    <!-- <style media="screen">
       body { 
         background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; 
       }
@@ -45,7 +45,7 @@
         font-size: 24px;
         margin-bottom: 1%;
       }
-    </style>
+    </style> -->
   </head>
   <body>
     <div id="message">
@@ -54,15 +54,35 @@
       <h4>CSE 380 Spring 2021 - Professor Richard McKenna</h4>
     </div>
     <div id="benchmarks">
-      <button class="benchmarkButton" onclick="window.location.href='/benchmark1.html';">View Benchmark 1 Page</button>
-      <button class="benchmarkButton" onclick="window.location.href='/benchmark2.html';">View Benchmark 2 Page</button>
-      <button class="benchmarkButton" onclick="window.location.href='/benchmark3.html';">View Benchmark 3 Page</button>
-      <button class="benchmarkButton" onclick="window.location.href='/benchmark4.html';">View Benchmark 4 Page</button>
+      <button
+        class="benchmarkButton"
+        onclick="window.location.href='/benchmark1.html';"
+      >
+        View Benchmark 1 Page
+      </button>
+      <button
+        class="benchmarkButton"
+        onclick="window.location.href='/benchmark2.html';"
+      >
+        View Benchmark 2 Page
+      </button>
+      <button
+        class="benchmarkButton"
+        onclick="window.location.href='/benchmark3.html';"
+      >
+        View Benchmark 3 Page
+      </button>
+      <button
+        class="benchmarkButton"
+        onclick="window.location.href='/benchmark4.html';"
+      >
+        View Benchmark 4 Page
+      </button>
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
+      document.addEventListener("DOMContentLoaded", function () {
+        const loadEl = document.querySelector("#load");
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
         //
@@ -81,20 +101,23 @@
         try {
           let app = firebase.app();
           let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
+            "auth",
+            "database",
+            "firestore",
+            "functions",
+            "messaging",
+            "storage",
+            "analytics",
+            "remoteConfig",
+            "performance",
+          ].filter((feature) => typeof app[feature] === "function");
+          loadEl.textContent = `Firebase SDK loaded with ${features.join(
+            ", "
+          )}`;
         } catch (e) {
           console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+          loadEl.textContent =
+            "Error loading the Firebase SDK, check the console.";
         }
       });
     </script>

@@ -5,6 +5,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Tian Brown, Brant Eckert, and Zhen Yi Pan" />
+    <meta
+      name="description"
+      content="Twin Game created by Tian Brown, Brant Eckert, and Zhen Yi Pan for CSE 380 (Spring 2021) at Stony Brook University."
+    />
+    <meta
+      name="keywords"
+      content="Tian Brown, Brant Eckert, Zhen Yi Pan, CSE 380, Game Development, Twin, Stony Brook University"
+    />
     <title>Twin: Benchmark 1</title>
 
     <!--Stylesheets-->
@@ -24,7 +33,7 @@
   </head>
   <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <a class="navbar-brand" href="index.html"><strong>Twin &nbsp;</strong></a>
       <button
         class="navbar-toggler"
@@ -69,21 +78,270 @@
     </nav>
 
     <!--Content-->
-    <div class="content">
-      <h2>Game Design Document</h2>
-      <h4>Benchmark 1</h4>
-      <br />
-      <div>
-        <h3>
-          <a
-            href="https://docs.google.com/document/d/1j2FaNqAFlbjdTsolUegOYmpd96L_lNDnLBqglm6H3Pk/edit?usp=sharing"
-            target="_blank"
-          >
-            Open Twin Game Design Document
-          </a>
-        </h3>
+    <div class="content container">
+      <div class="head">
+        <h1>Game Design Document</h1>
+        <h4 class="lead">Benchmark 1</h4>
+
+        <hr />
       </div>
+      <h2 class="mt-4">Introduction</h2>
+      <p>
+        This document describes a game called <em>Twin</em>, which is designed
+        to be a 2D puzzle platformer. The game will employ sprite-based
+        animation, tiled backgrounds, collision detection, physics, basic AI,
+        side scrolling & gravity, efficient memory management, render threading,
+        and more basic 2D game techniques.
+      </p>
+
+      <h2 class="mt-4">Technology</h2>
+      <p>
+        <em>Twin</em> will be developed for web browsers using the Wolfie2D game
+        engine, which is a game engine developed by Joe Weaver and Richard
+        McKenna for developing 2D games. WebGL will be used as the underlying
+        rendering technology. Audacity, Chiptone and Petaporon will be used for
+        the creation of music and sound effects, and Adobe Photoshop and Piskell
+        will be used for the creation of the game’s artwork.
+      </p>
+
+      <h2 class="mt-4">Backstory</h2>
+      <p>
+        <em>Twin</em> is a game about a fractured person, a soul and body
+        separated from each other, trying to find each other again. It’s a game
+        about a person finding themself, and navigating the quite literal
+        obstacles in their quest to find themselves again. You play as Gray, and
+        you simultaneously control both their physical body in the real world
+        and their soul in the Realm of Lost Souls. When Gray moves, so too does
+        their soul, and various objectives and obstructions stand in your way on
+        your quest to be whole once more. You will jump, fly, and crawl through
+        puzzle after puzzle in your search for wholeness, and many obstacles
+        will stand in your way as you navigate through the twin worlds.
+      </p>
+      <p>
+        As Gray’s body descends from Earth to the Realm of Souls, their soul
+        attempts to fly out of it and escape so that they might finally be
+        reunited once more.
+      </p>
+
+      <h2 class="mt-4">Objective</h2>
+      <p>
+        The objective of <em>Twin</em> is to reunite your character’s physical
+        body with its soul. This is accomplished by moving through a series of
+        levels, and reaching each level’s goal with both your physical body and
+        soul at the same time. After that, you will be brought one step closer
+        to reuniting with your body as you progress through the levels.
+      </p>
+
+      <h2 class="mt-4">Gameplay</h2>
+      <p>
+        The game will play as a platformer, with the character(s) being able to
+        move left and right, jump, (and where the soul falls at a slower rate,
+        the body can double jump). You, the player, control two characters with
+        linked movement, and must navigate through challenging levels and
+        complicated puzzles with both bodies at once. Due to the fact that both
+        characters move in the exact same way but on different maps, the main
+        bulk of the challenge is ensuring that both characters reach their
+        objective. Collision will likely be the backbone of the strategies
+        employed in order to ensure they both reach their objective as the soul
+        and body move independently towards different objectives with different
+        terrain features. Across the levels, there may be interactables such as
+        levers, buttons or other such objects which activate doors, switches and
+        buttons for either character.
+      </p>
+
+      <h2 class="mt-4">Controls</h2>
+      <p>
+        This game will be played using a keyboard, and the graphical user
+        interface will be navigated using a mouse. Once started, use the
+        following:
+      </p>
+      <ul>
+        <li>[A] - Move Left</li>
+        <li>[D] - Move Right</li>
+        <li>[←] - Move Left (same as [A])</li>
+        <li>[→] - Move Right (same as [D])</li>
+        <li>[SPACE] - Jump / Double Jump</li>
+        <li>
+          [Esc] - This pauses the game and presents a pop-up window to the
+          player, asking them to continue when they are ready. If a game is not
+          in progress, [Esc] does nothing.
+        </li>
+      </ul>
+      <p>
+        In addition, game physics will vary slightly between the Body and the
+        Soul, as the Soul will have a lower rate of descent whereas the Body
+        will accelerate downwards at a regular acceleration, however, has the
+        capability to double jump.
+      </p>
+
+      <h2 class="mt-4">Graphical User Interface</h2>
+      <p>Here are the wireframes for the game.</p>
+
+      <h5>Splash Screen</h5>
+      <p>
+        A simple screen will be presented, that just contains the game’s logo
+        and one sentence of cool descriptive text. It will then fade out and
+        reveal the Main Menu after a few seconds. Users will also be able to
+        press [Esc] to skip this sequence and go straight to the main menu.
+      </p>
+      <p>
+        The splash screen will contain a graphic that intrigues the player in
+        the real game. It may also contain the game <a href="#logo">logo</a> .
+      </p>
+      <img
+        src="images/wireframe/SplashScreen.png"
+        alt="Twin game splash screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h5>Main Menu Screen</h5>
+      <p>
+        The main menu will contain buttons to move to the Controls, Help, and
+        Level Selection Screens. It will also have a button to allow the user to
+        start a new game. Upon starting a new game, the screen will fade out and
+        fade in to Level 1.
+      </p>
+      <img
+        src="images/wireframe/MainMenuScreen.png"
+        alt="Twin game main menu screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h5>Controls Screen</h5>
+      <p>
+        This screen will display the controls of the game, in a similar manner
+        to the controls setup listed above.
+      </p>
+      <img
+        src="images/wireframe/ControlsScreen.png"
+        alt="Twin game controls screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h5>Help Screen</h5>
+      <p>
+        This screen will list the developers of the game, as well as a link to
+        contact us if the player has any questions or concerns.
+      </p>
+      <p>The user can scroll through the help screen</p>
+      <img
+        src="images/wireframe/HelpScreen.png"
+        alt="Twin game help screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h5>Level Selection Screen</h5>
+      <p>
+        This screen will show the player which levels are currently unlocked,
+        which they can then click on to play directly from the main menu. It
+        will also show levels the user has not accessed yet, but these will not
+        be clickable. Upon clicking an accessible level, the screen will fade
+        out and fade in to the respective level.
+      </p>
+      <img
+        src="images/wireframe/LevelSelectionScreen.png"
+        alt="Twin game level selection screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h5>In-Game GUI</h5>
+      <p>
+        These are the 2 In-Game GUI screens (gameplay screen & pause screen).
+      </p>
+      <h6>Gameplay Screen</h6>
+      <img
+        src="images/wireframe/GameScreen1.png"
+        alt="Twin game in-game gameplay screen 1"
+        class="wireframe"
+      />
+      <br />
+      <br />
+      <img
+        src="images/wireframe/GameScreen2.png"
+        alt="Twin game in-game gameplay screen 2"
+        class="wireframe"
+      />
+      <br />
+      <br />
+      <h6>Pause Screen</h6>
+      <img
+        src="images/wireframe/GameScreenPause.png"
+        alt="Twin game in-game paused screen"
+        class="wireframe"
+      />
+      <br />
+      <br />
+
+      <h2 class="mt-4">Artwork</h2>
+      <p>
+        The artwork will all be done in pixel art, with a heavy theme on
+        mysticality and uncanny valley-esque vibes in the Realm of Souls whereas
+        the real world is mundane and normal. As a result, the Realm of Souls
+        will be filled with bright and unnatural colors, strange shapes and
+        other such obstacles whereas the mundane world will largely be composed
+        of simple shapes, earthy, natural colors and normal hues. As the levels
+        progress, the ‘real world’ would grow more and more uncanny and ethereal
+        as the body descends through the levels of reality to reach the Realm of
+        Souls, whereas the uncanny valley-esque Realm of Souls would grow more
+        and more normal until they end up in the middle plane and meet each
+        other at last, whereupon their sprite would unify and turn into a single
+        being.
+      </p>
+      <p>
+        Assets will need to be created for Gray’s body, Gray’s soul,
+        obstructions, floors, walls, level backgrounds and more.
+      </p>
+
+      <h2 class="mt-4">Sound Effects</h2>
+      <p>Sound effects will be created for:</p>
+      <ul>
+        <li>Soul/Body movement and interactions with terrain objects</li>
+        <li>Portals through the Realm of Souls, i.e. end-stage transfers</li>
+        <li>Interactables such as levers, buttons and doors.</li>
+        <li>Death for both the Soul/Body via spike traps and the like.</li>
+      </ul>
+      <h2 class="mt-4">Music</h2>
+      <p>Original music will be created for this game.</p>
+
+      <hr />
+
+      <h2 class="mt-4">Twin Logo</h2>
+      <img src="images/logo/logo@3x.png" alt="Twin logo" id="logo" />
+
+      <h2 class="mt-4">Firebase URL</h2>
+      <a href="https://twin-game.firebaseapp.com/"
+        >https://twin-game.firebaseapp.com/</a
+      >
+
+      <h2 class="mt-4">Twin Game Design - Document Version</h2>
+      <a
+        href="https://docs.google.com/document/d/1j2FaNqAFlbjdTsolUegOYmpd96L_lNDnLBqglm6H3Pk/edit?usp=sharing"
+        target="_blank"
+      >
+        Twin Game Design Document Version
+      </a>
     </div>
+
+    <br /><br />
+
+    <!--Footer-->
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted"
+          >&copy; 2021 Tian Brown, Brant Eckert, and Zhen Yi Pan</span
+        >
+      </div>
+    </footer>
 
     <!--Scripts-->
     <script
