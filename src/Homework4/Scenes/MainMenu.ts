@@ -10,6 +10,15 @@ export default class MainMenu extends Scene {
 
     animatedSprite: AnimatedSprite;
 
+    // Apply user-defined styles to a basic button.
+    applyButtonStyle (button: Button, backgroundColor: Color, textColor: Color, size: Vec2, fontStr: string): void {
+        button.setBackgroundColor(backgroundColor);
+        button.setTextColor(textColor);
+        button.size.x = size.x;
+        button.size.y = size.y;
+        button.font = fontStr;
+    }
+
     loadScene(): void {}
 
     startScene(): void {
@@ -18,10 +27,19 @@ export default class MainMenu extends Scene {
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
 
-        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y), text: "Play Game"});
-        playBtn.setBackgroundColor(Color.GREEN);
-        playBtn.setPadding(new Vec2(50, 10));
-        playBtn.font = "NoPixel";
+        // Play Button
+        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 550), text: "Play Game"});
+        this.applyButtonStyle(playBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
+        // Controls button
+        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 610), text: "Controls"});
+        this.applyButtonStyle(controlsBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
+        // Help Button
+        let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 670), text: "Help"});
+        this.applyButtonStyle(helpBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
+        // Credits Button
+        let creditsButton = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 730), text: "Credits"});
+        this.applyButtonStyle(creditsButton, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
+
 
         // When the play button is clicked, go to the next scene
         playBtn.onClick = () => {
@@ -59,5 +77,6 @@ export default class MainMenu extends Scene {
     }
 
     updateScene(): void {}
+    
 }
 
