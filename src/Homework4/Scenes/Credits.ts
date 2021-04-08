@@ -6,28 +6,28 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import MainMenu from "./MainMenu";
 
-export default class Help extends Scene {
+export default class Credits extends Scene {
 
   loadScene(): void {}
 
   startScene(): void {
-    // TODO - Add real text to display help/info
+    // TODO - Add real text to display game credits
 
     // Testing stuff
-    this.addUILayer("Help");
-    let helpLabel = <Label>this.add.uiElement(
+    this.addUILayer("Credits");
+    let creditsLabel = <Label>this.add.uiElement(
       UIElementType.LABEL,
-      "Help",
+      "Credits",
       {
-        position: new Vec2(600, 100),
-        text: "There is no help coming for you. You are alone in this world",
+        position: new Vec2(100, 100),
+        text: "Credits",
       }
     );
-    helpLabel.textColor = Color.RED;
+    creditsLabel.textColor = Color.WHITE;
 
     // Return to Main Menu button
     let returnButton = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Help", {
+      this.add.uiElement(UIElementType.BUTTON, "Credits", {
         position: new Vec2(1000, 730),
         text: "Return",
       })

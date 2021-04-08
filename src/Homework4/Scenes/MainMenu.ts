@@ -6,24 +6,11 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./Level1";
 import Controls from "./Controls";
+import Help from "./Help";
+import Credits from "./Credits";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;
-
-  // Apply user-defined styles to a basic button.
-  applyButtonStyle(
-    button: Button,
-    backgroundColor: Color,
-    textColor: Color,
-    size: Vec2,
-    fontStr: string
-  ): void {
-    button.setBackgroundColor(backgroundColor);
-    button.setTextColor(textColor);
-    button.size.x = size.x;
-    button.size.y = size.y;
-    button.font = fontStr;
-  }
 
   loadScene(): void {}
 
@@ -40,8 +27,7 @@ export default class MainMenu extends Scene {
         text: "Play Game",
       })
     );
-    this.applyButtonStyle(
-      playBtn,
+    playBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
       new Vec2(250, 50),
@@ -54,8 +40,7 @@ export default class MainMenu extends Scene {
         text: "Controls",
       })
     );
-    this.applyButtonStyle(
-      controlsBtn,
+    controlsBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
       new Vec2(250, 50),
@@ -68,29 +53,28 @@ export default class MainMenu extends Scene {
         text: "Help",
       })
     );
-    this.applyButtonStyle(
-      helpBtn,
+    helpBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
       new Vec2(250, 50),
       "NoPixel"
     );
     // Credits Button
-    let creditsButton = <Button>(
+    let creditsBtn = <Button>(
       this.add.uiElement(UIElementType.BUTTON, "Main", {
         position: new Vec2(1000, 730),
         text: "Credits",
       })
     );
-    this.applyButtonStyle(
-      creditsButton,
+    creditsBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
       new Vec2(250, 50),
       "NoPixel"
     );
 
-    // When the play button is clicked, go to the next scene
+    // When the play button is clicked, go to the first level
+    // TODO - Make this connect to a Level Select Screen
     playBtn.onClick = () => {
       /*
                 Init the next scene with physics collisions:
@@ -123,9 +107,17 @@ export default class MainMenu extends Scene {
       this.sceneManager.changeToScene(Level1, {}, sceneOptions);
     };
 
-    // When the control button is clicked, go to the controls screen
+    // Jump to Controls screen
     controlsBtn.onClick = () => {
       this.sceneManager.changeToScene(Controls, {});
+    };
+    // Jump to Help screen
+    helpBtn.onClick = () => {
+        this.sceneManager.changeToScene(Help, {});
+    };
+    // Jump to Credits screen
+    creditsBtn.onClick = () => {
+        this.sceneManager.changeToScene(Credits, {});
     };
   }
 
