@@ -5,45 +5,94 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./Level1";
+import Controls from "./Controls";
 
 export default class MainMenu extends Scene {
+  animatedSprite: AnimatedSprite;
 
-    animatedSprite: AnimatedSprite;
+  // Apply user-defined styles to a basic button.
+  applyButtonStyle(
+    button: Button,
+    backgroundColor: Color,
+    textColor: Color,
+    size: Vec2,
+    fontStr: string
+  ): void {
+    button.setBackgroundColor(backgroundColor);
+    button.setTextColor(textColor);
+    button.size.x = size.x;
+    button.size.y = size.y;
+    button.font = fontStr;
+  }
 
-    // Apply user-defined styles to a basic button.
-    applyButtonStyle (button: Button, backgroundColor: Color, textColor: Color, size: Vec2, fontStr: string): void {
-        button.setBackgroundColor(backgroundColor);
-        button.setTextColor(textColor);
-        button.size.x = size.x;
-        button.size.y = size.y;
-        button.font = fontStr;
-    }
+  loadScene(): void {}
 
-    loadScene(): void {}
+  startScene(): void {
+    this.addUILayer("Main");
 
-    startScene(): void {
-        this.addUILayer("Main");
+    let size = this.viewport.getHalfSize();
+    this.viewport.setFocus(size);
 
-        let size = this.viewport.getHalfSize();
-        this.viewport.setFocus(size);
+    // Play Button
+    let playBtn = <Button>(
+      this.add.uiElement(UIElementType.BUTTON, "Main", {
+        position: new Vec2(1000, 550),
+        text: "Play Game",
+      })
+    );
+    this.applyButtonStyle(
+      playBtn,
+      Color.WHITE,
+      Color.BLACK,
+      new Vec2(250, 50),
+      "NoPixel"
+    );
+    // Controls button
+    let controlsBtn = <Button>(
+      this.add.uiElement(UIElementType.BUTTON, "Main", {
+        position: new Vec2(1000, 610),
+        text: "Controls",
+      })
+    );
+    this.applyButtonStyle(
+      controlsBtn,
+      Color.WHITE,
+      Color.BLACK,
+      new Vec2(250, 50),
+      "NoPixel"
+    );
+    // Help Button
+    let helpBtn = <Button>(
+      this.add.uiElement(UIElementType.BUTTON, "Main", {
+        position: new Vec2(1000, 670),
+        text: "Help",
+      })
+    );
+    this.applyButtonStyle(
+      helpBtn,
+      Color.WHITE,
+      Color.BLACK,
+      new Vec2(250, 50),
+      "NoPixel"
+    );
+    // Credits Button
+    let creditsButton = <Button>(
+      this.add.uiElement(UIElementType.BUTTON, "Main", {
+        position: new Vec2(1000, 730),
+        text: "Credits",
+      })
+    );
+    this.applyButtonStyle(
+      creditsButton,
+      Color.WHITE,
+      Color.BLACK,
+      new Vec2(250, 50),
+      "NoPixel"
+    );
 
-        // Play Button
-        let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 550), text: "Play Game"});
-        this.applyButtonStyle(playBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
-        // Controls button
-        let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 610), text: "Controls"});
-        this.applyButtonStyle(controlsBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
-        // Help Button
-        let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 670), text: "Help"});
-        this.applyButtonStyle(helpBtn, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
-        // Credits Button
-        let creditsButton = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(1000, 730), text: "Credits"});
-        this.applyButtonStyle(creditsButton, Color.WHITE, Color.BLACK, new Vec2(250, 50), "NoPixel");
-
-
-        // When the play button is clicked, go to the next scene
-        playBtn.onClick = () => {
-            /*
+    // When the play button is clicked, go to the next scene
+    playBtn.onClick = () => {
+      /*
                 Init the next scene with physics collisions:
 
                         ground  player  enemy   coin
@@ -60,23 +109,25 @@ export default class MainMenu extends Scene {
                 coin:   self - 1000, collisions - 0010
             */
 
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "coin"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                }
-            }
-            this.sceneManager.changeToScene(Level1, {}, sceneOptions);
-        }
-    }
+      let sceneOptions = {
+        physics: {
+          groupNames: ["ground", "player", "enemy", "coin"],
+          collisions: [
+            [0, 1, 1, 0],
+            [1, 0, 0, 1],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+          ],
+        },
+      };
+      this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+    };
 
-    updateScene(): void {}
-    
+    // When the control button is clicked, go to the controls screen
+    controlsBtn.onClick = () => {
+      this.sceneManager.changeToScene(Controls, {});
+    };
+  }
+
+  updateScene(): void {}
 }
-
