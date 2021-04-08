@@ -1,6 +1,6 @@
 import Input from "../../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import { HW4_Events } from "../../enums";
+import { Events } from "../../enums";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
 
@@ -27,7 +27,7 @@ export default class Run extends OnGround {
 
     this.parent.velocity.x = dir.x * this.parent.speed;
 
-    this.emitter.fireEvent(HW4_Events.PLAYER_MOVE, {
+    this.emitter.fireEvent(Events.PLAYER_MOVE, {
       position: this.owner.position.clone(),
     });
     this.owner.move(this.parent.velocity.scaled(deltaT));
