@@ -13,6 +13,15 @@ export default class Button extends Label {
 		this.textColor = new Color(255, 255, 255);
 	}
 
+	// Apply user-defined styles to a basic button.
+	applyButtonStyle (backgroundColor: Color, textColor: Color, size: Vec2, fontStr: string): void {
+		this.setBackgroundColor(backgroundColor);
+		this.setTextColor(textColor);
+		this.size.x = size.x;
+		this.size.y = size.y;
+		this.font = fontStr;
+	}
+
 	// @override
 	calculateBackgroundColor(): Color {
 		// Change the background color if clicked or hovered
