@@ -4,7 +4,7 @@ import Walk from "./Walk";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
-import { HW4_Events } from "../enums";
+import { Events } from "../enums";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 
 export enum EnemyStates {
@@ -25,9 +25,9 @@ export default class EnemyController extends StateMachineAI {
     this.owner = owner;
     this.jumpy = options.jumpy ? options.jumpy : false;
 
-    this.receiver.subscribe(HW4_Events.PLAYER_MOVE);
+    this.receiver.subscribe(Events.PLAYER_MOVE);
     if (this.jumpy) {
-      this.receiver.subscribe(HW4_Events.PLAYER_JUMP);
+      this.receiver.subscribe(Events.PLAYER_JUMP);
       this.speed = 100;
 
       // Give the owner a tween for the jump

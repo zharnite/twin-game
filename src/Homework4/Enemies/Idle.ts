@@ -1,6 +1,6 @@
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import { HW4_Events } from "../enums";
+import { Events } from "../enums";
 import { EnemyStates } from "./EnemyController";
 import OnGround from "./OnGround";
 
@@ -19,7 +19,7 @@ export default class Idle extends OnGround {
   }
 
   handleInput(event: GameEvent) {
-    if (event.type === HW4_Events.PLAYER_MOVE) {
+    if (event.type === Events.PLAYER_MOVE) {
       let pos = event.data.get("position");
       if (this.owner.position.x - pos.x < 64 * 10) {
         this.finished(EnemyStates.WALK);

@@ -11,7 +11,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../Enemies/EnemyController";
-import { HW4_Events } from "../enums";
+import { Events } from "../enums";
 import PlayerController from "../Player/PlayerController";
 
 export default class GameLevel extends Scene {
@@ -63,7 +63,7 @@ export default class GameLevel extends Scene {
       let event = this.receiver.getNextEvent();
 
       switch (event.type) {
-        case HW4_Events.PLAYER_HIT_COIN:
+        case Events.PLAYER_HIT_COIN:
           {
             // Hit a coin
             let coin;
@@ -84,14 +84,14 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case HW4_Events.PLAYER_HIT_COIN_BLOCK:
+        case Events.PLAYER_HIT_COIN_BLOCK:
           {
             // Hit a coin block, so increment our number of coins
             this.incPlayerCoins(1);
           }
           break;
 
-        case HW4_Events.PLAYER_HIT_ENEMY:
+        case Events.PLAYER_HIT_ENEMY:
           {
             let node = this.sceneGraph.getNode(event.data.get("node"));
             let other = this.sceneGraph.getNode(event.data.get("other"));
@@ -112,7 +112,7 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case HW4_Events.ENEMY_DIED:
+        case Events.ENEMY_DIED:
           {
             // An enemy finished its dying animation, hide it
             let node = this.sceneGraph.getNode(event.data.get("owner"));
@@ -120,7 +120,7 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case HW4_Events.PLAYER_ENTERED_LEVEL_END:
+        case Events.PLAYER_ENTERED_LEVEL_END:
           {
             if (
               !this.levelEndTimer.hasRun() &&
@@ -133,7 +133,7 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case HW4_Events.LEVEL_START:
+        case Events.LEVEL_START:
           {
             // Re-enable controls
             console.log("Enabling input");
@@ -141,7 +141,7 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case HW4_Events.LEVEL_END:
+        case Events.LEVEL_END:
           {
             // Go to the next level
             if (this.nextLevel) {
@@ -189,42 +189,40 @@ export default class GameLevel extends Scene {
 
   protected subscribeToEvents() {
     this.receiver.subscribe([
-      HW4_Events.PLAYER_HIT_COIN,
-      HW4_Events.PLAYER_HIT_COIN_BLOCK,
-      HW4_Events.PLAYER_HIT_ENEMY,
-      HW4_Events.ENEMY_DIED,
-      HW4_Events.PLAYER_ENTERED_LEVEL_END,
-      HW4_Events.LEVEL_START,
-      HW4_Events.LEVEL_END,
+      Events.PLAYER_HIT_COIN,
+      Events.PLAYER_HIT_COIN_BLOCK,
+      Events.PLAYER_HIT_ENEMY,
+      Events.ENEMY_DIED,
+      Events.PLAYER_ENTERED_LEVEL_END,
+      Events.LEVEL_START,
+      Events.LEVEL_END,
     ]);
   }
 
   protected addUI() {
     // In-game labels
-    this.coinCountLabel = <Label>(
-      this.add.uiElement(UIElementType.LABEL, "UI", {
-        position: new Vec2(80, 30),
-        text: "Coins: " + GameLevel.coinCount,
-      })
-    );
+    this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
+      position: new Vec2(80, 30),
+      text: "Coins: " + GameLevel.coinCount,
+    });
     this.coinCountLabel.textColor = Color.WHITE;
     this.coinCountLabel.font = "NoPixel";
-    this.livesCountLabel = <Label>(
-      this.add.uiElement(UIElementType.LABEL, "UI", {
+    this.livesCountLabel = <Label>this.add.uiElement(
+      UIElementType.LABEL,
+      "UI",
+      {
         position: new Vec2(500, 30),
         text: "Lives: " + GameLevel.livesCount,
-      })
+      }
     );
     this.livesCountLabel.textColor = Color.WHITE;
     this.livesCountLabel.font = "NoPixel";
 
     // End of level label (start off screen)
-    this.levelEndLabel = <Label>(
-      this.add.uiElement(UIElementType.LABEL, "UI", {
-        position: new Vec2(-300, 200),
-        text: "Level Complete",
-      })
-    );
+    this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
+      position: new Vec2(-300, 200),
+      text: "Level Complete",
+    });
     this.levelEndLabel.size.set(1200, 60);
     this.levelEndLabel.borderRadius = 0;
     this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
@@ -246,11 +244,13 @@ export default class GameLevel extends Scene {
       ],
     });
 
-    this.levelTransitionScreen = <Rect>(
-      this.add.graphic(GraphicType.RECT, "UI", {
+    this.levelTransitionScreen = <Rect>this.add.graphic(
+      GraphicType.RECT,
+      "UI",
+      {
         position: new Vec2(300, 200),
         size: new Vec2(600, 400),
-      })
+      }
     );
     this.levelTransitionScreen.color = new Color(34, 32, 52);
     this.levelTransitionScreen.alpha = 1;
@@ -266,7 +266,7 @@ export default class GameLevel extends Scene {
           ease: EaseFunctionType.IN_OUT_QUAD,
         },
       ],
-      onEnd: HW4_Events.LEVEL_END,
+      onEnd: Events.LEVEL_END,
     });
 
     this.levelTransitionScreen.tweens.add("fadeOut", {
@@ -280,7 +280,7 @@ export default class GameLevel extends Scene {
           ease: EaseFunctionType.IN_OUT_QUAD,
         },
       ],
-      onEnd: HW4_Events.LEVEL_START,
+      onEnd: Events.LEVEL_START,
     });
   }
 
@@ -320,16 +320,14 @@ export default class GameLevel extends Scene {
   }
 
   protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
-    this.levelEndArea = <Rect>(
-      this.add.graphic(GraphicType.RECT, "primary", {
-        position: startingTile.add(size.scaled(0.5)).scale(32),
-        size: size.scale(32),
-      })
-    );
+    this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
+      position: startingTile.add(size.scaled(0.5)).scale(32),
+      size: size.scale(32),
+    });
     this.levelEndArea.addPhysics(undefined, undefined, false, true);
     this.levelEndArea.setTrigger(
       "player",
-      HW4_Events.PLAYER_ENTERED_LEVEL_END,
+      Events.PLAYER_ENTERED_LEVEL_END,
       null
     );
     this.levelEndArea.color = new Color(0, 0, 0, 0);
@@ -346,7 +344,7 @@ export default class GameLevel extends Scene {
     enemy.addPhysics();
     enemy.addAI(EnemyController, aiOptions);
     enemy.setGroup("enemy");
-    enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger("player", Events.PLAYER_HIT_ENEMY, null);
   }
 
   protected handlePlayerEnemyCollision(
@@ -361,7 +359,7 @@ export default class GameLevel extends Scene {
       if (dir.dot(Vec2.UP) > 0.5) {
         enemy.disablePhysics();
         enemy.tweens.stopAll();
-        enemy.animation.play("DYING", false, HW4_Events.ENEMY_DIED);
+        enemy.animation.play("DYING", false, Events.ENEMY_DIED);
 
         // Stop the player's jump for some feedback
         (<PlayerController>player.ai).velocity.y = 0;
@@ -373,7 +371,7 @@ export default class GameLevel extends Scene {
       // If not, we want to hit it from the top
       if (dir.dot(Vec2.DOWN) > 0.5) {
         enemy.disablePhysics();
-        enemy.animation.play("DYING", false, HW4_Events.ENEMY_DIED);
+        enemy.animation.play("DYING", false, Events.ENEMY_DIED);
 
         // Give the player a slight jump boost
         let playerVel = (<PlayerController>player.ai).velocity;
