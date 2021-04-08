@@ -1,108 +1,113 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
-import { HW4_Events } from "../../hw4_enums";
+import { HW4_Events } from "../../enums";
 import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
 
 export default class Jump extends InAir {
-	owner: AnimatedSprite;
+  owner: AnimatedSprite;
 
-	onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("JUMP", true);
-	}
+  onEnter(options: Record<string, any>): void {
+    this.owner.animation.play("JUMP", true);
+  }
 
-	handleInput(event: GameEvent): void {}
+  handleInput(event: GameEvent): void {}
 
-	update(deltaT: number): void {
-		super.update(deltaT);
+  update(deltaT: number): void {
+    super.update(deltaT);
 
-		if(this.owner.onCeiling){
-			this.parent.velocity.y = 0;
-		}
+    if (this.owner.onCeiling) {
+      this.parent.velocity.y = 0;
+    }
 
-		// If we're falling, go to the fall state
-		if(this.parent.velocity.y >= 0){
-			this.finished(PlayerStates.FALL);
-		}
+    // If we're falling, go to the fall state
+    if (this.parent.velocity.y >= 0) {
+      this.finished(PlayerStates.FALL);
+    }
 
-		if(this.owner.collidedWithTilemap && this.owner.onCeiling){
-			// We collided with a tilemap above us. First, get the tile right above us
-			this.handleCoinblockCollision();
-		}		
-	}
+    if (this.owner.collidedWithTilemap && this.owner.onCeiling) {
+      // We collided with a tilemap above us. First, get the tile right above us
+      this.handleCoinblockCollision();
+    }
+  }
 
-	onExit(): Record<string, any> {
-		this.owner.animation.stop();
-		return {};
-	}
+  onExit(): Record<string, any> {
+    this.owner.animation.stop();
+    return {};
+  }
 
-	handleCoinblockCollision(){
-		let pos = this.owner.position.clone();
+  handleCoinblockCollision() {
+    let pos = this.owner.position.clone();
 
-		// Go up plus some extra
-		pos.y -= (this.owner.collisionShape.halfSize.y + 10);
-		pos.x -= 16;
-		let rowCol = this.parent.tilemap.getColRowAt(pos);
-		let tile1 = this.parent.tilemap.getTileAtRowCol(rowCol);
-		pos.x += 16;
-		rowCol = this.parent.tilemap.getColRowAt(pos);
-		let tile2 = this.parent.tilemap.getTileAtRowCol(rowCol);
-		pos.x += 16;
-		rowCol = this.parent.tilemap.getColRowAt(pos);
-		let tile3 = this.parent.tilemap.getTileAtRowCol(rowCol);
+    // Go up plus some extra
+    pos.y -= this.owner.collisionShape.halfSize.y + 10;
+    pos.x -= 16;
+    let rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile1 = this.parent.tilemap.getTileAtRowCol(rowCol);
+    pos.x += 16;
+    rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile2 = this.parent.tilemap.getTileAtRowCol(rowCol);
+    pos.x += 16;
+    rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile3 = this.parent.tilemap.getTileAtRowCol(rowCol);
 
-		let t1 = tile1 === 17;
-		let t2 = tile2 === 17;
-		let t3 = tile3 === 17;
-		let air1 = tile1 === 0;
-		let air2 = tile2 === 0;
-		let air3 = tile3 === 0;
-		let majority = (t1 && t2) || (t1 && t3) || (t2 && t3) || (t1 && t2 && t3);
-		let minorityButAir = (t1 && air2 && air3) || (air1 && t2 && air3) || (air1 && air2 && t3);
-		
-		// If coin block, change to empty coin block
-		if(majority || minorityButAir){
-			if(minorityButAir){
-				// Get the correct position
-				if(t1){
-					pos.x -= 32;
-				} else if(t2){
-					pos.x -= 16;
-				}
-				rowCol = this.parent.tilemap.getColRowAt(pos);
-			} else {
-				pos.x -= 16;
-				rowCol = this.parent.tilemap.getColRowAt(pos);
-			}
+    let t1 = tile1 === 17;
+    let t2 = tile2 === 17;
+    let t3 = tile3 === 17;
+    let air1 = tile1 === 0;
+    let air2 = tile2 === 0;
+    let air3 = tile3 === 0;
+    let majority = (t1 && t2) || (t1 && t3) || (t2 && t3) || (t1 && t2 && t3);
+    let minorityButAir =
+      (t1 && air2 && air3) || (air1 && t2 && air3) || (air1 && air2 && t3);
 
-			this.parent.tilemap.setTileAtRowCol(rowCol, 18);
-			this.emitter.fireEvent(HW4_Events.PLAYER_HIT_COIN_BLOCK);
+    // If coin block, change to empty coin block
+    if (majority || minorityButAir) {
+      if (minorityButAir) {
+        // Get the correct position
+        if (t1) {
+          pos.x -= 32;
+        } else if (t2) {
+          pos.x -= 16;
+        }
+        rowCol = this.parent.tilemap.getColRowAt(pos);
+      } else {
+        pos.x -= 16;
+        rowCol = this.parent.tilemap.getColRowAt(pos);
+      }
 
-			let tileSize = this.parent.tilemap.getTileSize();
-			this.parent.coin.position.copy(rowCol.scale(tileSize.x, tileSize.y).add(tileSize.scaled(0.5)));
+      this.parent.tilemap.setTileAtRowCol(rowCol, 18);
+      this.emitter.fireEvent(HW4_Events.PLAYER_HIT_COIN_BLOCK);
 
-			// Animate collision
-			this.parent.coin.tweens.add("coin", {
-				startDelay: 0,
-				duration: 300,
-				effects: [{
-					property: "positionY",
-					resetOnComplete: false,
-					start: this.parent.coin.position.y,
-					end: this.parent.coin.position.y - 2*tileSize.y,
-					ease: EaseFunctionType.OUT_SINE
-				},
-				{
-					property: "alpha",
-					resetOnComplete: false,
-					start: 1,
-					end: 0,
-					ease: EaseFunctionType.OUT_SINE
-				}]
-			});
+      let tileSize = this.parent.tilemap.getTileSize();
+      this.parent.coin.position.copy(
+        rowCol.scale(tileSize.x, tileSize.y).add(tileSize.scaled(0.5))
+      );
 
-			this.parent.coin.tweens.play("coin");
-		}
-	}
+      // Animate collision
+      this.parent.coin.tweens.add("coin", {
+        startDelay: 0,
+        duration: 300,
+        effects: [
+          {
+            property: "positionY",
+            resetOnComplete: false,
+            start: this.parent.coin.position.y,
+            end: this.parent.coin.position.y - 2 * tileSize.y,
+            ease: EaseFunctionType.OUT_SINE,
+          },
+          {
+            property: "alpha",
+            resetOnComplete: false,
+            start: 1,
+            end: 0,
+            ease: EaseFunctionType.OUT_SINE,
+          },
+        ],
+      });
+
+      this.parent.coin.tweens.play("coin");
+    }
+  }
 }
