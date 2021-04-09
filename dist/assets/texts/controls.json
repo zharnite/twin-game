@@ -1,10 +1,10 @@
 {
   "layer": "Controls",
   "Controls": [
-    "[A] - Move left     ",
-    "[D] - Move right    ",
-    "[W] - Jump          ",
-    "[R] - Restart level ",
-    "[P] - Pause         "
+    "- [A] - Move left     ",
+    "- [D] - Move right    ",
+    "- [W] - Jump          ",
+    "- [R] - Restart level ",
+    "- [P] - Pause         "
   ]
 }
