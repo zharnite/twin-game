@@ -24,6 +24,7 @@ import MainMenu from "./Twin/Scenes/MainMenu";
   const game = new Game(options);
 
   // Start our game
+  // Twin TODO - change to SplashScreen
   game.start(MainMenu, {});
 })();
 

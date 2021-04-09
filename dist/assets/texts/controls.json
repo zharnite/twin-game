@@ -1,7 +1,6 @@
 {
   "layer": "Controls",
   "Controls": [
-    "- Game created by:                                      ",
     "- [A] - Move left                                       ",
     "- [D] - Move right                                      ",
     "- [W] - Jump                                            ",
