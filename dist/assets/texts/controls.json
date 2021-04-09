@@ -1,10 +1,11 @@
 {
   "layer": "Controls",
   "Controls": [
-    "- [A] - Move left     ",
-    "- [D] - Move right    ",
-    "- [W] - Jump          ",
-    "- [R] - Restart level ",
-    "- [P] - Pause         "
+    "- Game created by:                                      ",
+    "- [A] - Move left                                       ",
+    "- [D] - Move right                                      ",
+    "- [W] - Jump                                            ",
+    "- [R] - Restart level                                   ",
+    "- [P] - Pause                                           "
   ]
 }

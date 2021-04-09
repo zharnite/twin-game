@@ -5,42 +5,29 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import MainMenu from "./MainMenu";
+import SceneItemCreator from "./SceneItemCreator";
 
 export default class Credits extends Scene {
-
-  loadScene(): void {}
+  loadScene(): void {
+    this.load.object("Credits", "assets/texts/credits.json");
+  }
 
   startScene(): void {
-    // TODO - Add real text to display game credits
+    // Twin TODO - Edit credits.json with more information
 
-    // Testing stuff
-    this.addUILayer("Credits");
-    let creditsLabel = <Label>this.add.uiElement(
-      UIElementType.LABEL,
-      "Credits",
-      {
-        position: new Vec2(100, 100),
-        text: "Credits",
-      }
-    );
-    creditsLabel.textColor = Color.WHITE;
+    let layer = "Credits";
+    this.addUILayer(layer);
 
-    // Return to Main Menu button
-    let returnButton = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Credits", {
-        position: new Vec2(1000, 730),
-        text: "Return",
-      })
-    );
-    returnButton.applyButtonStyle(
-      Color.WHITE,
-      Color.BLACK,
-      new Vec2(250, 50),
-      "NoPixel"
-    );
-
-    // When the control button is clicked, go to the controls screen
-    returnButton.onClick = () => {
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
+    SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
+    // return button
+    SceneItemCreator.createButton(
+      this,
+      layer,
+      1000,
+      730,
+      "Return"
+    ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };
   }

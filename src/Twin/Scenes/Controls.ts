@@ -19,7 +19,7 @@ export default class Controls extends Scene {
     this.addUILayer(layer);
 
     SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
-    SceneItemCreator.createTextBody(this, this.viewport, layer, 300);
+    SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
     // return button
     SceneItemCreator.createButton(
       this,
