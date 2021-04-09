@@ -12,9 +12,6 @@ export default class Controls extends Scene {
   }
 
   startScene(): void {
-    // TODO - Add real text to display controls
-
-    // Testing stuff
     let layer = "Controls";
     this.addUILayer(layer);
 
