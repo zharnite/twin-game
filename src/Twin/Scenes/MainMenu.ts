@@ -20,13 +20,12 @@ export default class MainMenu extends Scene {
     let size = this.viewport.getHalfSize();
     this.viewport.setFocus(size);
 
+    // Twin TODO (optional) - can probably modularize this
     // Play Button
-    let playBtn = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Main", {
-        position: new Vec2(1000, 550),
-        text: "Play Game",
-      })
-    );
+    let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
+      position: new Vec2(1000, 550),
+      text: "Play Game",
+    });
     playBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
@@ -34,12 +33,10 @@ export default class MainMenu extends Scene {
       "NoPixel"
     );
     // Controls button
-    let controlsBtn = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Main", {
-        position: new Vec2(1000, 610),
-        text: "Controls",
-      })
-    );
+    let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
+      position: new Vec2(1000, 610),
+      text: "Controls",
+    });
     controlsBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
@@ -47,12 +44,10 @@ export default class MainMenu extends Scene {
       "NoPixel"
     );
     // Help Button
-    let helpBtn = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Main", {
-        position: new Vec2(1000, 670),
-        text: "Help",
-      })
-    );
+    let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
+      position: new Vec2(1000, 670),
+      text: "Help",
+    });
     helpBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
@@ -60,12 +55,10 @@ export default class MainMenu extends Scene {
       "NoPixel"
     );
     // Credits Button
-    let creditsBtn = <Button>(
-      this.add.uiElement(UIElementType.BUTTON, "Main", {
-        position: new Vec2(1000, 730),
-        text: "Credits",
-      })
-    );
+    let creditsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
+      position: new Vec2(1000, 730),
+      text: "Credits",
+    });
     creditsBtn.applyButtonStyle(
       Color.WHITE,
       Color.BLACK,
@@ -74,7 +67,7 @@ export default class MainMenu extends Scene {
     );
 
     // When the play button is clicked, go to the first level
-    // TODO - Make this connect to a Level Select Screen
+    // Twin TODO - Make this connect to a Level Select Screen
     playBtn.onClick = () => {
       /*
                 Init the next scene with physics collisions:
@@ -113,11 +106,11 @@ export default class MainMenu extends Scene {
     };
     // Jump to Help screen
     helpBtn.onClick = () => {
-        this.sceneManager.changeToScene(Help, {});
+      this.sceneManager.changeToScene(Help, {});
     };
     // Jump to Credits screen
     creditsBtn.onClick = () => {
-        this.sceneManager.changeToScene(Credits, {});
+      this.sceneManager.changeToScene(Credits, {});
     };
   }
 
