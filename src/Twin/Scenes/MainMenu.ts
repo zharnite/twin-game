@@ -43,7 +43,7 @@ export default class MainMenu extends Scene {
     );
 
     // When the play button is clicked, go to the first level
-    // Twin TODO (Code) - Make this connect to a Level Select Screen (Connect when making LevelSelect.ts)
+    // Twin TODO [Benchmark 2] (Code) - Make this connect to a Level Select Screen (Connect when making LevelSelect.ts)
     playBtn.onClick = () => {
       /*
                 Init the next scene with physics collisions:
