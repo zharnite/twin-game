@@ -4,10 +4,10 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Level1 from "./Level1";
 import Controls from "./Controls";
-import Help from "./Help";
 import Credits from "./Credits";
+import Help from "./Help";
+import Level1 from "./Level1";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;
