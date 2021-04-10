@@ -23,22 +23,22 @@ export default class MainMenu extends Scene {
     this.viewport.setFocus(size);
 
     // Play button
-    let playBtn = <Button>(
+    let playBtn = (
       SceneItemCreator.createButton(this, layer, 1000, 550, "Play Game")
     );
 
     // Controls button
-    let controlsBtn = <Button>(
+    let controlsBtn = (
       SceneItemCreator.createButton(this, layer, 1000, 610, "Controls")
     );
 
     // Help button
-    let helpBtn = <Button>(
+    let helpBtn = (
       SceneItemCreator.createButton(this, layer, 1000, 670, "Help")
     );
 
     // Credits button
-    let creditsBtn = <Button>(
+    let creditsBtn = (
       SceneItemCreator.createButton(this, layer, 1000, 730, "Credits")
     );
 
