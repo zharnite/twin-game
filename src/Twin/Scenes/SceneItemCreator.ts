@@ -48,6 +48,24 @@ export default class SceneItemCreator {
     });
   }
 
+  static createText(
+    scene: Scene,
+    viewport: Viewport,
+    layer: string,
+    x: number,
+    y: number,
+    str: string
+  ) {
+    let label = <Label>scene.add.uiElement(UIElementType.LABEL, layer, {
+      position: new Vec2(x, y),
+      text: str,
+    });
+    label.textColor = Color.WHITE;
+    label.backgroundColor = Color.BLACK;
+    label.font = "Monospace";
+    label.padding = new Vec2(20, 10);
+  }
+
   static createButton(
     scene: Scene,
     layer: string,
