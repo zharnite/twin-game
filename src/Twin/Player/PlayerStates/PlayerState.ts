@@ -26,5 +26,11 @@ export default abstract class PlayerState extends State {
 	update(deltaT: number): void {
 		// Do gravity
 		this.parent.velocity.y += this.gravity*deltaT;
+
+		// Kill the player without taking away a life, if the R key is pressed to restart level.
+		if (Input.isPressed("restart")) {
+			// TEMPORARY: ONLY WORKS FOR LEVEL 1
+			this.owner.position = new Vec2(2 * 32, 14 * 32);
+		}
 	}
 }
