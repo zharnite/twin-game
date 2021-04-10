@@ -13,7 +13,7 @@ export default class Help extends Scene {
   }
 
   startScene(): void {
-    // Twin TODO - Edit help.json with real help/info
+    // Twin TODO (Text) - Edit help.json with real help/info
 
     let layer = "Help";
     this.addUILayer(layer);
