@@ -67,6 +67,7 @@ export default class TilemapFactory {
                 // that we only want to use them for object layers
                 tilesets.push(new Tileset(tileset));
             } else {
+                console.log(tileset);
                 tileset.tiles.forEach(tile => tile.id += tileset.firstgid);
                 collectionTiles.push(...tileset.tiles);
             }
