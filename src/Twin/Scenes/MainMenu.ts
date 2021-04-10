@@ -8,6 +8,7 @@ import Controls from "./Controls";
 import Credits from "./Credits";
 import Help from "./Help";
 import Level1 from "./Level1";
+import SceneItemCreator from "./SceneItemCreator";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;
@@ -15,55 +16,30 @@ export default class MainMenu extends Scene {
   loadScene(): void {}
 
   startScene(): void {
-    this.addUILayer("Main");
+    let layer = "Main";
+    this.addUILayer(layer);
 
     let size = this.viewport.getHalfSize();
     this.viewport.setFocus(size);
 
-    // Twin TODO (optional) - can probably modularize this
-    // Play Button
-    let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
-      position: new Vec2(1000, 550),
-      text: "Play Game",
-    });
-    playBtn.applyButtonStyle(
-      Color.WHITE,
-      Color.BLACK,
-      new Vec2(250, 50),
-      "NoPixel"
+    // Play button
+    let playBtn = <Button>(
+      SceneItemCreator.createButton(this, layer, 1000, 550, "Play Game")
     );
+
     // Controls button
-    let controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
-      position: new Vec2(1000, 610),
-      text: "Controls",
-    });
-    controlsBtn.applyButtonStyle(
-      Color.WHITE,
-      Color.BLACK,
-      new Vec2(250, 50),
-      "NoPixel"
+    let controlsBtn = <Button>(
+      SceneItemCreator.createButton(this, layer, 1000, 610, "Controls")
     );
-    // Help Button
-    let helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
-      position: new Vec2(1000, 670),
-      text: "Help",
-    });
-    helpBtn.applyButtonStyle(
-      Color.WHITE,
-      Color.BLACK,
-      new Vec2(250, 50),
-      "NoPixel"
+
+    // Help button
+    let helpBtn = <Button>(
+      SceneItemCreator.createButton(this, layer, 1000, 670, "Help")
     );
-    // Credits Button
-    let creditsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {
-      position: new Vec2(1000, 730),
-      text: "Credits",
-    });
-    creditsBtn.applyButtonStyle(
-      Color.WHITE,
-      Color.BLACK,
-      new Vec2(250, 50),
-      "NoPixel"
+
+    // Credits button
+    let creditsBtn = <Button>(
+      SceneItemCreator.createButton(this, layer, 1000, 730, "Credits")
     );
 
     // When the play button is clicked, go to the first level
