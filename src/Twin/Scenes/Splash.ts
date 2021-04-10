@@ -17,6 +17,18 @@ export default class Splash extends Scene {
     let bg = this.add.sprite("background", "bg");
     bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
+    // "Click to continue" text
+    let half = this.viewport.getHalfSize();
+    let str = "Click anywhere to continue";
+    SceneItemCreator.createText(
+      this,
+      this.viewport,
+      layer,
+      half.x,
+      half.y * 2 - 100,
+      str
+    );
+
     // Click splash screen to get to MainMenu
     SceneItemCreator.createScreenButton(this, layer).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
