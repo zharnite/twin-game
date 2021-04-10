@@ -71,4 +71,26 @@ export default class SceneItemCreator {
 
     return button;
   }
+
+  /**
+   * Transparent full screen button
+   */
+  static createScreenButton(scene: Scene, layer: string) {
+    // Create button
+    let half = scene.getViewport().getHalfSize();
+    let button = <Button>scene.add.uiElement(UIElementType.BUTTON, layer, {
+      position: new Vec2(half.x, half.y),
+      text: "",
+    });
+
+    // Apply button styles
+    button.applyButtonStyle(
+      Color.TRANSPARENT,
+      Color.TRANSPARENT,
+      new Vec2(half.x * 2, half.y * 2),
+      "NoPixel"
+    );
+
+    return button;
+  }
 }

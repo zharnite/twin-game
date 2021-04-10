@@ -1,5 +1,7 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./Twin/Scenes/MainMenu";
+import Splash from "./Twin/Scenes/Splash";
+import Controls from "./Twin/Scenes/Controls";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main() {
@@ -25,7 +27,7 @@ import MainMenu from "./Twin/Scenes/MainMenu";
 
   // Start our game
   // Twin TODO - change to SplashScreen
-  game.start(MainMenu, {});
+  game.start(Splash, {});
 })();
 
 function runTests() {}
