@@ -1,6 +1,6 @@
-// Twin TODO - Core game mechanics in this level
-// Twin TODO - Create an animated character (spritesheet for player)
-// Twin TODO - Make levels; read "World Rendering" part of  Benchmark 2
+// Twin TODO (Code) - Core game mechanics in this level
+// Twin TODO (Art) - Create an animated character (spritesheet for player)
+// Twin TODO (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";

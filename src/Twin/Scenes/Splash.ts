@@ -4,7 +4,7 @@ import SceneItemCreator from "./SceneItemCreator";
 
 export default class Splash extends Scene {
   loadScene(): void {
-    // Twin TODO - make a real Splash screen
+    // Twin TODO (Art) - make a real Splash screen
     this.load.image("background", "assets/sprites/TwinPlaceholderSplash.png");
   }
 
