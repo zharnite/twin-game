@@ -4,9 +4,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import MainMenu from "./MainMenu";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 
 export default class SceneItemCreator {
   static createHeadingLabel(
