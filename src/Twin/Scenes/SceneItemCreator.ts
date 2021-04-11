@@ -6,6 +6,9 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
 
+/**
+ * Creates scene items
+ */
 export default class SceneItemCreator {
   static createHeadingLabel(
     scene: Scene,
@@ -86,6 +89,41 @@ export default class SceneItemCreator {
       new Vec2(250, 50),
       "NoPixel"
     );
+
+    return button;
+  }
+
+  static createLevelButton(
+    scene: Scene,
+    layer: string,
+    x: number,
+    y: number,
+    str: string,
+    unlocked: boolean
+  ) {
+    // Create button
+    let button = <Button>scene.add.uiElement(UIElementType.BUTTON, layer, {
+      position: new Vec2(x, y),
+      text: str,
+    });
+
+    // Apply button styles
+    let lockedColor = new Color(51, 51, 51, 1);
+    if (!unlocked) {
+      button.applyButtonStyle(
+        lockedColor,
+        Color.BLACK,
+        new Vec2(250, 50),
+        "NoPixel"
+      );
+    } else {
+      button.applyButtonStyle(
+        Color.WHITE,
+        Color.BLACK,
+        new Vec2(250, 50),
+        "NoPixel"
+      );
+    }
 
     return button;
   }
