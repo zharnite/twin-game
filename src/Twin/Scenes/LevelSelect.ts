@@ -1,4 +1,3 @@
-// Twin TODO [Benchmark 2] (Code) - Make buttons and color them a color for our level selection; make a link to Level1 for core game mechanics
 // Twin TODO (Code) - Level locked and unlock mechanism; state with completed levels and different button based on that
 
 import Scene from "../../Wolfie2D/Scene/Scene";
