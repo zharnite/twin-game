@@ -23,6 +23,14 @@ export default class LevelTracker {
   }
 
   static unlockAllLevels(): void {
-    // Twin TODO
+    this.levels = {
+      "Level 1": true,
+      "Level 2": true,
+      "Level 3": true,
+      "Level 4": true,
+      "Level 5": true,
+      "Level 6": true,
+      "Final Level": true,
+    };
   }
 }
