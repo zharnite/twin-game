@@ -54,7 +54,6 @@ export default class MainMenu extends Scene {
     );
 
     // Jump to LevelSelect screen
-    // Twin TODO [Benchmark 2] (Code) - Make this connect to a Level Select Screen (Connect when making LevelSelect.ts)
     playBtn.onClick = () => {
       this.sceneManager.changeToScene(LevelSelect, {});
     };
