@@ -1,11 +1,10 @@
-// Twin TODO (Code) - Level locked and unlock mechanism; state with completed levels and different button based on that
-
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
 import MainMenu from "./MainMenu";
 import LevelTracker from "./LevelTracker";
 import SceneItemCreator from "./SceneItemCreator";
+import Input from "../../Wolfie2D/Input/Input";
 
 export default class LevelSelect extends Scene {
   // String to Level Map
@@ -36,7 +35,7 @@ export default class LevelSelect extends Scene {
   }
 
   createStringToLevelMap(): void {
-    // Twin TODO (Code) - Correct level map
+    // Twin TODO (Code) - Correct level map (as levels are created)
     this.stringToLevelMap = {
       "Level 1": Level1,
       "Level 2": Level2,
@@ -159,5 +158,13 @@ export default class LevelSelect extends Scene {
     }
   }
 
-  updateScene(): void {}
+  updateScene(deltaT: number): void {
+    super.updateScene(deltaT);
+
+    if (Input.isPressed("unlock")) {
+      if (LevelTracker.unlockAllLevels()) {
+        this.sceneManager.changeToScene(LevelSelect, {});
+      }
+    }
+  }
 }

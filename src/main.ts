@@ -16,6 +16,7 @@ import Splash from "./Twin/Scenes/Splash";
       { name: "jump", keys: ["w", "space"] },
       { name: "run", keys: ["shift"] },
       { name: "restart", keys: ["r"] },
+      { name: "unlock", keys: ["u"] }, // unlocks all levels
     ],
     useWebGL: false, // Tell the game we want to use webgl
     showDebug: false, // Whether to show debug messages. You can change this to true if you want

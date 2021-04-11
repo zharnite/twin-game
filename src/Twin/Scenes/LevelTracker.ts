@@ -3,6 +3,7 @@
  */
 export default class LevelTracker {
   static levels: object; // level name : boolean (true: unlocked, false: locked)
+  static cheatCodePressed: boolean; // whether or not cheat code key was pressed
 
   static getLevels(): { [level: string]: boolean } {
     // First time getting level tracker's levels
@@ -22,7 +23,16 @@ export default class LevelTracker {
     return <{ [level: string]: boolean }>this.levels;
   }
 
-  static unlockAllLevels(): void {
+  /**
+   * Unlocks levels and returns true. If the cheat code was already executed, returns false.
+   * @returns boolean whether or not levels have been unlocked
+   */
+  static unlockAllLevels(): boolean {
+    if (this.cheatCodePressed === true) {
+      return false;
+    }
+
+    this.cheatCodePressed = true;
     this.levels = {
       "Level 1": true,
       "Level 2": true,
@@ -32,5 +42,7 @@ export default class LevelTracker {
       "Level 6": true,
       "Final Level": true,
     };
+
+    return true;
   }
 }
