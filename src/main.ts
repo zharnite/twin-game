@@ -17,6 +17,7 @@ import Splash from "./Twin/Scenes/Splash";
       { name: "run", keys: ["shift"] },
       { name: "restart", keys: ["r"] },
       { name: "unlock", keys: ["u"] }, // unlocks all levels
+      { name: "swap view", keys: ["v"] }, // swaps views between player and ghost player (for debugging)
     ],
     useWebGL: false, // Tell the game we want to use webgl
     showDebug: false, // Whether to show debug messages. You can change this to true if you want
