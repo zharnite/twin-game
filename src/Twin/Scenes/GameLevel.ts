@@ -1,6 +1,6 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../Wolfie2D/Input/Input";
-import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -39,6 +39,9 @@ export default class GameLevel extends Scene {
   protected levelTransitionTimer: Timer;
   protected levelTransitionScreen: Rect;
 
+  // Game nodes that the viewport can follow
+  protected followNodes: AnimatedSprite[];
+
   startScene(): void {
     // Do the game level standard initializations
     this.initLayers();
@@ -58,6 +61,11 @@ export default class GameLevel extends Scene {
     // Start the black screen fade out
     this.levelTransitionScreen.tweens.play("fadeOut");
 
+    // Define nodes that the viewport can follow
+    this.followNodes = [];
+    this.followNodes.push(this.player);
+    this.followNodes.push(this.ghostPlayer);
+
     // Initially disable player movement
     Input.disableInput();
   }
@@ -72,7 +80,10 @@ export default class GameLevel extends Scene {
           {
             // Hit a coin
             let coin;
-            if (event.data.get("node") === this.player.id) {
+            if (
+              event.data.get("node") === this.player.id ||
+              event.data.get("node") === this.ghostPlayer.id
+            ) {
               // Other is coin, disable
               coin = this.sceneGraph.getNode(event.data.get("other"));
             } else {
@@ -101,7 +112,7 @@ export default class GameLevel extends Scene {
             let node = this.sceneGraph.getNode(event.data.get("node"));
             let other = this.sceneGraph.getNode(event.data.get("other"));
 
-            if (node === this.player) {
+            if (node === this.player || node === this.ghostPlayer) {
               // Node is player, other is enemy
               this.handlePlayerEnemyCollision(
                 <AnimatedSprite>node,
@@ -170,7 +181,10 @@ export default class GameLevel extends Scene {
     }
 
     // If player falls into a pit, kill them off and reset their position
-    if (this.player.position.y > 100 * 64) {
+    if (
+      this.player.position.y > 100 * 64 ||
+      this.ghostPlayer.position.y > 100 * 64
+    ) {
       this.incPlayerLife(-1);
       this.respawnPlayer();
     }
@@ -441,5 +455,6 @@ export default class GameLevel extends Scene {
 
   protected respawnPlayer(): void {
     this.player.position.copy(this.playerSpawn);
+    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
   }
 }

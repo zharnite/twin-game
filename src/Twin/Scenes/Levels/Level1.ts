@@ -6,10 +6,13 @@
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
+import Input from "../../../Wolfie2D/Input/Input";
 import GameLevel from "../GameLevel";
 import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
+  private followNodeIndex = 0;
+
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
@@ -17,7 +20,7 @@ export default class Level1 extends GameLevel {
     this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
     this.load.spritesheet(
       "ghostPlayer",
-      "assets/spritesheets/platformPlayer.json"
+      "assets/spritesheets/platformGhostPlayer.json"
     );
   }
 
@@ -46,5 +49,12 @@ export default class Level1 extends GameLevel {
     super.updateScene(deltaT);
 
     Debug.log("playerpos", this.player.position.toString());
+
+    // swap view key input
+    if (Input.isJustPressed("swap view")) {
+      this.followNodeIndex++;
+      this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
+      this.viewport.follow(this.followNodes[this.followNodeIndex]);
+    }
   }
 }
