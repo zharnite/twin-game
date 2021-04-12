@@ -11,7 +11,12 @@ import GameLevel from "../GameLevel";
 import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
-  private followNodeIndex = 0;
+  // Follow node index for viewport swapping between game characters
+  private followNodeIndex: number;
+
+  // Level specific spawn locations
+  private playerSpawnLocation: Vec2;
+  private ghostPlayerSpawnLocation: Vec2;
 
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
@@ -25,6 +30,11 @@ export default class Level1 extends GameLevel {
   }
 
   startScene(): void {
+    // Initialize variables
+    this.followNodeIndex = 0;
+    this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
+    this.ghostPlayerSpawnLocation = new Vec2(7 * 32, 14 * 32);
+
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
     let bg = this.add.sprite("background", "bg");
@@ -35,7 +45,8 @@ export default class Level1 extends GameLevel {
     this.add.tilemap("test_level", new Vec2(2, 2));
     this.viewport.setBounds(0, 0, 32 * 32, 16 * 32);
 
-    this.playerSpawn = new Vec2(2 * 32, 14 * 32);
+    this.playerSpawn = this.playerSpawnLocation;
+    this.ghostPlayerSpawn = this.ghostPlayerSpawnLocation;
 
     // Do generic setup for a GameLevel
     super.startScene();
@@ -55,6 +66,11 @@ export default class Level1 extends GameLevel {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
+    }
+
+    // restart key input
+    if (Input.isJustPressed("restart")) {
+      this.respawnPlayer();
     }
   }
 }
