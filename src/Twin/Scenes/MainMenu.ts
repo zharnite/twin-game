@@ -23,51 +23,56 @@ export default class MainMenu extends Scene {
     let size = this.viewport.getHalfSize();
     this.viewport.setFocus(size);
 
+    // Create menu buttons
+    this.createMenuButtons(layer);
+  }
+
+  /**
+   * Creates the 4 menu buttons: play, controls, help, and credits
+   * @param layer Name of the layer
+   */
+  createMenuButtons(layer: string): void {
     // Play button
-    let playBtn = SceneItemCreator.createButton(
+    SceneItemCreator.createButton(
       this,
       layer,
       1000,
       550,
       "Play Game"
-    );
+    ).onClick = () => {
+      this.sceneManager.changeToScene(LevelSelect, {});
+    };
 
     // Controls button
-    let controlsBtn = SceneItemCreator.createButton(
+    SceneItemCreator.createButton(
       this,
       layer,
       1000,
       610,
       "Controls"
-    );
+    ).onClick = () => {
+      this.sceneManager.changeToScene(Controls, {});
+    };
 
     // Help button
-    let helpBtn = SceneItemCreator.createButton(this, layer, 1000, 670, "Help");
+    SceneItemCreator.createButton(
+      this,
+      layer,
+      1000,
+      670,
+      "Help"
+    ).onClick = () => {
+      this.sceneManager.changeToScene(Help, {});
+    };
 
     // Credits button
-    let creditsBtn = SceneItemCreator.createButton(
+    SceneItemCreator.createButton(
       this,
       layer,
       1000,
       730,
       "Credits"
-    );
-
-    // Jump to LevelSelect screen
-    playBtn.onClick = () => {
-      this.sceneManager.changeToScene(LevelSelect, {});
-    };
-
-    // Jump to Controls screen
-    controlsBtn.onClick = () => {
-      this.sceneManager.changeToScene(Controls, {});
-    };
-    // Jump to Help screen
-    helpBtn.onClick = () => {
-      this.sceneManager.changeToScene(Help, {});
-    };
-    // Jump to Credits screen
-    creditsBtn.onClick = () => {
+    ).onClick = () => {
       this.sceneManager.changeToScene(Credits, {});
     };
   }
