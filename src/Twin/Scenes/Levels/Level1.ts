@@ -1,4 +1,4 @@
-// Twin TODO [Benchmark 2] (Code) - Core game mechanics in this level
+// Twin TODO [Benchmark 2] (Code) - Core game mechanics: reaching the exit at the same time
 // Twin TODO [Benchmark 2] (Art) - Create an animated character (spritesheet for player)
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
