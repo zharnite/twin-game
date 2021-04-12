@@ -2,7 +2,7 @@
 // Twin TODO [Benchmark 2] (Art) - Create an animated character (spritesheet for player)
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
-// Twin TODO (Code & Art) - Update to the correct player and ghost sprites for all levels
+// Twin TODO (Code & Art) - Update the correct player and ghost sprites for all levels
 // Twin TODO (Code) - Pause game
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
