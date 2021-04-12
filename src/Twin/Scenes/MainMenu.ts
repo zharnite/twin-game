@@ -7,7 +7,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Controls from "./Controls";
 import Credits from "./Credits";
 import Help from "./Help";
-import Level1 from "./Level1";
+import Level1 from "./Levels/Level1";
 import LevelSelect from "./LevelSelect";
 import SceneItemCreator from "./SceneItemCreator";
 
