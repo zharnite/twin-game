@@ -19,6 +19,10 @@ export default class GameLevel extends Scene {
   protected playerSpawn: Vec2;
   protected player: AnimatedSprite;
 
+  // Every level will have a ghost player, which will be an animated sprite
+  protected ghostPlayerSpawn: Vec2;
+  protected ghostPlayer: AnimatedSprite;
+
   // Labels for the UI
   protected static coinCount: number = 0;
   protected coinCountLabel: Label;
@@ -40,6 +44,7 @@ export default class GameLevel extends Scene {
     this.initLayers();
     this.initViewport();
     this.initPlayer();
+    this.initGhostPlayer();
     this.subscribeToEvents();
     this.addUI();
 
@@ -317,6 +322,41 @@ export default class GameLevel extends Scene {
     });
 
     this.viewport.follow(this.player);
+  }
+
+  protected initGhostPlayer(): void {
+    // Add the ghost player
+    this.ghostPlayer = this.add.animatedSprite("ghostPlayer", "primary");
+    this.ghostPlayer.scale.set(2, 2);
+    if (!this.ghostPlayerSpawn) {
+      console.warn(
+        "Ghost player spawn was never set - setting spawn to (0, 0)"
+      );
+      this.ghostPlayerSpawn = Vec2.ZERO;
+    }
+    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+    this.ghostPlayer.addPhysics();
+    this.ghostPlayer.addAI(PlayerController, {
+      playerType: "platformer",
+      tilemap: "Main",
+    });
+
+    // Add triggers on colliding with coins or coinBlocks
+    this.ghostPlayer.setGroup("player");
+
+    // Add a tween animation for the player jump
+    this.ghostPlayer.tweens.add("flip", {
+      startDelay: 0,
+      duration: 500,
+      effects: [
+        {
+          property: "rotation",
+          start: 0,
+          end: 2 * Math.PI,
+          ease: EaseFunctionType.IN_OUT_QUAD,
+        },
+      ],
+    });
   }
 
   protected addLevelEnd(startingTile: Vec2, size: Vec2): void {

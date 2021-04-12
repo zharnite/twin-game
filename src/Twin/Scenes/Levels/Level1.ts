@@ -2,6 +2,7 @@
 // Twin TODO [Benchmark 2] (Art) - Create an animated character (spritesheet for player)
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
+// Twin TODO (Code & Art) - Update to the correct player and ghost sprites for all levels
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
@@ -14,6 +15,10 @@ export default class Level1 extends GameLevel {
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("test_level", "assets/tilemaps/testing_level.json");
     this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
+    this.load.spritesheet(
+      "ghostPlayer",
+      "assets/spritesheets/platformPlayer.json"
+    );
   }
 
   startScene(): void {
