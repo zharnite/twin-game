@@ -98,7 +98,7 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("pause")) {
       console.log("PAUSE GAME!");
       this.isPaused = !this.isPaused;
-      // TODO - pause functionality goes here
+      // Twin TODO - pause functionality goes here
     }
 
     // Handle events and update the UI if needed

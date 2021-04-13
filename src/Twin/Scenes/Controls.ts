@@ -13,8 +13,6 @@ export default class Controls extends Scene {
   }
 
   startScene(): void {
-    // Twin TODO (Text) - Edit controls.json with real controls
-
     let layer = "Controls";
     this.addUILayer(layer);
 
