@@ -1,10 +1,10 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import Color from "../../Wolfie2D/Utils/Color";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Button from "../../../Wolfie2D/Nodes/UIElements/Button";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
+import Color from "../../../Wolfie2D/Utils/Color";
 
 /**
  * Creates scene items

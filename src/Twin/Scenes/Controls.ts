@@ -5,7 +5,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import MainMenu from "./MainMenu";
-import SceneItemCreator from "./SceneItemCreator";
+import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
 
 export default class Controls extends Scene {
   loadScene(): void {
