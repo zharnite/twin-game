@@ -45,6 +45,9 @@ export default class GameLevel extends Scene {
   // Follow node index for viewport swapping between game characters
   private followNodeIndex: number;
 
+  // Track if the game level is currently paused or not
+  public isPaused = false;
+
   startScene(): void {
     // Do the game level standard initializations
     this.initLayers();
@@ -90,6 +93,12 @@ export default class GameLevel extends Scene {
     // restart key input
     if (Input.isJustPressed("restart")) {
       this.respawnPlayer();
+    }
+
+    if (Input.isJustPressed("pause")) {
+      console.log("PAUSE GAME!");
+      this.isPaused = !this.isPaused;
+      // TODO - pause functionality goes here
     }
 
     // Handle events and update the UI if needed

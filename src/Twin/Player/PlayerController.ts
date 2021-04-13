@@ -30,7 +30,7 @@ export default class PlayerController extends StateMachineAI {
     velocity: Vec2 = Vec2.ZERO;
 	speed: number = 200;
 	MIN_SPEED: number = 200;
-    MAX_SPEED: number = 300;
+    MAX_SPEED: number = 250;
     tilemap: OrthogonalTilemap;
     coin: Sprite;
     // 0 = Body, 1 = Soul
