@@ -75,6 +75,8 @@ export default class GameLevel extends Scene {
     Input.disableInput();
   }
 
+
+
   updateScene(deltaT: number) {
     // Handle the player making inputs
 
@@ -84,7 +86,7 @@ export default class GameLevel extends Scene {
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
     }
-    
+
     // restart key input
     if (Input.isJustPressed("restart")) {
       this.respawnPlayer();
@@ -336,6 +338,7 @@ export default class GameLevel extends Scene {
       playerType: "platformer",
       tilemap: "Main",
     });
+    (<PlayerController>this.player._ai).characterType = 0;
 
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup("player");
@@ -373,6 +376,7 @@ export default class GameLevel extends Scene {
       playerType: "platformer",
       tilemap: "Main",
     });
+    (<PlayerController>this.player._ai).characterType = 1;
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup("player");
