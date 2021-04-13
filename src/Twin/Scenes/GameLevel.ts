@@ -42,6 +42,9 @@ export default class GameLevel extends Scene {
   // Game nodes that the viewport can follow
   protected followNodes: AnimatedSprite[];
 
+  // Follow node index for viewport swapping between game characters
+  private followNodeIndex: number;
+
   startScene(): void {
     // Do the game level standard initializations
     this.initLayers();
@@ -50,6 +53,8 @@ export default class GameLevel extends Scene {
     this.initGhostPlayer();
     this.subscribeToEvents();
     this.addUI();
+    // Initialize follow node index
+    this.followNodeIndex = 0;
 
     // Initialize the timers
     this.levelTransitionTimer = new Timer(500);
@@ -71,6 +76,20 @@ export default class GameLevel extends Scene {
   }
 
   updateScene(deltaT: number) {
+    // Handle the player making inputs
+
+    // swap view key input
+    if (Input.isJustPressed("swap view")) {
+      this.followNodeIndex++;
+      this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
+      this.viewport.follow(this.followNodes[this.followNodeIndex]);
+    }
+    
+    // restart key input
+    if (Input.isJustPressed("restart")) {
+      this.respawnPlayer();
+    }
+
     // Handle events and update the UI if needed
     while (this.receiver.hasNextEvent()) {
       let event = this.receiver.getNextEvent();
