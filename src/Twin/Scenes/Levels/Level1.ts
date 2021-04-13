@@ -12,8 +12,7 @@ import GameLevel from "../GameLevel";
 import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
-  // Follow node index for viewport swapping between game characters
-  private followNodeIndex: number;
+
 
   // Level specific spawn locations
   private playerSpawnLocation: Vec2;
@@ -32,7 +31,6 @@ export default class Level1 extends GameLevel {
 
   startScene(): void {
     // Initialize variables
-    this.followNodeIndex = 0;
     this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
     this.ghostPlayerSpawnLocation = new Vec2(7 * 32, 14 * 32);
 
@@ -61,17 +59,5 @@ export default class Level1 extends GameLevel {
     super.updateScene(deltaT);
 
     Debug.log("playerpos", this.player.position.toString());
-
-    // swap view key input
-    if (Input.isJustPressed("swap view")) {
-      this.followNodeIndex++;
-      this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
-      this.viewport.follow(this.followNodes[this.followNodeIndex]);
-    }
-
-    // restart key input
-    if (Input.isJustPressed("restart")) {
-      this.respawnPlayer();
-    }
   }
 }
