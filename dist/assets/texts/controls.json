@@ -3,9 +3,9 @@
   "Controls": [
     "[A] - Move left                                       ",
     "[D] - Move right                                      ",
-    "[W] - Jump                                            ",
+    "[Space] - Jump                                        ",
     "[R] - Restart level                                   ",
-    "[P] - Pause                                           ",
+    "[Esc] - Pause                                         ",
     "[V] - Swap between Body and Soul                      "
   ]
 }
