@@ -12,8 +12,6 @@ import GameLevel from "../GameLevel";
 import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
-
-
   // Level specific spawn locations
   private playerSpawnLocation: Vec2;
   private ghostPlayerSpawnLocation: Vec2;
@@ -32,7 +30,7 @@ export default class Level1 extends GameLevel {
   startScene(): void {
     // Initialize variables
     this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
-    this.ghostPlayerSpawnLocation = new Vec2(7 * 32, 14 * 32);
+    this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 14 * 32);
 
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);

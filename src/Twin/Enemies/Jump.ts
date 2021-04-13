@@ -7,7 +7,7 @@ export default class Jump extends EnemyState {
 	onEnter(): void {
 		(<AnimatedSprite>this.owner).animation.play("JUMP", true);
 		(<AnimatedSprite>this.owner).tweens.play("jump", true);
-		this.gravity = 500;
+		// this.gravity = 50;
 	}
 
 	update(deltaT: number): void {
@@ -22,6 +22,7 @@ export default class Jump extends EnemyState {
 		}
 
 		this.parent.velocity.x += this.parent.direction.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
+		console.log(this.parent);
 
 		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}

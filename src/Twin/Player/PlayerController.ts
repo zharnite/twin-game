@@ -33,9 +33,12 @@ export default class PlayerController extends StateMachineAI {
     MAX_SPEED: number = 300;
     tilemap: OrthogonalTilemap;
     coin: Sprite;
+    // 0 = Body, 1 = Soul
+    characterType: number;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
+        this.characterType = 0;
 
         this.initializePlatformer();
 
