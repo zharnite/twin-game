@@ -13,8 +13,6 @@ export default class Credits extends Scene {
   }
 
   startScene(): void {
-    // Twin TODO (Text) - Edit credits.json with more information
-
     let layer = "Credits";
     this.addUILayer(layer);
 
