@@ -6,10 +6,19 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import MainMenu from "./MainMenu";
 import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
+import GameLevel from "./GameLevel";
+import Pause from "./Pause";
 
 export default class Controls extends Scene {
+  private init: Record<string, any>;
+
   loadScene(): void {
     this.load.object("Controls", "assets/texts/controls.json");
+  }
+
+  initScene(init: Record<string, any>): void {
+    this.init = init;
+    console.log(this.init);
   }
 
   startScene(): void {
@@ -26,7 +35,11 @@ export default class Controls extends Scene {
       730,
       "Return"
     ).onClick = () => {
-      this.sceneManager.changeToScene(MainMenu, {});
+      if (this.init.level) {
+        this.sceneManager.changeToScene(Pause, this.init);
+      } else {
+        this.sceneManager.changeToScene(MainMenu, {});
+      }
     };
   }
 

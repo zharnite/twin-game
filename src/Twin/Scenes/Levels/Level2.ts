@@ -8,6 +8,10 @@ export default class Level2 extends GameLevel {
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("level2", "assets/tilemaps/level2.json");
     this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
+    this.load.spritesheet(
+      "ghostPlayer",
+      "assets/spritesheets/platformGhostPlayer.json"
+    );
     this.load.spritesheet("hopper", "assets/spritesheets/hopper.json");
     this.load.spritesheet("bunny", "assets/spritesheets/ghostBunny.json");
   }
@@ -39,6 +43,9 @@ export default class Level2 extends GameLevel {
     for (let pos of [new Vec2(51, 17)]) {
       this.addEnemy("hopper", pos, { jumpy: true });
     }
+
+    // Set up current level
+    this.currentLevel = Level2;
   }
 
   updateScene(deltaT: number): void {
