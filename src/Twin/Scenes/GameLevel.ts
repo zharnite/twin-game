@@ -20,10 +20,12 @@ export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
   protected playerSpawn: Vec2;
   protected player: AnimatedSprite;
+  protected playerResumeSpawn: Vec2;
 
   // Every level will have a ghost player, which will be an animated sprite
   protected ghostPlayerSpawn: Vec2;
   protected ghostPlayer: AnimatedSprite;
+  protected ghostPlayerResumeSpawn: Vec2;
 
   // Labels for the UI
   protected static coinCount: number = 0;
@@ -46,9 +48,18 @@ export default class GameLevel extends Scene {
 
   // Follow node index for viewport swapping between game characters
   private followNodeIndex: number;
+  private previousFollowNodeIndex: number;
 
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
+
+  initScene(init: Record<string, any>): void {
+    if (init) {
+      this.playerResumeSpawn = init.playerResumeSpawn;
+      this.ghostPlayerResumeSpawn = init.ghostPlayerResumeSpawn;
+      this.previousFollowNodeIndex = init.followNodeIndex;
+    }
+  }
 
   startScene(): void {
     // Do the game level standard initializations
@@ -58,8 +69,18 @@ export default class GameLevel extends Scene {
     this.initGhostPlayer();
     this.subscribeToEvents();
     this.addUI();
-    // Initialize follow node index
+
+    // Define nodes that the viewport can follow
+    this.followNodes = [];
+    this.followNodes.push(this.player);
+    this.followNodes.push(this.ghostPlayer);
+
+    // Initialize follow node index for viewport following
     this.followNodeIndex = 0;
+    if (this.previousFollowNodeIndex) {
+      this.followNodeIndex = this.previousFollowNodeIndex;
+    }
+    this.viewport.follow(this.followNodes[this.followNodeIndex]);
 
     // Initialize the timers
     this.levelTransitionTimer = new Timer(500);
@@ -70,11 +91,6 @@ export default class GameLevel extends Scene {
 
     // Start the black screen fade out
     this.levelTransitionScreen.tweens.play("fadeOut");
-
-    // Define nodes that the viewport can follow
-    this.followNodes = [];
-    this.followNodes.push(this.player);
-    this.followNodes.push(this.ghostPlayer);
 
     // Initially disable player movement
     Input.disableInput();
@@ -96,9 +112,11 @@ export default class GameLevel extends Scene {
     }
 
     if (Input.isJustPressed("pause")) {
-      // Twin TODO - pause functionality goes here
       this.sceneManager.changeToScene(Pause, {
         level: this.currentLevel,
+        playerResumeSpawn: this.player.position,
+        ghostPlayerResumeSpawn: this.ghostPlayer.position,
+        followNodeIndex: this.followNodeIndex,
       });
     }
 
@@ -332,7 +350,14 @@ export default class GameLevel extends Scene {
       console.warn("Player spawn was never set - setting spawn to (0, 0)");
       this.playerSpawn = Vec2.ZERO;
     }
-    this.player.position.copy(this.playerSpawn);
+
+    // Player resume spawn
+    if (this.playerResumeSpawn) {
+      this.player.position.copy(this.playerResumeSpawn);
+    } else {
+      this.player.position.copy(this.playerSpawn);
+    }
+
     this.player.addPhysics();
     this.player.addAI(PlayerController, {
       playerType: "platformer",
@@ -358,8 +383,6 @@ export default class GameLevel extends Scene {
         },
       ],
     });
-
-    this.viewport.follow(this.player);
   }
 
   protected initGhostPlayer(): void {
@@ -372,7 +395,14 @@ export default class GameLevel extends Scene {
       );
       this.ghostPlayerSpawn = Vec2.ZERO;
     }
-    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+
+    // Ghost Player resume spawn
+    if (this.ghostPlayerResumeSpawn) {
+      this.ghostPlayer.position.copy(this.ghostPlayerResumeSpawn);
+    } else {
+      this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+    }
+
     this.ghostPlayer.addPhysics();
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",

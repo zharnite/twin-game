@@ -18,7 +18,6 @@ export default class Controls extends Scene {
 
   initScene(init: Record<string, any>): void {
     this.init = init;
-    console.log(this.init);
   }
 
   startScene(): void {
