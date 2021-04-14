@@ -24,7 +24,7 @@ export default class Pause extends Scene {
     let layer = "Pause";
     this.addUILayer(layer);
 
-    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "PAUSE");
     this.createScreenButtons(layer);
   }
 
@@ -36,7 +36,7 @@ export default class Pause extends Scene {
       layer,
       half.x,
       half.y,
-      "Resume"
+      "RESUME"
     ).onClick = () => {
       this.sceneManager.changeToScene(
         <any>this.init.level,
@@ -51,7 +51,7 @@ export default class Pause extends Scene {
       layer,
       1000,
       550,
-      "Main Menu"
+      "MAIN MENU"
     ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };
@@ -62,7 +62,7 @@ export default class Pause extends Scene {
       layer,
       1000,
       610,
-      "Controls"
+      "CONTROLS"
     ).onClick = () => {
       this.sceneManager.changeToScene(Controls, this.init);
     };
@@ -73,7 +73,7 @@ export default class Pause extends Scene {
       layer,
       1000,
       670,
-      "Help"
+      "HELP"
     ).onClick = () => {
       this.sceneManager.changeToScene(Help, this.init);
     };
@@ -84,7 +84,7 @@ export default class Pause extends Scene {
       layer,
       1000,
       730,
-      "Credits"
+      "CREDITS"
     ).onClick = () => {
       this.sceneManager.changeToScene(Credits, this.init);
     };
