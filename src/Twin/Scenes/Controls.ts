@@ -24,7 +24,7 @@ export default class Controls extends Scene {
     let layer = "Controls";
     this.addUILayer(layer);
 
-    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "CONTROLS");
     SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
     // return button
     SceneItemCreator.createButton(
@@ -32,7 +32,7 @@ export default class Controls extends Scene {
       layer,
       1000,
       730,
-      "Return"
+      "RETURN"
     ).onClick = () => {
       if (this.init.level) {
         this.sceneManager.changeToScene(Pause, this.init);

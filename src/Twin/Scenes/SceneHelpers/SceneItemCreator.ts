@@ -23,7 +23,7 @@ export default class SceneItemCreator {
     });
     label.fontSize = 50;
     label.textColor = Color.WHITE;
-    label.font = "Monospace";
+    label.font = "Squarely";
   }
 
   static createTextBody(
@@ -87,8 +87,10 @@ export default class SceneItemCreator {
       Color.WHITE,
       Color.BLACK,
       new Vec2(250, 50),
-      "NoPixel"
+      "Squarely"
     );
+
+    button.fontSize = 32;
 
     return button;
   }
@@ -114,14 +116,14 @@ export default class SceneItemCreator {
         lockedColor,
         Color.BLACK,
         new Vec2(250, 50),
-        "NoPixel"
+        "Squarely"
       );
     } else {
       button.applyButtonStyle(
         Color.WHITE,
         Color.BLACK,
         new Vec2(250, 50),
-        "NoPixel"
+        "Squarely"
       );
     }
 
@@ -144,7 +146,7 @@ export default class SceneItemCreator {
       Color.TRANSPARENT,
       Color.TRANSPARENT,
       new Vec2(half.x * 2, half.y * 2),
-      "NoPixel"
+      "Squarely"
     );
 
     return button;

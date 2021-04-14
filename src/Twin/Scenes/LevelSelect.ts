@@ -23,7 +23,7 @@ export default class LevelSelect extends Scene {
       layer,
       1000,
       730,
-      "Return"
+      "RETURN"
     ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };
@@ -38,19 +38,19 @@ export default class LevelSelect extends Scene {
   createStringToLevelMap(): void {
     // Twin TODO (Code) - Correct level map (as levels are created)
     this.stringToLevelMap = {
-      "Level 1": Level1,
-      "Level 2": Level2,
-      "Level 3": Level2,
-      "Level 4": Level2,
-      "Level 5": Level2,
-      "Level 6": Level2,
-      "Final Level": Level2,
+      "LEVEL 1": Level1,
+      "LEVEL 2": Level2,
+      "LEVEL 3": Level2,
+      "LEVEL 4": Level2,
+      "LEVEL 5": Level2,
+      "LEVEL 6": Level2,
+      "FINAL LEVEL": Level2,
     };
   }
 
   createLevelButtons(layer: string): void {
     let levelMap = LevelTracker.getLevels();
-    console.log(levelMap["Level 1"]);
+    console.log(levelMap["LEVEL 1"]);
 
     let half = this.viewport.getHalfSize();
     let x = half.x / 2;
@@ -83,7 +83,7 @@ export default class LevelSelect extends Scene {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         levelCounter++;
-        let level = "Level " + levelCounter;
+        let level = "LEVEL " + levelCounter;
 
         this.createLevelButton(
           layer,
@@ -107,7 +107,7 @@ export default class LevelSelect extends Scene {
       y,
       xSpace,
       ySpace,
-      "Final Level",
+      "FINAL LEVEL",
       levelMap,
       sceneOptions,
       1,
