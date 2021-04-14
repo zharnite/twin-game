@@ -344,7 +344,7 @@ export default class GameLevel extends Scene {
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
-      characterType: 0,
+      characterType: "body",
     });
 
     // Add triggers on colliding with coins or coinBlocks
@@ -382,7 +382,7 @@ export default class GameLevel extends Scene {
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
-      characterType: 1,
+      characterType: "soul",
     });
 
     // Add triggers on colliding with coins or coinBlocks
