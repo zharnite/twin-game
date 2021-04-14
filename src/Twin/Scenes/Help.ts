@@ -21,12 +21,10 @@ export default class Help extends Scene {
   }
 
   startScene(): void {
-    // Twin TODO (Text) - Edit help.json with real help/info
-
     let layer = "Help";
     this.addUILayer(layer);
 
-    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "HELP");
     SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
     // return button
     SceneItemCreator.createButton(
@@ -34,7 +32,7 @@ export default class Help extends Scene {
       layer,
       1000,
       730,
-      "Return"
+      "RETURN"
     ).onClick = () => {
       if (this.init.level) {
         this.sceneManager.changeToScene(Pause, this.init);
