@@ -28,8 +28,8 @@ export default class Level1 extends GameLevel {
 
   startScene(): void {
     // Initialize variables
-    this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
-    this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 14 * 32);
+    this.playerSpawnLocation = new Vec2(2 * 32, 15 * 32);
+    this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 15 * 32);
 
     // Set up current and next level
     this.currentLevel = Level1;
@@ -51,7 +51,7 @@ export default class Level1 extends GameLevel {
     // Do generic setup for a GameLevel
     super.startScene();
 
-    // this.addLevelEnd(new Vec2(58, 17), new Vec2(2, 2));
+    this.addLevelEnd(new Vec2(30, 15), new Vec2(2, 2));
   }
 
   updateScene(deltaT: number): void {

@@ -261,25 +261,27 @@ export default class GameLevel extends Scene {
     // In-game labels
     this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(80, 30),
-      text: "Coins: " + GameLevel.coinCount,
+      text: "COINS: " + GameLevel.coinCount,
     });
     this.coinCountLabel.textColor = Color.WHITE;
     this.coinCountLabel.font = "Squarely";
+    this.coinCountLabel.fontSize = 40;
     this.livesCountLabel = <Label>this.add.uiElement(
       UIElementType.LABEL,
       "UI",
       {
         position: new Vec2(500, 30),
-        text: "Lives: " + GameLevel.livesCount,
+        text: "LIVES: " + GameLevel.livesCount,
       }
     );
     this.livesCountLabel.textColor = Color.WHITE;
     this.livesCountLabel.font = "Squarely";
+    this.livesCountLabel.fontSize = 40;
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(-300, 200),
-      text: "Level Complete",
+      text: "LEVEL COMPLETE",
     });
     this.levelEndLabel.size.set(1200, 60);
     this.levelEndLabel.borderRadius = 0;
