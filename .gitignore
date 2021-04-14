@@ -10,6 +10,9 @@ dist/*
 # Include the assets
 !dist/assets/
 
+# Include dist/index.html
+!dist/index.html
+
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 # !dist/assets/
 
