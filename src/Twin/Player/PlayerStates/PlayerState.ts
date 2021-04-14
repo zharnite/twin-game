@@ -24,14 +24,7 @@ export default abstract class PlayerState extends State {
   }
 
   update(deltaT: number): void {
-    // Do gravity. Slow down gravity for the soul.
+    // Do gravity.
     this.parent.velocity.y += this.gravity * deltaT;
-    if (
-      this.parent.characterType === "soul" &&
-      !this.owner.onGround &&
-      this.parent.velocity.y > 0
-    ) {
-      this.parent.velocity.y *= 0.9;
-    }
   }
 }
