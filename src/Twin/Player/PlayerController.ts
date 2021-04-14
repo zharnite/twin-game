@@ -34,10 +34,12 @@ export default class PlayerController extends StateMachineAI {
   tilemap: OrthogonalTilemap;
   coin: Sprite;
   characterType: string; // body, soul
+  jumpHeight: number;
 
   initializeAI(owner: GameNode, options: Record<string, any>) {
     this.owner = owner;
     this.characterType = options.characterType;
+    this.jumpHeight = options.jumpHeight;
 
     this.initializePlatformer();
 
