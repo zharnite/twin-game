@@ -1,13 +1,8 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
 import Controls from "./Controls";
 import Credits from "./Credits";
 import Help from "./Help";
-import Level1 from "./Levels/Level1";
 import LevelSelect from "./LevelSelect";
 import SceneItemCreator from "./SceneItemCreator";
 
@@ -28,7 +23,7 @@ export default class MainMenu extends Scene {
   }
 
   /**
-   * Creates the 4 menu buttons: play, controls, help, and credits
+   * Creates the 4 menu buttons: play game (leads to level select), controls, help, and credits
    * @param layer Name of the layer
    */
   createMenuButtons(layer: string): void {
@@ -38,7 +33,7 @@ export default class MainMenu extends Scene {
       layer,
       1000,
       550,
-      "Play Game"
+      "PLAY GAME"
     ).onClick = () => {
       this.sceneManager.changeToScene(LevelSelect, {});
     };
@@ -49,7 +44,7 @@ export default class MainMenu extends Scene {
       layer,
       1000,
       610,
-      "Controls"
+      "CONTROLS"
     ).onClick = () => {
       this.sceneManager.changeToScene(Controls, {});
     };
@@ -60,7 +55,7 @@ export default class MainMenu extends Scene {
       layer,
       1000,
       670,
-      "Help"
+      "HELP"
     ).onClick = () => {
       this.sceneManager.changeToScene(Help, {});
     };
@@ -71,7 +66,7 @@ export default class MainMenu extends Scene {
       layer,
       1000,
       730,
-      "Credits"
+      "CREDITS"
     ).onClick = () => {
       this.sceneManager.changeToScene(Credits, {});
     };

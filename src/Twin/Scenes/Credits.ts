@@ -16,7 +16,7 @@ export default class Credits extends Scene {
     let layer = "Credits";
     this.addUILayer(layer);
 
-    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, layer);
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "CREDITS");
     SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
     // return button
     SceneItemCreator.createButton(
@@ -24,7 +24,7 @@ export default class Credits extends Scene {
       layer,
       1000,
       730,
-      "Return"
+      "RETURN"
     ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };
