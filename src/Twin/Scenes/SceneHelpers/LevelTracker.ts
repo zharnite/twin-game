@@ -2,7 +2,7 @@
  * Singleton: Tracks locked / unlocked levels
  */
 export default class LevelTracker {
-  static levels: object; // level name : boolean (true: unlocked, false: locked)
+  static levels: { [level: string]: boolean }; // level name : boolean (true: unlocked, false: locked)
   static cheatCodePressed: boolean; // whether or not cheat code key was pressed
 
   static getLevels(): { [level: string]: boolean } {
@@ -44,5 +44,13 @@ export default class LevelTracker {
     };
 
     return true;
+  }
+
+  /**
+   * Unlocks a level
+   * @param level Level to unlock
+   */
+  static unlockLevel(level: string) {
+    this.levels[level] = true;
   }
 }
