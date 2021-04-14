@@ -21,10 +21,10 @@
     {
       "name": "WALK",
       "frames": [
-        { "index": 0, "duration": 8 },
-        { "index": 3, "duration": 8 },
-        { "index": 0, "duration": 8 },
-        { "index": 4, "duration": 8 }
+        { "index": 0, "duration": 6 },
+        { "index": 3, "duration": 6 },
+        { "index": 0, "duration": 6 },
+        { "index": 4, "duration": 6 }
       ]
     },
     {
