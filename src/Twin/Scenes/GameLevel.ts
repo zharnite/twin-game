@@ -78,8 +78,6 @@ export default class GameLevel extends Scene {
     Input.disableInput();
   }
 
-
-
   updateScene(deltaT: number) {
     // Handle the player making inputs
 
@@ -346,8 +344,8 @@ export default class GameLevel extends Scene {
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
+      characterType: 0,
     });
-    (<PlayerController>this.player._ai).characterType = 0;
 
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup("player");
@@ -384,8 +382,8 @@ export default class GameLevel extends Scene {
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
+      characterType: 1,
     });
-    (<PlayerController>this.player._ai).characterType = 1;
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup("player");
