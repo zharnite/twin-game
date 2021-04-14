@@ -1,5 +1,7 @@
 // Twin TODO (optional) - currently pause is implemented very poorly. there is a lot of duplicated code and it is not modular. make it better.
+// Twin TODO (code) - add more pause variables in GameLevel.ts as needed. include whatever state that needs to be saved when resumed.
 
+import Input from "../../Wolfie2D/Input/Input";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Controls from "./Controls";
 import Credits from "./Credits";
@@ -88,5 +90,14 @@ export default class Pause extends Scene {
     };
   }
 
-  updateScene(): void {}
+  updateScene(deltaT: number): void {
+    // Resume button
+    if (Input.isJustPressed("pause")) {
+      this.sceneManager.changeToScene(
+        <any>this.init.level,
+        this.init,
+        SceneOptions.getSceneOptions()
+      );
+    }
+  }
 }
