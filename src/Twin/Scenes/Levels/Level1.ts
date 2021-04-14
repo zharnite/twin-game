@@ -32,6 +32,10 @@ export default class Level1 extends GameLevel {
     this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
     this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 14 * 32);
 
+    // Set up current and next level
+    this.currentLevel = Level1;
+    this.nextLevel = Level2;
+
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
     let bg = this.add.sprite("background", "bg");
@@ -49,8 +53,6 @@ export default class Level1 extends GameLevel {
     super.startScene();
 
     // this.addLevelEnd(new Vec2(58, 17), new Vec2(2, 2));
-
-    this.nextLevel = Level2;
   }
 
   updateScene(deltaT: number): void {

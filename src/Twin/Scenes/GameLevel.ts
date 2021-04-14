@@ -13,6 +13,8 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../Enemies/EnemyController";
 import { Events } from "../enums";
 import PlayerController from "../Player/PlayerController";
+import Pause from "./Pause";
+import SceneOptions from "./SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -45,8 +47,8 @@ export default class GameLevel extends Scene {
   // Follow node index for viewport swapping between game characters
   private followNodeIndex: number;
 
-  // Track if the game level is currently paused or not
-  public isPaused = false;
+  // Variable to track levels. Used to track if game is paused
+  protected currentLevel: new (...args: any) => GameLevel;
 
   startScene(): void {
     // Do the game level standard initializations
@@ -94,9 +96,10 @@ export default class GameLevel extends Scene {
     }
 
     if (Input.isJustPressed("pause")) {
-      console.log("PAUSE GAME!");
-      this.isPaused = !this.isPaused;
       // Twin TODO - pause functionality goes here
+      this.sceneManager.changeToScene(Pause, {
+        level: this.currentLevel,
+      });
     }
 
     // Handle events and update the UI if needed
@@ -190,17 +193,7 @@ export default class GameLevel extends Scene {
             // Go to the next level
             if (this.nextLevel) {
               console.log("Going to next level!");
-              let sceneOptions = {
-                physics: {
-                  groupNames: ["ground", "player", "enemy", "coin"],
-                  collisions: [
-                    [0, 1, 1, 0],
-                    [1, 0, 0, 1],
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0],
-                  ],
-                },
-              };
+              let sceneOptions = SceneOptions.getSceneOptions();
               this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
             }
           }
@@ -230,7 +223,7 @@ export default class GameLevel extends Scene {
   }
 
   protected initViewport(): void {
-    this.viewport.enableZoom();
+    // this.viewport.enableZoom();
     this.viewport.setZoomLevel(2);
   }
 
@@ -490,5 +483,10 @@ export default class GameLevel extends Scene {
   protected respawnPlayer(): void {
     this.player.position.copy(this.playerSpawn);
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+  }
+
+  unloadScene(): void {
+    // Reset zoom level. Only game levels have a zoom level of 2.
+    this.viewport.setZoomLevel(1);
   }
 }
