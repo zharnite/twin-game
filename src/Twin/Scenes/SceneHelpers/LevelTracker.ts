@@ -34,13 +34,13 @@ export default class LevelTracker {
 
     this.cheatCodePressed = true;
     this.levels = {
-      "Level 1": true,
-      "Level 2": true,
-      "Level 3": true,
-      "Level 4": true,
-      "Level 5": true,
-      "Level 6": true,
-      "Final Level": true,
+      "LEVEL 1": true,
+      "LEVEL 2": true,
+      "LEVEL 3": true,
+      "LEVEL 4": true,
+      "LEVEL 5": true,
+      "LEVEL 6": true,
+      "FINAL LEVEL": true,
     };
 
     return true;
