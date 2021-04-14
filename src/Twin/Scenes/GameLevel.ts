@@ -13,15 +13,19 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../Enemies/EnemyController";
 import { Events } from "../enums";
 import PlayerController from "../Player/PlayerController";
+import Pause from "./Pause";
+import SceneOptions from "./SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
   protected playerSpawn: Vec2;
   protected player: AnimatedSprite;
+  protected playerResumeSpawn: Vec2;
 
   // Every level will have a ghost player, which will be an animated sprite
   protected ghostPlayerSpawn: Vec2;
   protected ghostPlayer: AnimatedSprite;
+  protected ghostPlayerResumeSpawn: Vec2;
 
   // Labels for the UI
   protected static coinCount: number = 0;
@@ -44,9 +48,18 @@ export default class GameLevel extends Scene {
 
   // Follow node index for viewport swapping between game characters
   private followNodeIndex: number;
+  private previousFollowNodeIndex: number;
 
-  // Track if the game level is currently paused or not
-  public isPaused = false;
+  // Variable to track levels. Used to track if game is paused
+  protected currentLevel: new (...args: any) => GameLevel;
+
+  initScene(init: Record<string, any>): void {
+    if (init) {
+      this.playerResumeSpawn = init.playerResumeSpawn;
+      this.ghostPlayerResumeSpawn = init.ghostPlayerResumeSpawn;
+      this.previousFollowNodeIndex = init.followNodeIndex;
+    }
+  }
 
   startScene(): void {
     // Do the game level standard initializations
@@ -56,8 +69,18 @@ export default class GameLevel extends Scene {
     this.initGhostPlayer();
     this.subscribeToEvents();
     this.addUI();
-    // Initialize follow node index
+
+    // Define nodes that the viewport can follow
+    this.followNodes = [];
+    this.followNodes.push(this.player);
+    this.followNodes.push(this.ghostPlayer);
+
+    // Initialize follow node index for viewport following
     this.followNodeIndex = 0;
+    if (this.previousFollowNodeIndex) {
+      this.followNodeIndex = this.previousFollowNodeIndex;
+    }
+    this.viewport.follow(this.followNodes[this.followNodeIndex]);
 
     // Initialize the timers
     this.levelTransitionTimer = new Timer(500);
@@ -69,16 +92,9 @@ export default class GameLevel extends Scene {
     // Start the black screen fade out
     this.levelTransitionScreen.tweens.play("fadeOut");
 
-    // Define nodes that the viewport can follow
-    this.followNodes = [];
-    this.followNodes.push(this.player);
-    this.followNodes.push(this.ghostPlayer);
-
     // Initially disable player movement
     Input.disableInput();
   }
-
-
 
   updateScene(deltaT: number) {
     // Handle the player making inputs
@@ -96,9 +112,12 @@ export default class GameLevel extends Scene {
     }
 
     if (Input.isJustPressed("pause")) {
-      console.log("PAUSE GAME!");
-      this.isPaused = !this.isPaused;
-      // Twin TODO - pause functionality goes here
+      this.sceneManager.changeToScene(Pause, {
+        level: this.currentLevel,
+        playerResumeSpawn: this.player.position,
+        ghostPlayerResumeSpawn: this.ghostPlayer.position,
+        followNodeIndex: this.followNodeIndex,
+      });
     }
 
     // Handle events and update the UI if needed
@@ -192,17 +211,7 @@ export default class GameLevel extends Scene {
             // Go to the next level
             if (this.nextLevel) {
               console.log("Going to next level!");
-              let sceneOptions = {
-                physics: {
-                  groupNames: ["ground", "player", "enemy", "coin"],
-                  collisions: [
-                    [0, 1, 1, 0],
-                    [1, 0, 0, 1],
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0],
-                  ],
-                },
-              };
+              let sceneOptions = SceneOptions.getSceneOptions();
               this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
             }
           }
@@ -232,7 +241,7 @@ export default class GameLevel extends Scene {
   }
 
   protected initViewport(): void {
-    this.viewport.enableZoom();
+    // this.viewport.enableZoom();
     this.viewport.setZoomLevel(2);
   }
 
@@ -341,13 +350,22 @@ export default class GameLevel extends Scene {
       console.warn("Player spawn was never set - setting spawn to (0, 0)");
       this.playerSpawn = Vec2.ZERO;
     }
-    this.player.position.copy(this.playerSpawn);
+
+    // Player resume spawn
+    if (this.playerResumeSpawn) {
+      this.player.position.copy(this.playerResumeSpawn);
+    } else {
+      this.player.position.copy(this.playerSpawn);
+    }
+
     this.player.addPhysics();
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
+      characterType: "body",
+      jumpHeight: -350,
+      fallFactor: 1.0,
     });
-    (<PlayerController>this.player._ai).characterType = 0;
 
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup("player");
@@ -365,8 +383,6 @@ export default class GameLevel extends Scene {
         },
       ],
     });
-
-    this.viewport.follow(this.player);
   }
 
   protected initGhostPlayer(): void {
@@ -379,13 +395,22 @@ export default class GameLevel extends Scene {
       );
       this.ghostPlayerSpawn = Vec2.ZERO;
     }
-    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+
+    // Ghost Player resume spawn
+    if (this.ghostPlayerResumeSpawn) {
+      this.ghostPlayer.position.copy(this.ghostPlayerResumeSpawn);
+    } else {
+      this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+    }
+
     this.ghostPlayer.addPhysics();
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
+      characterType: "soul",
+      jumpHeight: -550,
+      fallFactor: 0.9,
     });
-    (<PlayerController>this.player._ai).characterType = 1;
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup("player");
@@ -488,5 +513,10 @@ export default class GameLevel extends Scene {
   protected respawnPlayer(): void {
     this.player.position.copy(this.playerSpawn);
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+  }
+
+  unloadScene(): void {
+    // Reset zoom level. Only game levels have a zoom level of 2.
+    this.viewport.setZoomLevel(1);
   }
 }

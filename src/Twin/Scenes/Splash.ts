@@ -1,6 +1,6 @@
 import Scene from "../../Wolfie2D/Scene/Scene";
 import MainMenu from "./MainMenu";
-import SceneItemCreator from "./SceneItemCreator";
+import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import { Events } from "../enums";

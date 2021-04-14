@@ -4,7 +4,7 @@ import Controls from "./Controls";
 import Credits from "./Credits";
 import Help from "./Help";
 import LevelSelect from "./LevelSelect";
-import SceneItemCreator from "./SceneItemCreator";
+import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;

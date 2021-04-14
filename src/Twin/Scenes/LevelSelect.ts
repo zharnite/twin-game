@@ -2,9 +2,10 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Level1 from "./Levels/Level1";
 import Level2 from "./Levels/Level2";
 import MainMenu from "./MainMenu";
-import LevelTracker from "./LevelTracker";
-import SceneItemCreator from "./SceneItemCreator";
+import LevelTracker from "./SceneHelpers/LevelTracker";
+import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
 import Input from "../../Wolfie2D/Input/Input";
+import SceneOptions from "./SceneHelpers/SceneOptions";
 
 export default class LevelSelect extends Scene {
   // String to Level Map
@@ -59,33 +60,22 @@ export default class LevelSelect extends Scene {
 
     // Level Options
     /*
-                Init the next scene with physics collisions:
+        Init the next scene with physics collisions:
 
-                        ground  player  enemy   coin
-                ground    No      --      --     --
-                player   Yes      No      --     --
-                enemy    Yes      No      No     --
-                coin      No     Yes      No     No
+                ground  player  enemy   coin
+        ground    No      --      --     --
+        player   Yes      No      --     --
+        enemy    Yes      No      No     --
+        coin      No     Yes      No     No
 
-                Each layer becomes a number. In this case, 4 bits matter for each
+        Each layer becomes a number. In this case, 4 bits matter for each
 
-                ground: self - 0001, collisions - 0110
-                player: self - 0010, collisions - 1001
-                enemy:  self - 0100, collisions - 0001
-                coin:   self - 1000, collisions - 0010
-            */
-
-    let sceneOptions = {
-      physics: {
-        groupNames: ["ground", "player", "enemy", "coin"],
-        collisions: [
-          [0, 1, 1, 0],
-          [1, 0, 0, 1],
-          [1, 0, 0, 0],
-          [0, 1, 0, 0],
-        ],
-      },
-    };
+        ground: self - 0001, collisions - 0110
+        player: self - 0010, collisions - 1001
+        enemy:  self - 0100, collisions - 0001
+        coin:   self - 1000, collisions - 0010
+    */
+    let sceneOptions = SceneOptions.getSceneOptions();
 
     let levelCounter = 0;
     let rows = 2;
