@@ -1,4 +1,4 @@
-// Twin TODO (optional) - currently pause is implemented very poorly.
+// Twin TODO (optional) - currently pause is implemented very poorly. there is a lot of duplicated code and it is not modular. make it better.
 
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Controls from "./Controls";
@@ -16,7 +16,6 @@ export default class Pause extends Scene {
 
   initScene(init: Record<string, any>): void {
     this.init = init;
-    console.log("pause", this.init);
   }
 
   startScene(): void {
@@ -39,7 +38,7 @@ export default class Pause extends Scene {
     ).onClick = () => {
       this.sceneManager.changeToScene(
         <any>this.init.level,
-        {},
+        this.init,
         SceneOptions.getSceneOptions()
       );
     };
@@ -74,7 +73,7 @@ export default class Pause extends Scene {
       670,
       "Help"
     ).onClick = () => {
-      this.sceneManager.changeToScene(Controls, this.init);
+      this.sceneManager.changeToScene(Help, this.init);
     };
 
     // Credits button
@@ -85,7 +84,7 @@ export default class Pause extends Scene {
       730,
       "Credits"
     ).onClick = () => {
-      this.sceneManager.changeToScene(Controls, this.init);
+      this.sceneManager.changeToScene(Credits, this.init);
     };
   }
 
