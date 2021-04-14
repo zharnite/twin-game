@@ -35,11 +35,13 @@ export default class PlayerController extends StateMachineAI {
   coin: Sprite;
   characterType: string; // body, soul
   jumpHeight: number;
+  fallFactor: number;
 
   initializeAI(owner: GameNode, options: Record<string, any>) {
     this.owner = owner;
     this.characterType = options.characterType;
     this.jumpHeight = options.jumpHeight;
+    this.fallFactor = options.fallFactor;
 
     this.initializePlatformer();
 

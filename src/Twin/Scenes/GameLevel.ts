@@ -346,6 +346,7 @@ export default class GameLevel extends Scene {
       tilemap: "Main",
       characterType: "body",
       jumpHeight: -350,
+      fallFactor: 1.0,
     });
 
     // Add triggers on colliding with coins or coinBlocks
@@ -385,6 +386,7 @@ export default class GameLevel extends Scene {
       tilemap: "Main",
       characterType: "soul",
       jumpHeight: -550,
+      fallFactor: 0.9,
     });
 
     // Add triggers on colliding with coins or coinBlocks

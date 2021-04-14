@@ -13,9 +13,9 @@ export default class Fall extends InAir {
 
   update(deltaT: number): void {
     super.update(deltaT);
-    if (this.parent.characterType === "soul") {
-      this.parent.velocity.y *= 0.9;
-    }
+
+    // fall factor for soul is 0.9 to slow fall velocity
+    this.parent.velocity.y *= this.parent.fallFactor;
   }
 
   onExit(): Record<string, any> {
