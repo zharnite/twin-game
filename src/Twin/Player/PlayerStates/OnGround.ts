@@ -23,12 +23,8 @@ export default class OnGround extends PlayerState {
 
     if (Input.isJustPressed("jump")) {
       this.finished("jump");
-      // Change jump height based on if the jumping character is the soul or body.
-      if (this.parent.characterType === "body") {
-        this.parent.velocity.y = -350;
-      } else {
-        this.parent.velocity.y = -550;
-      }
+      this.parent.velocity.y = this.parent.jumpHeight;
+
       if (this.parent.velocity.x !== 0) {
         // We don't need this silly flip right now.
         // this.owner.tweens.play("flip");
