@@ -9,13 +9,13 @@ export default class LevelTracker {
     // First time getting level tracker's levels
     if (!this.levels) {
       this.levels = {
-        "Level 1": true,
-        "Level 2": false,
-        "Level 3": false,
-        "Level 4": false,
-        "Level 5": false,
-        "Level 6": false,
-        "Final Level": false,
+        "LEVEL 1": true,
+        "LEVEL 2": false,
+        "LEVEL 3": false,
+        "LEVEL 4": false,
+        "LEVEL 5": false,
+        "LEVEL 6": false,
+        "FINAL LEVEL": false,
       };
     }
 

@@ -255,7 +255,7 @@ export default class GameLevel extends Scene {
       text: "Coins: " + GameLevel.coinCount,
     });
     this.coinCountLabel.textColor = Color.WHITE;
-    this.coinCountLabel.font = "NoPixel";
+    this.coinCountLabel.font = "Squarely";
     this.livesCountLabel = <Label>this.add.uiElement(
       UIElementType.LABEL,
       "UI",
@@ -265,7 +265,7 @@ export default class GameLevel extends Scene {
       }
     );
     this.livesCountLabel.textColor = Color.WHITE;
-    this.livesCountLabel.font = "NoPixel";
+    this.livesCountLabel.font = "Squarely";
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
@@ -277,7 +277,7 @@ export default class GameLevel extends Scene {
     this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
     this.levelEndLabel.textColor = Color.WHITE;
     this.levelEndLabel.fontSize = 48;
-    this.levelEndLabel.font = "NoPixel";
+    this.levelEndLabel.font = "Squarely";
 
     // Add a tween to move the label on screen
     this.levelEndLabel.tweens.add("slideIn", {
