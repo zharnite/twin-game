@@ -13,8 +13,7 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../Enemies/EnemyController";
 import { Events } from "../enums";
 import PlayerController from "../Player/PlayerController";
-import Pause from "./Pause";
-import PauseTracker from "./PauseTracker";
+import PauseTracker from "./SceneHelpers/PauseTracker";
 import SceneOptions from "./SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
@@ -54,7 +53,6 @@ export default class GameLevel extends Scene {
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
   protected pauseTracker: PauseTracker;
-  // protected isPaused: boolean;
 
   initScene(init: Record<string, any>): void {
     if (init) {
@@ -122,15 +120,9 @@ export default class GameLevel extends Scene {
       this.respawnPlayer();
     }
 
+    // pause key input
     if (Input.isJustPressed("pause")) {
       this.pauseTracker.toggle();
-
-      // this.sceneManager.changeToScene(Pause, {
-      //   level: this.currentLevel,
-      //   playerResumeSpawn: this.player.position,
-      //   ghostPlayerResumeSpawn: this.ghostPlayer.position,
-      //   followNodeIndex: this.followNodeIndex,
-      // });
     }
 
     // Handle events and update the UI if needed
