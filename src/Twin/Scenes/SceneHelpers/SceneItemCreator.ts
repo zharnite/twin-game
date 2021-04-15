@@ -184,4 +184,33 @@ export default class SceneItemCreator {
 
     return button;
   }
+
+  /**
+   * Create the button for pause screen
+   */
+  static createPauseScreenButton(
+    scene: Scene,
+    layer: string,
+    half: Vec2,
+    objName: string
+  ) {
+    let objs: Label[] = [];
+    let obj = scene.load.getObject(objName);
+    let body = obj[objName];
+    let i = 1;
+    body.forEach((str: string) => {
+      let label = <Label>scene.add.uiElement(UIElementType.LABEL, layer, {
+        position: new Vec2(300, half.y + 50 + 30 * i),
+        text: str,
+      });
+      label.fontSize = 14;
+      label.textColor = Color.WHITE;
+      label.backgroundColor = Color.BLACK;
+      label.font = "Monospace";
+      label.padding = new Vec2(20, 10);
+      objs.push(label);
+      i++;
+    });
+    return objs;
+  }
 }
