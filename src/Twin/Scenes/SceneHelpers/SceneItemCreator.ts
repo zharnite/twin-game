@@ -15,7 +15,7 @@ export default class SceneItemCreator {
     viewport: Viewport,
     layer: string,
     heading: string
-  ): void {
+  ): Label {
     let halfSize = viewport.getHalfSize();
     let label = <Label>scene.add.uiElement(UIElementType.LABEL, layer, {
       position: new Vec2(halfSize.x, 100),
@@ -24,6 +24,8 @@ export default class SceneItemCreator {
     label.fontSize = 50;
     label.textColor = Color.WHITE;
     label.font = "Squarely";
+
+    return label;
   }
 
   static createTextBody(
@@ -31,9 +33,10 @@ export default class SceneItemCreator {
     viewport: Viewport,
     layer: string,
     x: number
-  ): void {
+  ): Label[] {
     let obj = scene.load.getObject(layer);
     let body = obj[layer];
+    let labels: Label[] = [];
 
     let halfSize = viewport.getHalfSize();
     let vertex = new Vec2(x, 200);
@@ -48,7 +51,11 @@ export default class SceneItemCreator {
       label.textColor = Color.WHITE;
       label.font = "Monospace";
       i++;
+
+      labels.push(label);
     });
+
+    return labels;
   }
 
   static createText(
@@ -67,6 +74,7 @@ export default class SceneItemCreator {
     label.backgroundColor = Color.BLACK;
     label.font = "Monospace";
     label.padding = new Vec2(20, 10);
+    return label;
   }
 
   static createButton(
@@ -148,6 +156,31 @@ export default class SceneItemCreator {
       new Vec2(half.x * 2, half.y * 2),
       "Squarely"
     );
+
+    return button;
+  }
+
+  /**
+   * shaded screen button
+   */
+  static createScreenButtonShaded(scene: Scene, layer: string) {
+    // Create button
+    let half = scene.getViewport().getHalfSize();
+    let button = <Button>scene.add.uiElement(UIElementType.BUTTON, layer, {
+      position: new Vec2(half.x, half.y),
+      text: "",
+    });
+
+    // Apply button styles
+    button.applyButtonStyle(
+      new Color(0, 0, 0, 1),
+      Color.TRANSPARENT,
+      new Vec2(half.x * 2, half.y * 2),
+      "Squarely"
+    );
+    button.calculateBackgroundColor = function () {
+      return new Color(0, 0, 0, 1);
+    };
 
     return button;
   }

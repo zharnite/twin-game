@@ -1,8 +1,6 @@
 // Twin TODO [Benchmark 2] (Code) - Core game mechanics: reaching the exit at the same time
-// Twin TODO [Benchmark 2] (Art) - Create an animated character (spritesheet for player)
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
-// Twin TODO (Code & Art) - Update the correct player and ghost sprites for all levels
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
@@ -24,12 +22,19 @@ export default class Level1 extends GameLevel {
       "ghostPlayer",
       "assets/spritesheets/platformGhostPlayer.json"
     );
+
+    // load pause items
+    this.load.object("Controls", "assets/texts/controls.json");
+    this.load.object("Help", "assets/texts/help.json");
+    this.load.object("Credits", "assets/texts/credits.json");
   }
 
   startScene(): void {
     // Initialize variables
     this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
     this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 14 * 32);
+    this.playerSpawn = this.playerSpawnLocation;
+    this.ghostPlayerSpawn = this.ghostPlayerSpawnLocation;
 
     // Set up current and next level
     this.currentLevel = Level1;
@@ -45,18 +50,18 @@ export default class Level1 extends GameLevel {
     this.add.tilemap("test_level", new Vec2(2, 2));
     this.viewport.setBounds(0, 0, 32 * 32, 16 * 32);
 
-    this.playerSpawn = this.playerSpawnLocation;
-    this.ghostPlayerSpawn = this.ghostPlayerSpawnLocation;
-
     // Do generic setup for a GameLevel
     super.startScene();
 
-    this.addLevelEnd(new Vec2(30, 14), new Vec2(2, 2));
+    // Set up exits
+    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1));
+    this.addLevelEnd(new Vec2(30, 11), new Vec2(1, 1));
+
+    console.log(this);
   }
 
   updateScene(deltaT: number): void {
     super.updateScene(deltaT);
-
     Debug.log("playerpos", this.player.position.toString());
   }
 }

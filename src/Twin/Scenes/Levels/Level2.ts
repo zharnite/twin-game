@@ -17,7 +17,6 @@ export default class Level2 extends GameLevel {
   }
 
   startScene(): void {
-    console.log("Starting level2");
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
     let bg = this.add.sprite("background", "bg");

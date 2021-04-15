@@ -14,6 +14,7 @@ import EnemyController from "../Enemies/EnemyController";
 import { Events } from "../enums";
 import PlayerController from "../Player/PlayerController";
 import Pause from "./Pause";
+import PauseTracker from "./PauseTracker";
 import SceneOptions from "./SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
@@ -52,6 +53,8 @@ export default class GameLevel extends Scene {
 
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
+  protected pauseTracker: PauseTracker;
+  // protected isPaused: boolean;
 
   initScene(init: Record<string, any>): void {
     if (init) {
@@ -94,6 +97,14 @@ export default class GameLevel extends Scene {
 
     // Initially disable player movement
     Input.disableInput();
+
+    // Start unpaused
+    this.pauseTracker = new PauseTracker(
+      this,
+      this.viewport,
+      this.layers,
+      this.sceneManager
+    );
   }
 
   updateScene(deltaT: number) {
@@ -112,12 +123,14 @@ export default class GameLevel extends Scene {
     }
 
     if (Input.isJustPressed("pause")) {
-      this.sceneManager.changeToScene(Pause, {
-        level: this.currentLevel,
-        playerResumeSpawn: this.player.position,
-        ghostPlayerResumeSpawn: this.ghostPlayer.position,
-        followNodeIndex: this.followNodeIndex,
-      });
+      this.pauseTracker.toggle();
+
+      // this.sceneManager.changeToScene(Pause, {
+      //   level: this.currentLevel,
+      //   playerResumeSpawn: this.player.position,
+      //   ghostPlayerResumeSpawn: this.ghostPlayer.position,
+      //   followNodeIndex: this.followNodeIndex,
+      // });
     }
 
     // Handle events and update the UI if needed
@@ -238,6 +251,9 @@ export default class GameLevel extends Scene {
 
     // Add a layer for players and enemies
     this.addLayer("primary", 1);
+
+    // Add a layer for pause
+    this.addUILayer("pause");
   }
 
   protected initViewport(): void {
@@ -443,7 +459,7 @@ export default class GameLevel extends Scene {
       Events.PLAYER_ENTERED_LEVEL_END,
       null
     );
-    this.levelEndArea.color = new Color(0, 0, 0, 0);
+    this.levelEndArea.color = new Color(0, 0, 0, 1);
   }
 
   protected addEnemy(
