@@ -15,12 +15,12 @@ export default class Splash extends Scene {
   }
 
   startScene(): void {
-    // Create SplashScreen layer
+    // Create Splash layer
     this.layer = Screens.SPLASH;
     this.addUILayer(this.layer);
 
     // Add background image
-    this.addBackground();
+    this.createBackground();
 
     // Transparent full screen button to get to MainMenu
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
@@ -28,7 +28,10 @@ export default class Splash extends Scene {
     };
   }
 
-  private addBackground(): void {
+  /**
+   * Creates and adds the background image in the Splash screen.
+   */
+  private createBackground(): void {
     // Create background layer and attach background image to center
     this.addLayer("bg");
     let bg = this.add.sprite("background", "bg");

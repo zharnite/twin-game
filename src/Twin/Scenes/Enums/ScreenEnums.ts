@@ -1,8 +1,8 @@
 export enum Screens {
-  CONTROLS = "ControlsScreen",
-  CREDITS = "CreditsScreen",
-  HELP = "HelpScreen",
-  LEVEL_SELECT = "LevelSelectScreen",
-  MAIN_MENU = "MainMenuScreen",
-  SPLASH = "SplashScreen",
+  CONTROLS = "Controls",
+  CREDITS = "Credits",
+  HELP = "Help",
+  LEVEL_SELECT = "LevelSelect",
+  MAIN_MENU = "MainMenu",
+  SPLASH = "Splash",
 }
