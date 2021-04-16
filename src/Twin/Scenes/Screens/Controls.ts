@@ -1,17 +1,19 @@
-import Scene from "../../Wolfie2D/Scene/Scene";
+import Scene from "../../../Wolfie2D/Scene/Scene";
 import MainMenu from "./MainMenu";
-import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
+import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 
-export default class Help extends Scene {
+export default class Controls extends Scene {
+  private init: Record<string, any>;
+
   loadScene(): void {
-    this.load.object("Help", "assets/texts/help.json");
+    this.load.object("Controls", "assets/texts/controls.json");
   }
 
   startScene(): void {
-    let layer = "Help";
+    let layer = "Controls";
     this.addUILayer(layer);
 
-    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "HELP");
+    SceneItemCreator.createHeadingLabel(this, this.viewport, layer, "CONTROLS");
     SceneItemCreator.createTextBody(this, this.viewport, layer, 600);
     // return button
     SceneItemCreator.createButton(

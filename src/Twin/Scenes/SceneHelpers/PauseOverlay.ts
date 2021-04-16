@@ -2,7 +2,7 @@ import CanvasNode from "../../../Wolfie2D/Nodes/CanvasNode";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import SceneManager from "../../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
-import MainMenu from "../MainMenu";
+import MainMenu from "../Screens/MainMenu";
 import PauseTracker from "./PauseTracker";
 import SceneItemCreator from "./SceneItemCreator";
 

@@ -1,11 +1,11 @@
-import Scene from "../../Wolfie2D/Scene/Scene";
+import Scene from "../../../Wolfie2D/Scene/Scene";
 import Level1 from "./Levels/Level1";
 import Level2 from "./Levels/Level2";
 import MainMenu from "./MainMenu";
-import LevelTracker from "./SceneHelpers/LevelTracker";
-import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
-import Input from "../../Wolfie2D/Input/Input";
-import SceneOptions from "./SceneHelpers/SceneOptions";
+import LevelTracker from "../SceneHelpers/LevelTracker";
+import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
+import Input from "../../../Wolfie2D/Input/Input";
+import SceneOptions from "../SceneHelpers/SceneOptions";
 
 export default class LevelSelect extends Scene {
   // String to Level Map
