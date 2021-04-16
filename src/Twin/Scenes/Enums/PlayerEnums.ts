@@ -1,4 +1,4 @@
-export enum PlayerType {
+export enum PlayerTypes {
   BODY = "Body",
   SOUL = "Soul",
 }

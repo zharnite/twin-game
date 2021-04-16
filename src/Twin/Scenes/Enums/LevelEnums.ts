@@ -1,4 +1,4 @@
-export enum Level {
+export enum Levels {
   LEVEL_1 = "Level 1",
   LEVEL_2 = "Level 2",
   LEVEL_3 = "Level 3",
