@@ -294,7 +294,7 @@ export default class GameLevel extends Scene {
     this.coinCountLabel.font = "Squarely";
     this.coinCountLabel.fontSize = 40;
     this.coinCountLabel.padding = new Vec2(10, 5);
-    this.coinCountLabel.backgroundColor = new Color(0, 0, 0, 0.7);
+    this.coinCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
 
     // Lives label
     this.livesCountLabel = <Label>this.add.uiElement(
@@ -309,7 +309,7 @@ export default class GameLevel extends Scene {
     this.livesCountLabel.font = "Squarely";
     this.livesCountLabel.fontSize = 40;
     this.livesCountLabel.padding = new Vec2(10, 5);
-    this.livesCountLabel.backgroundColor = new Color(0, 0, 0, 0.7);
+    this.livesCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
@@ -472,8 +472,11 @@ export default class GameLevel extends Scene {
     });
     this.levelEndArea.addPhysics(undefined, undefined, false, true);
     this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
-    this.levelEndArea.color = new Color(0, 0, 0, 1);
     this.levelEndAreas[group] = this.levelEndArea;
+
+    // Set colors to be different for testing purposes: can be alpha overlay later
+    if (group === "player") this.levelEndArea.color = Color.GREEN;
+    if (group === "ghostPlayer") this.levelEndArea.color = Color.MAGENTA;
   }
 
   protected addEnemy(
