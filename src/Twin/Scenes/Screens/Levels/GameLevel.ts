@@ -1,21 +1,21 @@
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Input from "../../Wolfie2D/Input/Input";
-import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Timer from "../../Wolfie2D/Timing/Timer";
-import Color from "../../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import EnemyController from "../Enemies/EnemyController";
-import { Events } from "../enums";
-import PlayerController from "../Player/PlayerController";
-import PauseTracker from "./SceneHelpers/PauseTracker";
-import SceneOptions from "./SceneHelpers/SceneOptions";
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import Input from "../../../../Wolfie2D/Input/Input";
+import GameNode, { TweenableProperties } from "../../../../Wolfie2D/Nodes/GameNode";
+import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../../../Wolfie2D/Nodes/Graphics/Rect";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Label from "../../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Scene from "../../../../Wolfie2D/Scene/Scene";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
+import Color from "../../../../Wolfie2D/Utils/Color";
+import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
+import EnemyController from "../../../Enemies/EnemyController";
+import { Events } from "../../../enums";
+import PlayerController from "../../../Player/PlayerController";
+import PauseTracker from "../../SceneHelpers/PauseTracker";
+import SceneOptions from "../../SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
