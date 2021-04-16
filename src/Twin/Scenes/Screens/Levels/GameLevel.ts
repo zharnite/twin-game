@@ -1,7 +1,9 @@
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../../../Wolfie2D/Input/Input";
-import GameNode, { TweenableProperties } from "../../../../Wolfie2D/Nodes/GameNode";
+import GameNode, {
+  TweenableProperties,
+} from "../../../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -14,6 +16,7 @@ import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../../../Enemies/EnemyController";
 import { Events } from "../../../enums";
 import PlayerController from "../../../Player/PlayerController";
+import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 
@@ -284,7 +287,7 @@ export default class GameLevel extends Scene {
     // In-game labels
     this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(80, 30),
-      text: "COINS: " + GameLevel.coinCount,
+      text: ScreenTexts.COINS + " " + GameLevel.coinCount,
     });
     this.coinCountLabel.textColor = Color.WHITE;
     this.coinCountLabel.font = "Squarely";
@@ -294,7 +297,7 @@ export default class GameLevel extends Scene {
       "UI",
       {
         position: new Vec2(500, 30),
-        text: "LIVES: " + GameLevel.livesCount,
+        text: ScreenTexts.LIVES + " " + GameLevel.livesCount,
       }
     );
     this.livesCountLabel.textColor = Color.WHITE;
@@ -304,7 +307,7 @@ export default class GameLevel extends Scene {
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(-300, 200),
-      text: "LEVEL COMPLETE",
+      text: ScreenTexts.LEVEL_COMPLETE,
     });
     this.levelEndLabel.size.set(1200, 60);
     this.levelEndLabel.borderRadius = 0;
@@ -539,12 +542,12 @@ export default class GameLevel extends Scene {
 
   protected incPlayerLife(amt: number): void {
     GameLevel.livesCount += amt;
-    this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
+    this.livesCountLabel.text = ScreenTexts.LIVES + " " + GameLevel.livesCount;
   }
 
   protected incPlayerCoins(amt: number): void {
     GameLevel.coinCount += amt;
-    this.coinCountLabel.text = "Coins: " + GameLevel.coinCount;
+    this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
   }
 
   protected respawnPlayer(): void {

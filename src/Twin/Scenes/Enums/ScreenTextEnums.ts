@@ -8,4 +8,7 @@ export enum ScreenTexts {
   PLAY = "PLAY",
   PLAY_GAME = "PLAY GAME",
   RETURN = "RETURN",
+  COINS = "COINS",
+  LIVES = "LIVES",
+  LEVEL_COMPLETE = "LEVEL COMPLETE",
 }
