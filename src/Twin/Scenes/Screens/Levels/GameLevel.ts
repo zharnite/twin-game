@@ -14,7 +14,7 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Color from "../../../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../../../Enemies/EnemyController";
-import { Events } from "../../../enums";
+import { Events } from "../../../Enums/EventEnums";
 import PlayerController from "../../../Player/PlayerController";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
