@@ -1,6 +1,4 @@
 import Scene from "../../../../Wolfie2D/Scene/Scene";
-import MainMenu from "../MainMenu";
-import SceneItemCreator from "../../SceneHelpers/SceneItemCreator";
 import { Screens } from "../../Enums/ScreenEnums";
 import InfoScreenCreator from "../../SceneHelpers/InfoScreenCreator";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
