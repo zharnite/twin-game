@@ -17,11 +17,6 @@ export default class Level1 extends GameLevel {
       "ghostPlayer",
       "assets/spritesheets/platformGhostPlayer.json"
     );
-
-    // load pause items
-    this.load.object("Controls", "assets/texts/controls.json");
-    this.load.object("Help", "assets/texts/help.json");
-    this.load.object("Credits", "assets/texts/credits.json");
   }
 
   startScene(): void {

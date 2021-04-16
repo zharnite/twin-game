@@ -71,6 +71,13 @@ export default class GameLevel extends Scene {
     }
   }
 
+  loadScene(): void {
+    // load pause items
+    this.load.object("Controls", "assets/texts/controls.json");
+    this.load.object("Help", "assets/texts/help.json");
+    this.load.object("Credits", "assets/texts/credits.json");
+  }
+
   startScene(): void {
     // Do the game level standard initializations
     this.initLayers();
@@ -491,6 +498,7 @@ export default class GameLevel extends Scene {
     enemy.addAI(EnemyController, aiOptions);
     enemy.setGroup("enemy");
     enemy.setTrigger("player", Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger("ghostPlayer", Events.PLAYER_HIT_ENEMY, null);
   }
 
   protected handlePlayerEnemyCollision(
