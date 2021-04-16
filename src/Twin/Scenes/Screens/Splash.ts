@@ -4,6 +4,7 @@ import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 import { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import { Events } from "../../enums";
+import { Screen } from "../Enums/ScreenEnums";
 
 export default class Splash extends Scene {
   private layer: string;
@@ -14,7 +15,7 @@ export default class Splash extends Scene {
 
   startScene(): void {
     // Create SplashScreen layer
-    this.layer = "SplashScreen";
+    this.layer = Screen.SPLASH;
     this.addUILayer(this.layer);
 
     // Add background image
