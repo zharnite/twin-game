@@ -34,7 +34,7 @@ export default class InfoScreenCreator {
    * Creates the heading text for an information screen
    * @param heading Name of the information screen
    */
-  private createHeading(heading: string): void {
+  public createHeading(heading: string): void {
     SceneItemCreator.createHeadingLabel(
       this.scene,
       this.viewport,
@@ -46,14 +46,14 @@ export default class InfoScreenCreator {
   /**
    * Creates the body text for an information screen
    */
-  private createBody() {
+  public createBody() {
     SceneItemCreator.createTextBody(this.scene, this.viewport, this.layer, 600);
   }
 
   /**
    * Creates the return button for an information screen
    */
-  private createReturnButton() {
+  public createReturnButton() {
     SceneItemCreator.createButton(
       this.scene,
       this.layer,
