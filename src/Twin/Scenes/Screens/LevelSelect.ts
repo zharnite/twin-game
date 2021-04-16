@@ -6,36 +6,33 @@ import LevelTracker from "../SceneHelpers/LevelTracker";
 import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 import Input from "../../../Wolfie2D/Input/Input";
 import SceneOptions from "../SceneHelpers/SceneOptions";
+import { Screens } from "../Enums/ScreenEnums";
+import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
+import { ScreenTexts } from "../Enums/ScreenTextEnums";
 
 export default class LevelSelect extends Scene {
   // String to Level Map
   private stringToLevelMap: { [level: string]: object };
+  private layer: string;
 
   loadScene(): void {}
 
   startScene(): void {
-    let layer = "LevelSelect";
-    this.addUILayer(layer);
+    // Create LevelSelect layer
+    this.layer = Screens.LEVEL_SELECT;
+    this.addUILayer(this.layer);
 
-    // Create return button
-    SceneItemCreator.createButton(
-      this,
-      layer,
-      1000,
-      730,
-      "RETURN"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(MainMenu, {});
-    };
+    // Create heading and return button
+    this.createHeadingAndReturn();
 
     // Create map for levels
     this.createStringToLevelMap();
 
     // Buttons for each level
-    this.createLevelButtons(layer);
+    this.createLevelButtons(this.layer);
   }
 
-  createStringToLevelMap(): void {
+  private createStringToLevelMap(): void {
     // Twin TODO (Code) - Correct level map (as levels are created)
     this.stringToLevelMap = {
       "LEVEL 1": Level1,
@@ -48,9 +45,8 @@ export default class LevelSelect extends Scene {
     };
   }
 
-  createLevelButtons(layer: string): void {
+  private createLevelButtons(layer: string): void {
     let levelMap = LevelTracker.getLevels();
-    console.log(levelMap["LEVEL 1"]);
 
     let half = this.viewport.getHalfSize();
     let x = half.x / 2;
@@ -115,7 +111,7 @@ export default class LevelSelect extends Scene {
     );
   }
 
-  createLevelButton(
+  private createLevelButton(
     layer: string,
     x: number,
     y: number,
@@ -146,6 +142,17 @@ export default class LevelSelect extends Scene {
         );
       };
     }
+  }
+
+  private createHeadingAndReturn(): void {
+    let isc = new InfoScreenCreator(
+      this,
+      this.viewport,
+      this.layer,
+      this.sceneManager
+    );
+    isc.createHeading(ScreenTexts.LEVEL_SELECT);
+    isc.createReturnButton();
   }
 
   updateScene(deltaT: number): void {
