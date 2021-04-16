@@ -1,18 +1,12 @@
-// Twin TODO [Benchmark 2] (Code) - Core game mechanics: reaching the exit at the same time
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
 
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
-import Input from "../../../Wolfie2D/Input/Input";
 import GameLevel from "../GameLevel";
 import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
-  // Level specific spawn locations
-  private playerSpawnLocation: Vec2;
-  private ghostPlayerSpawnLocation: Vec2;
-
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
@@ -30,15 +24,8 @@ export default class Level1 extends GameLevel {
   }
 
   startScene(): void {
-    // Initialize variables
-    this.playerSpawnLocation = new Vec2(2 * 32, 14 * 32);
-    this.ghostPlayerSpawnLocation = new Vec2(4 * 32, 14 * 32);
-    this.playerSpawn = this.playerSpawnLocation;
-    this.ghostPlayerSpawn = this.ghostPlayerSpawnLocation;
-
-    // Set up current and next level
-    this.currentLevel = Level1;
-    this.nextLevel = Level2;
+    // Set up level variables
+    this.initLevelVariables();
 
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
@@ -53,11 +40,24 @@ export default class Level1 extends GameLevel {
     // Do generic setup for a GameLevel
     super.startScene();
 
-    // Set up exits
-    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1));
-    this.addLevelEnd(new Vec2(30, 11), new Vec2(1, 1));
+    // Set up exit locations
+    this.playerExitLocation = new Vec2(30, 14);
+    this.ghostPlayerExitLocation = new Vec2(30, 11);
+    this.exitSize = new Vec2(1, 1);
 
-    console.log(this);
+    // Set up exits for player and ghostPlayer
+    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), "player");
+    this.addLevelEnd(new Vec2(30, 11), new Vec2(1, 1), "ghostPlayer");
+  }
+
+  private initLevelVariables(): void {
+    // Initialize variables
+    this.playerSpawn = new Vec2(2 * 32, 14 * 32);
+    this.ghostPlayerSpawn = new Vec2(4 * 32, 14 * 32);
+
+    // Set up current and next level
+    this.currentLevel = Level1;
+    this.nextLevel = Level2;
   }
 
   updateScene(deltaT: number): void {

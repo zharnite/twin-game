@@ -1,6 +1,7 @@
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../Wolfie2D/Debug/Debug";
 import GameLevel from "../GameLevel";
+import LevelTracker from "../SceneHelpers/LevelTracker";
 
 export default class Level2 extends GameLevel {
   loadScene(): void {
@@ -17,6 +18,16 @@ export default class Level2 extends GameLevel {
   }
 
   startScene(): void {
+    // Unlock this level when entered
+    LevelTracker.unlockLevel("LEVEL 2");
+
+    // Initialize variables
+    this.playerSpawn = new Vec2(5 * 32, 18 * 32);
+
+    // Set up current and next level
+    this.currentLevel = Level2;
+    this.nextLevel = Level2; // Twin TODO - update to the correct next level
+
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
     let bg = this.add.sprite("background", "bg");
@@ -27,12 +38,10 @@ export default class Level2 extends GameLevel {
     this.add.tilemap("level2", new Vec2(2, 2));
     this.viewport.setBounds(0, 0, 64 * 32, 20 * 32);
 
-    this.playerSpawn = new Vec2(5 * 32, 18 * 32);
-
     // Do generic setup for a GameLevel
     super.startScene();
 
-    this.addLevelEnd(new Vec2(58, 17), new Vec2(2, 2));
+    this.addLevelEnd(new Vec2(58, 17), new Vec2(2, 2), "player");
 
     // Add enemies of various types
     for (let pos of [new Vec2(24, 18)]) {
@@ -42,9 +51,6 @@ export default class Level2 extends GameLevel {
     for (let pos of [new Vec2(51, 17)]) {
       this.addEnemy("hopper", pos, { jumpy: true });
     }
-
-    // Set up current level
-    this.currentLevel = Level2;
   }
 
   updateScene(deltaT: number): void {

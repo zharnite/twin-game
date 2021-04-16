@@ -1,15 +1,24 @@
 /**
  * SceneOptions for Twin game
+ *
+ *      g  p  gp e  c
+ * g    0  1  1  1  0
+ * p    1  0  0  0  1
+ * gp   1  0  0  0  1
+ * e    1  0  0  0  0
+ * c    0  1  1  0  0
+ *
  */
 export default class SceneOptions {
   static sceneOptions = {
     physics: {
-      groupNames: ["ground", "player", "enemy", "coin"],
+      groupNames: ["ground", "player", "ghostPlayer", "enemy", "coin"],
       collisions: [
-        [0, 1, 1, 0],
-        [1, 0, 0, 1],
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
+        [0, 1, 1, 1, 0],
+        [1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0],
       ],
     },
   };
