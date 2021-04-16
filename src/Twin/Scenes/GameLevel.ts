@@ -1,3 +1,4 @@
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../Wolfie2D/Input/Input";
 import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
@@ -54,6 +55,12 @@ export default class GameLevel extends Scene {
   protected currentLevel: new (...args: any) => GameLevel;
   protected pauseTracker: PauseTracker;
 
+  // Exit variables
+  protected playerExitLocation: Vec2;
+  protected ghostPlayerExitLocation: Vec2;
+  protected exitSize: Vec2;
+  protected levelEndAreas: { [character: string]: Rect };
+
   initScene(init: Record<string, any>): void {
     if (init) {
       this.playerResumeSpawn = init.playerResumeSpawn;
@@ -103,6 +110,9 @@ export default class GameLevel extends Scene {
       this.layers,
       this.sceneManager
     );
+
+    // Track exit locations
+    this.levelEndAreas = {};
   }
 
   updateScene(deltaT: number) {
@@ -192,6 +202,11 @@ export default class GameLevel extends Scene {
 
         case Events.PLAYER_ENTERED_LEVEL_END:
           {
+            // Determines if both characters are colliding with exit
+            if (!this.handlePlayerExitCollision()) {
+              break;
+            }
+
             if (
               !this.levelEndTimer.hasRun() &&
               this.levelEndTimer.isStopped()
@@ -423,7 +438,7 @@ export default class GameLevel extends Scene {
     });
 
     // Add triggers on colliding with coins or coinBlocks
-    this.ghostPlayer.setGroup("player");
+    this.ghostPlayer.setGroup("ghostPlayer");
 
     // Add a tween animation for the player jump
     this.ghostPlayer.tweens.add("flip", {
@@ -440,18 +455,15 @@ export default class GameLevel extends Scene {
     });
   }
 
-  protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
+  protected addLevelEnd(startingTile: Vec2, size: Vec2, group: string): void {
     this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
       position: startingTile.add(size.scaled(0.5)).scale(32),
       size: size.scale(32),
     });
     this.levelEndArea.addPhysics(undefined, undefined, false, true);
-    this.levelEndArea.setTrigger(
-      "player",
-      Events.PLAYER_ENTERED_LEVEL_END,
-      null
-    );
+    this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
     this.levelEndArea.color = new Color(0, 0, 0, 1);
+    this.levelEndAreas[group] = this.levelEndArea;
   }
 
   protected addEnemy(
@@ -508,6 +520,21 @@ export default class GameLevel extends Scene {
         this.respawnPlayer();
       }
     }
+  }
+
+  /**
+   * Handles player collision with exit
+   * @returns boolean true if exit condition is met
+   */
+  protected handlePlayerExitCollision(): boolean {
+    let playerOverlap = this.player.boundary.overlaps(
+      this.levelEndAreas["player"].boundary
+    );
+    let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
+      this.levelEndAreas["ghostPlayer"].boundary
+    );
+
+    return playerOverlap && ghostPlayerOverlap;
   }
 
   protected incPlayerLife(amt: number): void {
