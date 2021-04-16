@@ -65,6 +65,10 @@ export default class InfoScreenCreator {
     };
   }
 
+  /**
+   * Creates the full information screen with the heading, text body, and return button
+   * @param heading Name of the screen
+   */
   public createScreen(heading: string) {
     this.createHeading(heading);
     this.createBody();
