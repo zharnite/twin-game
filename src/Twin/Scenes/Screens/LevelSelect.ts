@@ -9,6 +9,11 @@ import SceneOptions from "../SceneHelpers/SceneOptions";
 import { Screens } from "../Enums/ScreenEnums";
 import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
 import { ScreenTexts } from "../Enums/ScreenTextEnums";
+import Level3 from "./Levels/Level3";
+import Level4 from "./Levels/Level4";
+import Level5 from "./Levels/Level5";
+import Level6 from "./Levels/Level6";
+import FinalLevel from "./Levels/FinalLevel";
 
 export default class LevelSelect extends Scene {
   // String to Level Map
@@ -48,11 +53,11 @@ export default class LevelSelect extends Scene {
     this.stringToLevelMap = {
       "LEVEL 1": Level1,
       "LEVEL 2": Level2,
-      "LEVEL 3": Level2,
-      "LEVEL 4": Level2,
-      "LEVEL 5": Level2,
-      "LEVEL 6": Level2,
-      "FINAL LEVEL": Level2,
+      "LEVEL 3": Level3,
+      "LEVEL 4": Level4,
+      "LEVEL 5": Level5,
+      "LEVEL 6": Level6,
+      "FINAL LEVEL": FinalLevel,
     };
   }
 
