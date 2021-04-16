@@ -10,6 +10,7 @@ export default class Splash extends Scene {
   private layer: string;
 
   loadScene(): void {
+    // Twin TODO (optional) - update splash screen image here
     this.load.image("background", "assets/images/TwinSplashScreen.png");
   }
 
