@@ -1,7 +1,7 @@
-import Scene from "../../../Wolfie2D/Scene/Scene";
-import { Screens } from "../Enums/ScreenEnums";
-import { ScreenTexts } from "../Enums/ScreenTextEnums";
-import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
+import Scene from "../../../../Wolfie2D/Scene/Scene";
+import { Screens } from "../../Enums/ScreenEnums";
+import { ScreenTexts } from "../../Enums/ScreenTextEnums";
+import InfoScreenCreator from "../../SceneHelpers/InfoScreenCreator";
 
 export default class Controls extends Scene {
   private layer: string;
