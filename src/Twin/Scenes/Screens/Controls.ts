@@ -1,7 +1,7 @@
 import Scene from "../../../Wolfie2D/Scene/Scene";
-import MainMenu from "./MainMenu";
-import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 import { Screens } from "../Enums/ScreenEnums";
+import { ScreenTexts } from "../Enums/ScreenTextEnums";
+import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
 
 export default class Controls extends Scene {
   private layer: string;
@@ -19,31 +19,14 @@ export default class Controls extends Scene {
     this.createScreen();
   }
 
-  /**
-   * Creates the screen with the heading label, text body, and return button.
-   */
   private createScreen(): void {
-    // Create heading
-    SceneItemCreator.createHeadingLabel(
+    let isc = new InfoScreenCreator(
       this,
       this.viewport,
       this.layer,
-      "CONTROLS"
+      this.sceneManager
     );
-
-    // Create text body
-    SceneItemCreator.createTextBody(this, this.viewport, this.layer, 600);
-
-    // Create return button
-    SceneItemCreator.createButton(
-      this,
-      this.layer,
-      1000,
-      730,
-      "RETURN"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(MainMenu, {});
-    };
+    isc.createScreen(ScreenTexts.CONTROLS);
   }
 
   updateScene(): void {}
