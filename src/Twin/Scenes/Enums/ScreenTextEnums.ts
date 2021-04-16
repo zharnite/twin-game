@@ -1,0 +1,11 @@
+export enum ScreenTexts {
+  CONTROLS = "CONTROLS",
+  CREDITS = "CREDITS",
+  HELP = "HELP",
+  LEVEL_SELECT = "LEVEL SELECT",
+  MAIN_MENU = "MAIN MENU",
+  SPLASH = "SPLASH",
+  PLAY = "PLAY",
+  PLAY_GAME = "PLAY GAME",
+  RETURN = "RETURN",
+}
