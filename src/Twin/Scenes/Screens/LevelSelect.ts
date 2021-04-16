@@ -32,6 +32,17 @@ export default class LevelSelect extends Scene {
     this.createLevelButtons(this.layer);
   }
 
+  private createHeadingAndReturn(): void {
+    let isc = new InfoScreenCreator(
+      this,
+      this.viewport,
+      this.layer,
+      this.sceneManager
+    );
+    isc.createHeading(ScreenTexts.LEVEL_SELECT);
+    isc.createReturnButton();
+  }
+
   private createStringToLevelMap(): void {
     // Twin TODO (Code) - Correct level map (as levels are created)
     this.stringToLevelMap = {
@@ -142,17 +153,6 @@ export default class LevelSelect extends Scene {
         );
       };
     }
-  }
-
-  private createHeadingAndReturn(): void {
-    let isc = new InfoScreenCreator(
-      this,
-      this.viewport,
-      this.layer,
-      this.sceneManager
-    );
-    isc.createHeading(ScreenTexts.LEVEL_SELECT);
-    isc.createReturnButton();
   }
 
   updateScene(deltaT: number): void {
