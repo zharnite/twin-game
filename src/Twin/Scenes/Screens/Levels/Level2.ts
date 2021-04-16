@@ -3,6 +3,7 @@ import Debug from "../../../../Wolfie2D/Debug/Debug";
 import GameLevel from "./GameLevel";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
 import { Levels } from "../../Enums/LevelEnums";
+import Level3 from "./Level3";
 
 export default class Level2 extends GameLevel {
   loadScene(): void {
@@ -27,7 +28,7 @@ export default class Level2 extends GameLevel {
 
     // Set up current and next level
     this.currentLevel = Level2;
-    this.nextLevel = Level2; // Twin TODO - update to the correct next level
+    this.nextLevel = Level3;
 
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);

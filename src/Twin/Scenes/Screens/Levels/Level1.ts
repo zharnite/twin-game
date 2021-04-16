@@ -1,5 +1,6 @@
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
 // Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
+// Twin TODO (optional) - optimize this along with Level2
 
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../../Wolfie2D/Debug/Debug";
