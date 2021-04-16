@@ -1,4 +1,4 @@
-export enum Screen {
+export enum Screens {
   CONTROLS = "ControlsScreen",
   CREDITS = "CreditsScreen",
   HELP = "HelpScreen",
