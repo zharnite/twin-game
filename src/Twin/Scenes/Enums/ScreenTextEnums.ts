@@ -11,4 +11,13 @@ export enum ScreenTexts {
   COINS = "COINS",
   LIVES = "LIVES",
   LEVEL_COMPLETE = "LEVEL COMPLETE",
+  LEVEL = "LEVEL",
+  LEVEL_CAPITALIZED = "Level",
+  LEVEL_1 = "LEVEL 1",
+  LEVEL_2 = "LEVEL 2",
+  LEVEL_3 = "LEVEL 3",
+  LEVEL_4 = "LEVEL 4",
+  LEVEL_5 = "LEVEL 5",
+  LEVEL_6 = "LEVEL 6",
+  FINAL_LEVEL = "FINAL LEVEL",
 }

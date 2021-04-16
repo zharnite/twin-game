@@ -2,6 +2,7 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../../Wolfie2D/Debug/Debug";
 import GameLevel from "./GameLevel";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
+import { Levels } from "../../Enums/LevelEnums";
 
 export default class Level2 extends GameLevel {
   loadScene(): void {
@@ -19,7 +20,7 @@ export default class Level2 extends GameLevel {
 
   startScene(): void {
     // Unlock this level when entered
-    LevelTracker.unlockLevel("LEVEL 2");
+    LevelTracker.unlockLevel(Levels.LEVEL_2);
 
     // Initialize variables
     this.playerSpawn = new Vec2(5 * 32, 18 * 32);
