@@ -1,6 +1,6 @@
-import Scene from "../../../Wolfie2D/Scene/Scene";
-import MainMenu from "./MainMenu";
-import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
+import Scene from "../../../../Wolfie2D/Scene/Scene";
+import MainMenu from "../MainMenu";
+import SceneItemCreator from "../../SceneHelpers/SceneItemCreator";
 
 export default class Credits extends Scene {
   private init: Record<string, any>;
