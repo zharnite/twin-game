@@ -3,7 +3,6 @@ import MainMenu from "./MainMenu";
 import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 
 export default class Controls extends Scene {
-  private init: Record<string, any>;
 
   loadScene(): void {
     this.load.object("Controls", "assets/texts/controls.json");
