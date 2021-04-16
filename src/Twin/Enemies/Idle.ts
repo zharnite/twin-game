@@ -1,6 +1,6 @@
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import { Events } from "../enums";
+import { Events } from "../Enums/EventEnums";
 import { EnemyStates } from "./EnemyController";
 import OnGround from "./OnGround";
 
