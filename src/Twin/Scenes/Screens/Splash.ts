@@ -6,18 +6,33 @@ import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import { Events } from "../../enums";
 
 export default class Splash extends Scene {
+  private layer: string;
+
   loadScene(): void {
     this.load.image("background", "assets/images/TwinSplashScreen.png");
   }
 
   startScene(): void {
-    let layer = "Splash";
-    this.addUILayer(layer);
+    // Create SplashScreen layer
+    this.layer = "SplashScreen";
+    this.addUILayer(this.layer);
 
-    // Add background layer
+    // Add background image
+    this.addBackground();
+
+    // Transparent full screen button to get to MainMenu
+    SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
+      this.sceneManager.changeToScene(MainMenu, {});
+    };
+  }
+
+  private addBackground(): void {
+    // Create background layer and attach background image to center
     this.addLayer("bg");
     let bg = this.add.sprite("background", "bg");
     bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
+
+    // Add fadeIn animation
     bg.tweens.add("fadeIn", {
       startDelay: 0,
       duration: 2000,
@@ -32,12 +47,8 @@ export default class Splash extends Scene {
       onEnd: Events.LEVEL_END,
     });
 
+    // Play fadeIn animation
     bg.tweens.play("fadeIn");
-
-    // Click splash screen to get to MainMenu
-    SceneItemCreator.createScreenButton(this, layer).onClick = () => {
-      this.sceneManager.changeToScene(MainMenu, {});
-    };
   }
 
   updateScene(): void {}
