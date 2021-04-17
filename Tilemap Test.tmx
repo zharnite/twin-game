@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="32" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
  <editorsettings>
-  <export target="dist/assets/tilemaps/testing_level.json" format="json"/>
+  <export target="dist/assets/tilemaps/testing_level_2.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="Twin-Tilemap.tsx"/>
  <layer id="2" name="Background" width="32" height="16">
@@ -52,7 +52,7 @@
 21,1,1,1,1,1,1,1,1,1,1,1,1,1,1,19,29,9,9,9,9,9,9,9,9,9,9,9,9,9,9,27
 </data>
  </layer>
- <objectgroup id="4" name="Coins" visible="0"/>
+ <objectgroup id="4" name="Coins"/>
  <layer id="3" name="Foreground" width="32" height="16">
   <properties>
    <property name="Collidable" type="bool" value="false"/>

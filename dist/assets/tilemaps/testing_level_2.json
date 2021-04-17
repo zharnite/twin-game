@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"testing_level.json"
+         "target":"testing_level_2.json"
         }
     },
  "height":16,
@@ -63,7 +63,7 @@
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -97,10 +97,19 @@
  "tiledversion":"1.4.3",
  "tileheight":16,
  "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/..\/Twin-Tilemap.tsx"
-        }],
+       {
+        "columns":16,
+        "firstgid":1,
+        "image":"Twin-Tilemap.png",
+        "imageheight":128,
+        "imagewidth":256,
+        "margin":0,
+        "name":"Twin-Tilemap_tileset",
+        "spacing":0,
+        "tilecount":128,
+        "tileheight":16,
+        "tilewidth":16
+       }],
  "tilewidth":16,
  "type":"map",
  "version":1.4,

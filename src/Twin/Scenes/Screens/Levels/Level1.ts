@@ -11,7 +11,7 @@ export default class Level1 extends GameLevel {
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
-    this.load.tilemap("test_level", "assets/tilemaps/testing_level.json");
+    this.load.tilemap("test_level", "assets/tilemaps/testing_level_2.json");
     this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
     this.load.spritesheet(
       "ghostPlayer",
@@ -48,8 +48,8 @@ export default class Level1 extends GameLevel {
 
   private initLevelVariables(): void {
     // Initialize variables
-    this.playerSpawn = new Vec2(2 * 32, 14 * 32);
-    this.ghostPlayerSpawn = new Vec2(4 * 32, 14 * 32);
+    this.playerSpawn = new Vec2(3 * 32, 14 * 32);
+    this.ghostPlayerSpawn = new Vec2(19 * 32, 14 * 32);
 
     // Set up current and next level
     this.currentLevel = Level1;
