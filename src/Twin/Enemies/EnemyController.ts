@@ -4,7 +4,7 @@ import Walk from "./Walk";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
-import { Events } from "../enums";
+import { Events } from "../Enums/EventEnums";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 
 export enum EnemyStates {

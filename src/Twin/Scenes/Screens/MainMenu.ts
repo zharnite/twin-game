@@ -1,10 +1,12 @@
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Controls from "./Controls";
-import Credits from "./Credits";
-import Help from "./Help";
+// Twin TODO (optional) - optimize
+
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Controls from "./InfoScreens/Controls";
+import Credits from "./InfoScreens/Credits";
+import Help from "./InfoScreens/Help";
 import LevelSelect from "./LevelSelect";
-import SceneItemCreator from "./SceneHelpers/SceneItemCreator";
+import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;

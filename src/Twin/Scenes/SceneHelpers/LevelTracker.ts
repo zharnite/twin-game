@@ -1,26 +1,47 @@
-/**
- * Singleton: Tracks locked / unlocked levels
- */
-export default class LevelTracker {
-  static levels: { [level: string]: boolean }; // level name : boolean (true: unlocked, false: locked)
-  static cheatCodePressed: boolean; // whether or not cheat code key was pressed
+import { Levels } from "../Enums/LevelEnums";
+import Level1 from "../Screens/Levels/Level1";
+import Level2 from "../Screens/Levels/Level2";
+import Level3 from "../Screens/Levels/Level3";
+import Level4 from "../Screens/Levels/Level4";
+import Level5 from "../Screens/Levels/Level5";
+import Level6 from "../Screens/Levels/Level6";
+import FinalLevel from "../Screens/Levels/FinalLevel";
 
-  static getLevels(): { [level: string]: boolean } {
-    // First time getting level tracker's levels
+export default class LevelTracker {
+  static levels: { [level in Levels]: boolean }; // level name : boolean (true: unlocked, false: locked)
+  static cheatCodePressed: boolean; // whether or not cheat code key was pressed
+  static stringToLevels: { [level in Levels]: object }; // String to Level Map
+  static rows: number = 2;
+  static cols: number = 3;
+
+  static getLevels(): { [level in Levels]: boolean } {
     if (!this.levels) {
       this.levels = {
-        "LEVEL 1": true,
-        "LEVEL 2": false,
-        "LEVEL 3": false,
-        "LEVEL 4": false,
-        "LEVEL 5": false,
-        "LEVEL 6": false,
-        "FINAL LEVEL": false,
+        [Levels.LEVEL_1]: true,
+        [Levels.LEVEL_2]: false,
+        [Levels.LEVEL_3]: false,
+        [Levels.LEVEL_4]: false,
+        [Levels.LEVEL_5]: false,
+        [Levels.LEVEL_6]: false,
+        [Levels.FINAL_LEVEL]: false,
       };
     }
+    return this.levels;
+  }
 
-    // Other times getting levels
-    return <{ [level: string]: boolean }>this.levels;
+  static getStringToLevels(): { [level in Levels]: object } {
+    if (!this.stringToLevels) {
+      this.stringToLevels = {
+        [Levels.LEVEL_1]: Level1,
+        [Levels.LEVEL_2]: Level2,
+        [Levels.LEVEL_3]: Level3,
+        [Levels.LEVEL_4]: Level4,
+        [Levels.LEVEL_5]: Level5,
+        [Levels.LEVEL_6]: Level6,
+        [Levels.FINAL_LEVEL]: FinalLevel,
+      };
+    }
+    return this.stringToLevels;
   }
 
   /**
@@ -34,13 +55,13 @@ export default class LevelTracker {
 
     this.cheatCodePressed = true;
     this.levels = {
-      "LEVEL 1": true,
-      "LEVEL 2": true,
-      "LEVEL 3": true,
-      "LEVEL 4": true,
-      "LEVEL 5": true,
-      "LEVEL 6": true,
-      "FINAL LEVEL": true,
+      [Levels.LEVEL_1]: true,
+      [Levels.LEVEL_2]: true,
+      [Levels.LEVEL_3]: true,
+      [Levels.LEVEL_4]: true,
+      [Levels.LEVEL_5]: true,
+      [Levels.LEVEL_6]: true,
+      [Levels.FINAL_LEVEL]: true,
     };
 
     return true;
@@ -50,7 +71,7 @@ export default class LevelTracker {
    * Unlocks a level
    * @param level Level to unlock
    */
-  static unlockLevel(level: string) {
+  static unlockLevel(level: Levels) {
     this.levels[level] = true;
   }
 }

@@ -1,9 +1,9 @@
-import Layer from "../../Wolfie2D/Scene/Layer";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Map from "../../Wolfie2D/DataTypes/Map";
+import Layer from "../../../Wolfie2D/Scene/Layer";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Map from "../../../Wolfie2D/DataTypes/Map";
 import PauseOverlay from "./PauseOverlay";
-import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
-import SceneManager from "../../Wolfie2D/Scene/SceneManager";
+import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
+import SceneManager from "../../../Wolfie2D/Scene/SceneManager";
 
 export default class PauseTracker {
   private isPaused: boolean;

@@ -13,8 +13,5 @@ dist/*
 # Include dist/index.html
 !dist/index.html
 
-### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
-# !dist/assets/
-
 # Exclude the firebase debug log
 firebase-debug.log
