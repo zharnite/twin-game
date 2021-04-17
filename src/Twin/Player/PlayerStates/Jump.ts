@@ -1,7 +1,7 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
-import { Events } from "../../enums";
+import { Events } from "../../Enums/EventEnums";
 import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
 

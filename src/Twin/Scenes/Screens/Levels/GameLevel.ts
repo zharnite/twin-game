@@ -1,21 +1,23 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Input from "../../Wolfie2D/Input/Input";
-import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Timer from "../../Wolfie2D/Timing/Timer";
-import Color from "../../Wolfie2D/Utils/Color";
-import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import EnemyController from "../Enemies/EnemyController";
-import { Events } from "../enums";
-import PlayerController from "../Player/PlayerController";
-import Pause from "./Pause";
-import PauseTracker from "./PauseTracker";
-import SceneOptions from "./SceneHelpers/SceneOptions";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import Input from "../../../../Wolfie2D/Input/Input";
+import GameNode, {
+  TweenableProperties,
+} from "../../../../Wolfie2D/Nodes/GameNode";
+import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Rect from "../../../../Wolfie2D/Nodes/Graphics/Rect";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Label from "../../../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Scene from "../../../../Wolfie2D/Scene/Scene";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
+import Color from "../../../../Wolfie2D/Utils/Color";
+import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
+import EnemyController from "../../../Enemies/EnemyController";
+import { Events } from "../../../Enums/EventEnums";
+import PlayerController from "../../../Player/PlayerController";
+import { ScreenTexts } from "../../Enums/ScreenTextEnums";
+import PauseTracker from "../../SceneHelpers/PauseTracker";
+import SceneOptions from "../../SceneHelpers/SceneOptions";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -54,7 +56,12 @@ export default class GameLevel extends Scene {
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
   protected pauseTracker: PauseTracker;
-  // protected isPaused: boolean;
+
+  // Exit variables
+  protected playerExitLocation: Vec2;
+  protected ghostPlayerExitLocation: Vec2;
+  protected exitSize: Vec2;
+  protected levelEndAreas: { [character: string]: Rect };
 
   initScene(init: Record<string, any>): void {
     if (init) {
@@ -62,6 +69,13 @@ export default class GameLevel extends Scene {
       this.ghostPlayerResumeSpawn = init.ghostPlayerResumeSpawn;
       this.previousFollowNodeIndex = init.followNodeIndex;
     }
+  }
+
+  loadScene(): void {
+    // load pause items
+    this.load.object("Controls", "assets/texts/controls.json");
+    this.load.object("Help", "assets/texts/help.json");
+    this.load.object("Credits", "assets/texts/credits.json");
   }
 
   startScene(): void {
@@ -105,6 +119,9 @@ export default class GameLevel extends Scene {
       this.layers,
       this.sceneManager
     );
+
+    // Track exit locations
+    this.levelEndAreas = {};
   }
 
   updateScene(deltaT: number) {
@@ -122,15 +139,9 @@ export default class GameLevel extends Scene {
       this.respawnPlayer();
     }
 
+    // pause key input
     if (Input.isJustPressed("pause")) {
       this.pauseTracker.toggle();
-
-      // this.sceneManager.changeToScene(Pause, {
-      //   level: this.currentLevel,
-      //   playerResumeSpawn: this.player.position,
-      //   ghostPlayerResumeSpawn: this.ghostPlayer.position,
-      //   followNodeIndex: this.followNodeIndex,
-      // });
     }
 
     // Handle events and update the UI if needed
@@ -200,6 +211,11 @@ export default class GameLevel extends Scene {
 
         case Events.PLAYER_ENTERED_LEVEL_END:
           {
+            // Determines if both characters are colliding with exit
+            if (!this.handlePlayerExitCollision()) {
+              break;
+            }
+
             if (
               !this.levelEndTimer.hasRun() &&
               this.levelEndTimer.isStopped()
@@ -274,30 +290,38 @@ export default class GameLevel extends Scene {
   }
 
   protected addUI() {
+    // Twin TODO (optional) - make this more modular: repeated code
     // In-game labels
+    // Coin label
     this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(80, 30),
-      text: "COINS: " + GameLevel.coinCount,
+      text: ScreenTexts.COINS + " " + GameLevel.coinCount,
     });
     this.coinCountLabel.textColor = Color.WHITE;
     this.coinCountLabel.font = "Squarely";
     this.coinCountLabel.fontSize = 40;
+    this.coinCountLabel.padding = new Vec2(10, 5);
+    this.coinCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
+
+    // Lives label
     this.livesCountLabel = <Label>this.add.uiElement(
       UIElementType.LABEL,
       "UI",
       {
         position: new Vec2(500, 30),
-        text: "LIVES: " + GameLevel.livesCount,
+        text: ScreenTexts.LIVES + " " + GameLevel.livesCount,
       }
     );
     this.livesCountLabel.textColor = Color.WHITE;
     this.livesCountLabel.font = "Squarely";
     this.livesCountLabel.fontSize = 40;
+    this.livesCountLabel.padding = new Vec2(10, 5);
+    this.livesCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(-300, 200),
-      text: "LEVEL COMPLETE",
+      text: ScreenTexts.LEVEL_COMPLETE,
     });
     this.levelEndLabel.size.set(1200, 60);
     this.levelEndLabel.borderRadius = 0;
@@ -431,7 +455,7 @@ export default class GameLevel extends Scene {
     });
 
     // Add triggers on colliding with coins or coinBlocks
-    this.ghostPlayer.setGroup("player");
+    this.ghostPlayer.setGroup("ghostPlayer");
 
     // Add a tween animation for the player jump
     this.ghostPlayer.tweens.add("flip", {
@@ -448,18 +472,18 @@ export default class GameLevel extends Scene {
     });
   }
 
-  protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
+  protected addLevelEnd(startingTile: Vec2, size: Vec2, group: string): void {
     this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
       position: startingTile.add(size.scaled(0.5)).scale(32),
       size: size.scale(32),
     });
     this.levelEndArea.addPhysics(undefined, undefined, false, true);
-    this.levelEndArea.setTrigger(
-      "player",
-      Events.PLAYER_ENTERED_LEVEL_END,
-      null
-    );
-    this.levelEndArea.color = new Color(0, 0, 0, 1);
+    this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
+    this.levelEndAreas[group] = this.levelEndArea;
+
+    // Set colors to be different for testing purposes: can be alpha overlay later
+    if (group === "player") this.levelEndArea.color = Color.GREEN;
+    if (group === "ghostPlayer") this.levelEndArea.color = Color.MAGENTA;
   }
 
   protected addEnemy(
@@ -474,6 +498,7 @@ export default class GameLevel extends Scene {
     enemy.addAI(EnemyController, aiOptions);
     enemy.setGroup("enemy");
     enemy.setTrigger("player", Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger("ghostPlayer", Events.PLAYER_HIT_ENEMY, null);
   }
 
   protected handlePlayerEnemyCollision(
@@ -518,14 +543,29 @@ export default class GameLevel extends Scene {
     }
   }
 
+  /**
+   * Handles player collision with exit
+   * @returns boolean true if exit condition is met
+   */
+  protected handlePlayerExitCollision(): boolean {
+    let playerOverlap = this.player.boundary.overlaps(
+      this.levelEndAreas["player"].boundary
+    );
+    let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
+      this.levelEndAreas["ghostPlayer"].boundary
+    );
+
+    return playerOverlap && ghostPlayerOverlap;
+  }
+
   protected incPlayerLife(amt: number): void {
     GameLevel.livesCount += amt;
-    this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
+    this.livesCountLabel.text = ScreenTexts.LIVES + " " + GameLevel.livesCount;
   }
 
   protected incPlayerCoins(amt: number): void {
     GameLevel.coinCount += amt;
-    this.coinCountLabel.text = "Coins: " + GameLevel.coinCount;
+    this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
   }
 
   protected respawnPlayer(): void {

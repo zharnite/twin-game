@@ -1,5 +1,5 @@
 import Game from "./Wolfie2D/Loop/Game";
-import Splash from "./Twin/Scenes/Splash";
+import Splash from "./Twin/Scenes/Screens/Splash";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main() {
