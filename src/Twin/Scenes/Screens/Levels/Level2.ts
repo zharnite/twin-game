@@ -19,8 +19,6 @@ export default class Level2 extends GameLevel {
       PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
-    this.load.spritesheet("hopper", "assets/spritesheets/hopper.json");
-    this.load.spritesheet("bunny", "assets/spritesheets/ghostBunny.json");
   }
 
   startScene(): void {
@@ -52,15 +50,6 @@ export default class Level2 extends GameLevel {
       new Vec2(1, 1),
       PlayerTypes.GHOST_PLAYER
     );
-
-    // // Add enemies of various types
-    // for (let pos of [new Vec2(24, 18)]) {
-    //   this.addEnemy("bunny", pos, {});
-    // }
-
-    // for (let pos of [new Vec2(51, 17)]) {
-    //   this.addEnemy("hopper", pos, { jumpy: true });
-    // }
   }
 
   private initLevelVariables(): void {
