@@ -1,3 +1,5 @@
+import { PlayerTypes } from "../Enums/PlayerEnums";
+
 /**
  * SceneOptions for Twin game
  *
@@ -12,7 +14,13 @@
 export default class SceneOptions {
   static sceneOptions = {
     physics: {
-      groupNames: ["ground", "player", "ghostPlayer", "enemy", "coin"],
+      groupNames: [
+        "ground",
+        PlayerTypes.PLAYER,
+        PlayerTypes.GHOST_PLAYER,
+        "enemy",
+        "coin",
+      ],
       collisions: [
         [0, 1, 1, 1, 0],
         [1, 0, 0, 0, 1],
