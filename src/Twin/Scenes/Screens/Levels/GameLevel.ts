@@ -1,3 +1,4 @@
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../../../Wolfie2D/Input/Input";
 import GameNode, {
@@ -15,6 +16,7 @@ import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../../../Enemies/EnemyController";
 import { Events } from "../../../Enums/EventEnums";
 import PlayerController from "../../../Player/PlayerController";
+import { PlayerTypes } from "../../Enums/PlayerEnums";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
@@ -23,12 +25,10 @@ export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
   protected playerSpawn: Vec2;
   protected player: AnimatedSprite;
-  protected playerResumeSpawn: Vec2;
 
   // Every level will have a ghost player, which will be an animated sprite
   protected ghostPlayerSpawn: Vec2;
   protected ghostPlayer: AnimatedSprite;
-  protected ghostPlayerResumeSpawn: Vec2;
 
   // Labels for the UI
   protected static coinCount: number = 0;
@@ -62,14 +62,6 @@ export default class GameLevel extends Scene {
   protected ghostPlayerExitLocation: Vec2;
   protected exitSize: Vec2;
   protected levelEndAreas: { [character: string]: Rect };
-
-  initScene(init: Record<string, any>): void {
-    if (init) {
-      this.playerResumeSpawn = init.playerResumeSpawn;
-      this.ghostPlayerResumeSpawn = init.ghostPlayerResumeSpawn;
-      this.previousFollowNodeIndex = init.followNodeIndex;
-    }
-  }
 
   loadScene(): void {
     // load pause items
@@ -386,21 +378,17 @@ export default class GameLevel extends Scene {
 
   protected initPlayer(): void {
     // Add the player
-    this.player = this.add.animatedSprite("player", "primary");
+    this.player = this.add.animatedSprite(PlayerTypes.PLAYER, "primary");
     this.player.scale.set(2, 2);
     if (!this.playerSpawn) {
       console.warn("Player spawn was never set - setting spawn to (0, 0)");
       this.playerSpawn = Vec2.ZERO;
     }
 
-    // Player resume spawn
-    if (this.playerResumeSpawn) {
-      this.player.position.copy(this.playerResumeSpawn);
-    } else {
-      this.player.position.copy(this.playerSpawn);
-    }
+    // Spawn location
+    this.player.position.copy(this.playerSpawn);
 
-    this.player.addPhysics();
+    this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(11, 16)));
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
@@ -410,7 +398,7 @@ export default class GameLevel extends Scene {
     });
 
     // Add triggers on colliding with coins or coinBlocks
-    this.player.setGroup("player");
+    this.player.setGroup(PlayerTypes.PLAYER);
 
     // Add a tween animation for the player jump
     this.player.tweens.add("flip", {
@@ -429,7 +417,10 @@ export default class GameLevel extends Scene {
 
   protected initGhostPlayer(): void {
     // Add the ghost player
-    this.ghostPlayer = this.add.animatedSprite("ghostPlayer", "primary");
+    this.ghostPlayer = this.add.animatedSprite(
+      PlayerTypes.GHOST_PLAYER,
+      "primary"
+    );
     this.ghostPlayer.scale.set(2, 2);
     if (!this.ghostPlayerSpawn) {
       console.warn(
@@ -438,14 +429,10 @@ export default class GameLevel extends Scene {
       this.ghostPlayerSpawn = Vec2.ZERO;
     }
 
-    // Ghost Player resume spawn
-    if (this.ghostPlayerResumeSpawn) {
-      this.ghostPlayer.position.copy(this.ghostPlayerResumeSpawn);
-    } else {
-      this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
-    }
+    // Spawn location
+    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
 
-    this.ghostPlayer.addPhysics();
+    this.ghostPlayer.addPhysics(new AABB(Vec2.ZERO, new Vec2(11, 16)));
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
@@ -455,7 +442,7 @@ export default class GameLevel extends Scene {
     });
 
     // Add triggers on colliding with coins or coinBlocks
-    this.ghostPlayer.setGroup("ghostPlayer");
+    this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
 
     // Add a tween animation for the player jump
     this.ghostPlayer.tweens.add("flip", {
@@ -482,8 +469,9 @@ export default class GameLevel extends Scene {
     this.levelEndAreas[group] = this.levelEndArea;
 
     // Set colors to be different for testing purposes: can be alpha overlay later
-    if (group === "player") this.levelEndArea.color = Color.GREEN;
-    if (group === "ghostPlayer") this.levelEndArea.color = Color.MAGENTA;
+    if (group === PlayerTypes.PLAYER) this.levelEndArea.color = Color.GREEN;
+    if (group === PlayerTypes.GHOST_PLAYER)
+      this.levelEndArea.color = Color.MAGENTA;
   }
 
   protected addEnemy(
@@ -497,8 +485,8 @@ export default class GameLevel extends Scene {
     enemy.addPhysics();
     enemy.addAI(EnemyController, aiOptions);
     enemy.setGroup("enemy");
-    enemy.setTrigger("player", Events.PLAYER_HIT_ENEMY, null);
-    enemy.setTrigger("ghostPlayer", Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
   protected handlePlayerEnemyCollision(
@@ -549,10 +537,10 @@ export default class GameLevel extends Scene {
    */
   protected handlePlayerExitCollision(): boolean {
     let playerOverlap = this.player.boundary.overlaps(
-      this.levelEndAreas["player"].boundary
+      this.levelEndAreas[PlayerTypes.PLAYER].boundary
     );
     let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
-      this.levelEndAreas["ghostPlayer"].boundary
+      this.levelEndAreas[PlayerTypes.GHOST_PLAYER].boundary
     );
 
     return playerOverlap && ghostPlayerOverlap;

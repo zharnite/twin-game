@@ -4,6 +4,7 @@
 
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../../../Wolfie2D/Debug/Debug";
+import { PlayerTypes } from "../../Enums/PlayerEnums";
 import GameLevel from "./GameLevel";
 import Level2 from "./Level2";
 
@@ -12,9 +13,12 @@ export default class Level1 extends GameLevel {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("test_level", "assets/tilemaps/testing_level_2.json");
-    this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
     this.load.spritesheet(
-      "ghostPlayer",
+      PlayerTypes.PLAYER,
+      "assets/spritesheets/platformPlayer.json"
+    );
+    this.load.spritesheet(
+      PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
   }
@@ -36,14 +40,8 @@ export default class Level1 extends GameLevel {
     // Do generic setup for a GameLevel
     super.startScene();
 
-    // Set up exit locations
-    this.playerExitLocation = new Vec2(30, 14);
-    this.ghostPlayerExitLocation = new Vec2(30, 11);
-    this.exitSize = new Vec2(1, 1);
-
-    // Set up exits for player and ghostPlayer
-    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), "player");
-    this.addLevelEnd(new Vec2(30, 11), new Vec2(1, 1), "ghostPlayer");
+    // Set up exits
+    this.setUpExits();
   }
 
   private initLevelVariables(): void {
@@ -54,6 +52,21 @@ export default class Level1 extends GameLevel {
     // Set up current and next level
     this.currentLevel = Level1;
     this.nextLevel = Level2;
+  }
+
+  private setUpExits(): void {
+    // Set up exit locations
+    this.playerExitLocation = new Vec2(30, 14);
+    this.ghostPlayerExitLocation = new Vec2(30, 11);
+    this.exitSize = new Vec2(1, 1);
+
+    // Set up exits for player and ghostPlayer
+    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), PlayerTypes.PLAYER);
+    this.addLevelEnd(
+      new Vec2(30, 11),
+      new Vec2(1, 1),
+      PlayerTypes.GHOST_PLAYER
+    );
   }
 
   updateScene(deltaT: number): void {

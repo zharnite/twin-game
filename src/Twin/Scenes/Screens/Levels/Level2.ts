@@ -4,15 +4,19 @@ import GameLevel from "./GameLevel";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
 import { Levels } from "../../Enums/LevelEnums";
 import Level3 from "./Level3";
+import { PlayerTypes } from "../../Enums/PlayerEnums";
 
 export default class Level2 extends GameLevel {
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("level2", "assets/tilemaps/level2.json");
-    this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
     this.load.spritesheet(
-      "ghostPlayer",
+      PlayerTypes.PLAYER,
+      "assets/spritesheets/platformPlayer.json"
+    );
+    this.load.spritesheet(
+      PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
     this.load.spritesheet("hopper", "assets/spritesheets/hopper.json");
@@ -42,8 +46,12 @@ export default class Level2 extends GameLevel {
     this.exitSize = new Vec2(1, 1);
 
     // Set up exits for player and ghostPlayer
-    this.addLevelEnd(new Vec2(58, 17), new Vec2(1, 1), "player");
-    this.addLevelEnd(new Vec2(58, 23), new Vec2(1, 1), "ghostPlayer");
+    this.addLevelEnd(new Vec2(58, 17), new Vec2(1, 1), PlayerTypes.PLAYER);
+    this.addLevelEnd(
+      new Vec2(58, 23),
+      new Vec2(1, 1),
+      PlayerTypes.GHOST_PLAYER
+    );
 
     // // Add enemies of various types
     // for (let pos of [new Vec2(24, 18)]) {
