@@ -1,0 +1,11 @@
+{
+  "layer": "Controls",
+  "Controls": [
+    "- [A] - Move left                                       ",
+    "- [D] - Move right                                      ",
+    "- [Space] - Jump                                        ",
+    "- [R] - Restart level                                   ",
+    "- [Esc] - Pause                                         ",
+    "- [V] - Swap between Body and Soul                      "
+  ]
+}
