@@ -1713,8 +1713,6 @@ class Level2 extends GameLevel_1.default {
         this.load.tilemap("level2", "assets/tilemaps/level2.json");
         this.load.spritesheet(PlayerEnums_1.PlayerTypes.PLAYER, "assets/spritesheets/platformPlayer.json");
         this.load.spritesheet(PlayerEnums_1.PlayerTypes.GHOST_PLAYER, "assets/spritesheets/platformGhostPlayer.json");
-        this.load.spritesheet("hopper", "assets/spritesheets/hopper.json");
-        this.load.spritesheet("bunny", "assets/spritesheets/ghostBunny.json");
     }
     startScene() {
         // Set up level variables
@@ -1736,13 +1734,6 @@ class Level2 extends GameLevel_1.default {
         // Set up exits for player and ghostPlayer
         this.addLevelEnd(new Vec2_1.default(58, 17), new Vec2_1.default(1, 1), PlayerEnums_1.PlayerTypes.PLAYER);
         this.addLevelEnd(new Vec2_1.default(58, 23), new Vec2_1.default(1, 1), PlayerEnums_1.PlayerTypes.GHOST_PLAYER);
-        // // Add enemies of various types
-        // for (let pos of [new Vec2(24, 18)]) {
-        //   this.addEnemy("bunny", pos, {});
-        // }
-        // for (let pos of [new Vec2(51, 17)]) {
-        //   this.addEnemy("hopper", pos, { jumpy: true });
-        // }
     }
     initLevelVariables() {
         // Initialize variables
