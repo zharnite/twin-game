@@ -38,7 +38,7 @@ export default class EaseFunctions {
         return 0.5 + Math.pow(2 * x - 1, pow) / 2;
     }
 
-    // Create custom ease in animation for splash text
+    // Custom ease animation for the "click anywhere to continue" text.
     private static easeInWithDelay(x: number): number {
         return (x > 0.5) ? (x - 0.5) * 2 : 0;
     }
@@ -58,6 +58,6 @@ export enum EaseFunctionType {
     // QUINT
     IN_OUT_QUINT = "easeInOutQuint",
 
-    // DELAY
+    // CUSTOM DELAY
     EASE_IN_WITH_DELAY = "easeInWithDelay",
 }
