@@ -11,7 +11,7 @@ export default class Level1 extends GameLevel {
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
-    this.load.tilemap("test_level", "assets/tilemaps/testing_level_2.json");
+    this.load.tilemap("test_level", "assets/tilemaps/testing_level.json");
     this.load.spritesheet("player", "assets/spritesheets/platformPlayer.json");
     this.load.spritesheet(
       "ghostPlayer",
@@ -42,8 +42,8 @@ export default class Level1 extends GameLevel {
     this.exitSize = new Vec2(1, 1);
 
     // Set up exits for player and ghostPlayer
-    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), "player");
-    this.addLevelEnd(new Vec2(30, 11), new Vec2(1, 1), "ghostPlayer");
+    this.addLevelEnd(new Vec2(14, 14), new Vec2(1, 1), "player");
+    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), "ghostPlayer");
   }
 
   private initLevelVariables(): void {
