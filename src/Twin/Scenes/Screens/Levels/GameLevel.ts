@@ -400,19 +400,6 @@ export default class GameLevel extends Scene {
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup(PlayerTypes.PLAYER);
 
-    // Add a tween animation for the player jump
-    this.player.tweens.add("flip", {
-      startDelay: 0,
-      duration: 500,
-      effects: [
-        {
-          property: "rotation",
-          start: 0,
-          end: 2 * Math.PI,
-          ease: EaseFunctionType.IN_OUT_QUAD,
-        },
-      ],
-    });
   }
 
   protected initGhostPlayer(): void {
@@ -444,19 +431,6 @@ export default class GameLevel extends Scene {
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
 
-    // Add a tween animation for the player jump
-    this.ghostPlayer.tweens.add("flip", {
-      startDelay: 0,
-      duration: 500,
-      effects: [
-        {
-          property: "rotation",
-          start: 0,
-          end: 2 * Math.PI,
-          ease: EaseFunctionType.IN_OUT_QUAD,
-        },
-      ],
-    });
   }
 
   protected addLevelEnd(startingTile: Vec2, size: Vec2, group: string): void {

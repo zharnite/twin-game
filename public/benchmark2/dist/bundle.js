@@ -498,10 +498,6 @@ class OnGround extends PlayerState_1.default {
         if (Input_1.default.isJustPressed("jump")) {
             this.finished("jump");
             this.parent.velocity.y = this.parent.jumpHeight;
-            if (this.parent.velocity.x !== 0) {
-                // We don't need this silly flip right now.
-                // this.owner.tweens.play("flip");
-            }
         }
         else if (!this.owner.onGround) {
             this.finished("jump");
@@ -1527,18 +1523,6 @@ class GameLevel extends Scene_1.default {
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup(PlayerEnums_1.PlayerTypes.PLAYER);
         // Add a tween animation for the player jump
-        this.player.tweens.add("flip", {
-            startDelay: 0,
-            duration: 500,
-            effects: [
-                {
-                    property: "rotation",
-                    start: 0,
-                    end: 2 * Math.PI,
-                    ease: EaseFunctions_1.EaseFunctionType.IN_OUT_QUAD,
-                },
-            ],
-        });
     }
     initGhostPlayer() {
         // Add the ghost player
@@ -1560,19 +1544,6 @@ class GameLevel extends Scene_1.default {
         });
         // Add triggers on colliding with coins or coinBlocks
         this.ghostPlayer.setGroup(PlayerEnums_1.PlayerTypes.GHOST_PLAYER);
-        // Add a tween animation for the player jump
-        this.ghostPlayer.tweens.add("flip", {
-            startDelay: 0,
-            duration: 500,
-            effects: [
-                {
-                    property: "rotation",
-                    start: 0,
-                    end: 2 * Math.PI,
-                    ease: EaseFunctions_1.EaseFunctionType.IN_OUT_QUAD,
-                },
-            ],
-        });
     }
     addLevelEnd(startingTile, size, group) {
         this.levelEndArea = this.add.graphic(GraphicTypes_1.GraphicType.RECT, "primary", {
