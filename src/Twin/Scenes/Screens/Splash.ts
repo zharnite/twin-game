@@ -10,8 +10,8 @@ export default class Splash extends Scene {
   private layer: string;
 
   loadScene(): void {
-    // Twin TODO (optional) - update splash screen image here
     this.load.image("background", "assets/images/TwinSplashScreen.png");
+    this.load.image("backgroundText", "assets/images/ClickAnywhereToContinue.png");
   }
 
   startScene(): void {
@@ -26,18 +26,25 @@ export default class Splash extends Scene {
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };
+
   }
 
   /**
    * Creates and adds the background image in the Splash screen.
    */
-  private createBackground(): void {
+  public createBackground(): void {
     // Create background layer and attach background image to center
     this.addLayer("bg");
     let bg = this.add.sprite("background", "bg");
     bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
-    // Add fadeIn animation
+    this.addLayer("bgText");
+    let bgText = this.add.sprite("backgroundText", "bgText");
+    bgText.position.set(bgText.boundary.halfSize.x, bgText.boundary.halfSize.y);
+
+
+
+    // Add fade in animations for both background images
     bg.tweens.add("fadeIn", {
       startDelay: 0,
       duration: 2000,
@@ -49,11 +56,24 @@ export default class Splash extends Scene {
           ease: EaseFunctionType.IN_OUT_QUAD,
         },
       ],
-      onEnd: Events.LEVEL_END,
+    });
+
+    bgText.tweens.add("fadeInText", {
+      startDelay: 0,
+      duration: 4000,
+      effects: [
+        {
+          property: TweenableProperties.alpha,
+          start: 0,
+          end: 1,
+          ease: EaseFunctionType.EASE_IN_WITH_DELAY,
+        },
+      ],
     });
 
     // Play fadeIn animation
     bg.tweens.play("fadeIn");
+    bgText.tweens.play("fadeInText");
   }
 
   updateScene(): void {}
