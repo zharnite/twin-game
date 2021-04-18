@@ -437,7 +437,7 @@ export default class GameLevel extends Scene {
       playerType: "platformer",
       tilemap: "Main",
       characterType: "soul",
-      jumpHeight: -550,
+      jumpHeight: -450,
       fallFactor: 0.9,
     });
 
