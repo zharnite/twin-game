@@ -10,7 +10,7 @@ export default class Level2 extends GameLevel {
   loadScene(): void {
     this.load.image("background", "assets/sprites/2bitbackground.png");
     this.load.image("coin", "assets/sprites/coin.png");
-    this.load.tilemap("level2", "assets/tilemaps/level2.json");
+    this.load.tilemap("level2", "assets/tilemaps/untitled.json");
     this.load.spritesheet(
       PlayerTypes.PLAYER,
       "assets/spritesheets/platformPlayer.json"
@@ -35,7 +35,7 @@ export default class Level2 extends GameLevel {
 
     // Add the level 2 tilemap
     this.add.tilemap("level2", new Vec2(2, 2));
-    this.viewport.setBounds(0, 0, 64 * 32, 20 * 32);
+    this.viewport.setBounds(0, 0, 16 * 32, 16 * 32);
 
     // Do generic setup for a GameLevel
     super.startScene();
@@ -65,8 +65,8 @@ export default class Level2 extends GameLevel {
 
   private initLevelVariables(): void {
     // Initialize variables
-    this.playerSpawn = new Vec2(5 * 32, 18 * 32);
-    this.ghostPlayerSpawn = new Vec2(5 * 32, 18 * 32);
+    this.playerSpawn = new Vec2(0 * 32, 0 * 32);
+    this.ghostPlayerSpawn = new Vec2(0 * 32, 0 * 32);
 
     // Set up current and next level
     this.currentLevel = Level2;

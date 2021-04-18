@@ -7,7 +7,7 @@ import PlayerController from "../PlayerController";
 
 export default abstract class PlayerState extends State {
   owner: GameNode;
-  gravity: number = 1000;
+  gravity: number = 500;
   parent: PlayerController;
 
   constructor(parent: StateMachine, owner: GameNode) {
