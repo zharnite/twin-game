@@ -37,6 +37,11 @@ export default class EaseFunctions {
     private static easeOutIn_InPow(x: number, pow: number): number {
         return 0.5 + Math.pow(2 * x - 1, pow) / 2;
     }
+
+    // Create custom ease in animation for splash text
+    private static easeInWithDelay(x: number): number {
+        return (x > 0.5) ? (x - 0.5) * 2 : 0;
+    }
 }
 
 export enum EaseFunctionType {
@@ -51,5 +56,8 @@ export enum EaseFunctionType {
     OUT_IN_QUAD = "easeOutInQuad",
 
     // QUINT
-    IN_OUT_QUINT = "easeInOutQuint"
+    IN_OUT_QUINT = "easeInOutQuint",
+
+    // DELAY
+    EASE_IN_WITH_DELAY = "easeInWithDelay",
 }
