@@ -56,14 +56,14 @@ export default class Level1 extends GameLevel {
 
   private setUpExits(): void {
     // Set up exit locations
-    this.playerExitLocation = new Vec2(30, 14);
-    this.ghostPlayerExitLocation = new Vec2(30, 11);
+    this.playerExitLocation = new Vec2(14, 14);
+    this.ghostPlayerExitLocation = new Vec2(30, 14);
     this.exitSize = new Vec2(1, 1);
 
     // Set up exits for player and ghostPlayer
-    this.addLevelEnd(new Vec2(30, 14), new Vec2(1, 1), PlayerTypes.PLAYER);
+    this.addLevelEnd(new Vec2(14, 14), new Vec2(1, 1), PlayerTypes.PLAYER);
     this.addLevelEnd(
-      new Vec2(30, 11),
+      new Vec2(30, 14),
       new Vec2(1, 1),
       PlayerTypes.GHOST_PLAYER
     );
