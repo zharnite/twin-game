@@ -33,8 +33,6 @@ export default class GameLevel extends Scene {
   // Labels for the UI
   protected static coinCount: number = 0;
   protected coinCountLabel: Label;
-  protected static livesCount: number = 3;
-  protected livesCountLabel: Label;
 
   // Stuff to end the level and go to the next level
   protected levelEndArea: Rect;
@@ -245,7 +243,6 @@ export default class GameLevel extends Scene {
       this.player.position.y > 100 * 64 ||
       this.ghostPlayer.position.y > 100 * 64
     ) {
-      this.incPlayerLife(-1);
       this.respawnPlayer();
     }
   }
@@ -294,21 +291,6 @@ export default class GameLevel extends Scene {
     this.coinCountLabel.fontSize = 40;
     this.coinCountLabel.padding = new Vec2(10, 5);
     this.coinCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
-
-    // Lives label
-    this.livesCountLabel = <Label>this.add.uiElement(
-      UIElementType.LABEL,
-      "UI",
-      {
-        position: new Vec2(500, 30),
-        text: ScreenTexts.LIVES + " " + GameLevel.livesCount,
-      }
-    );
-    this.livesCountLabel.textColor = Color.WHITE;
-    this.livesCountLabel.font = "Squarely";
-    this.livesCountLabel.fontSize = 40;
-    this.livesCountLabel.padding = new Vec2(10, 5);
-    this.livesCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
@@ -480,7 +462,6 @@ export default class GameLevel extends Scene {
         // Stop the player's jump for some feedback
         (<PlayerController>player.ai).velocity.y = 0;
       } else {
-        this.incPlayerLife(-1);
         this.respawnPlayer();
       }
     } else {
@@ -499,7 +480,6 @@ export default class GameLevel extends Scene {
           playerVel.y = -0.5 * (<PlayerController>player.ai).velocity.y;
         }
       } else {
-        this.incPlayerLife(-1);
         this.respawnPlayer();
       }
     }
@@ -518,11 +498,6 @@ export default class GameLevel extends Scene {
     );
 
     return playerOverlap && ghostPlayerOverlap;
-  }
-
-  protected incPlayerLife(amt: number): void {
-    GameLevel.livesCount += amt;
-    this.livesCountLabel.text = ScreenTexts.LIVES + " " + GameLevel.livesCount;
   }
 
   protected incPlayerCoins(amt: number): void {

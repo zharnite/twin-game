@@ -658,7 +658,6 @@ var ScreenTexts;
     ScreenTexts["PLAY_GAME"] = "PLAY GAME";
     ScreenTexts["RETURN"] = "RETURN";
     ScreenTexts["COINS"] = "COINS";
-    ScreenTexts["LIVES"] = "LIVES";
     ScreenTexts["LEVEL_COMPLETE"] = "LEVEL COMPLETE";
     ScreenTexts["LEVEL"] = "LEVEL";
     ScreenTexts["LEVEL_CAPITALIZED"] = "Level";
@@ -1393,7 +1392,6 @@ class GameLevel extends Scene_1.default {
         // If player falls into a pit, kill them off and reset their position
         if (this.player.position.y > 100 * 64 ||
             this.ghostPlayer.position.y > 100 * 64) {
-            this.incPlayerLife(-1);
             this.respawnPlayer();
         }
     }
@@ -1435,16 +1433,6 @@ class GameLevel extends Scene_1.default {
         this.coinCountLabel.fontSize = 40;
         this.coinCountLabel.padding = new Vec2_1.default(10, 5);
         this.coinCountLabel.backgroundColor = new Color_1.default(0, 0, 0, 0.9);
-        // Lives label
-        this.livesCountLabel = this.add.uiElement(UIElementTypes_1.UIElementType.LABEL, "UI", {
-            position: new Vec2_1.default(500, 30),
-            text: ScreenTextEnums_1.ScreenTexts.LIVES + " " + GameLevel.livesCount,
-        });
-        this.livesCountLabel.textColor = Color_1.default.WHITE;
-        this.livesCountLabel.font = "Squarely";
-        this.livesCountLabel.fontSize = 40;
-        this.livesCountLabel.padding = new Vec2_1.default(10, 5);
-        this.livesCountLabel.backgroundColor = new Color_1.default(0, 0, 0, 0.9);
         // End of level label (start off screen)
         this.levelEndLabel = this.add.uiElement(UIElementTypes_1.UIElementType.LABEL, "UI", {
             position: new Vec2_1.default(-300, 200),
@@ -1582,7 +1570,6 @@ class GameLevel extends Scene_1.default {
                 player.ai.velocity.y = 0;
             }
             else {
-                this.incPlayerLife(-1);
                 this.respawnPlayer();
             }
         }
@@ -1603,7 +1590,6 @@ class GameLevel extends Scene_1.default {
                 }
             }
             else {
-                this.incPlayerLife(-1);
                 this.respawnPlayer();
             }
         }
@@ -1616,10 +1602,6 @@ class GameLevel extends Scene_1.default {
         let playerOverlap = this.player.boundary.overlaps(this.levelEndAreas[PlayerEnums_1.PlayerTypes.PLAYER].boundary);
         let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(this.levelEndAreas[PlayerEnums_1.PlayerTypes.GHOST_PLAYER].boundary);
         return playerOverlap && ghostPlayerOverlap;
-    }
-    incPlayerLife(amt) {
-        GameLevel.livesCount += amt;
-        this.livesCountLabel.text = ScreenTextEnums_1.ScreenTexts.LIVES + " " + GameLevel.livesCount;
     }
     incPlayerCoins(amt) {
         GameLevel.coinCount += amt;
@@ -1637,7 +1619,6 @@ class GameLevel extends Scene_1.default {
 exports.default = GameLevel;
 // Labels for the UI
 GameLevel.coinCount = 0;
-GameLevel.livesCount = 3;
 },{"../../../../Wolfie2D/DataTypes/Shapes/AABB":54,"../../../../Wolfie2D/DataTypes/Vec2":61,"../../../../Wolfie2D/Input/Input":69,"../../../../Wolfie2D/Nodes/GameNode":77,"../../../../Wolfie2D/Nodes/Graphics/GraphicTypes":79,"../../../../Wolfie2D/Nodes/UIElements/UIElementTypes":92,"../../../../Wolfie2D/Scene/Scene":128,"../../../../Wolfie2D/Timing/Timer":132,"../../../../Wolfie2D/Utils/Color":134,"../../../../Wolfie2D/Utils/EaseFunctions":135,"../../../Enemies/EnemyController":1,"../../../Enums/EventEnums":7,"../../../Player/PlayerController":8,"../../Enums/PlayerEnums":18,"../../Enums/ScreenTextEnums":20,"../../SceneHelpers/PauseTracker":24,"../../SceneHelpers/SceneOptions":26}],33:[function(require,module,exports){
 "use strict";
 // Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
