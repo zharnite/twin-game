@@ -8,8 +8,12 @@ export default abstract class InAir extends PlayerState {
 
     let dir = this.getInputDirection();
 
-    this.parent.velocity.x +=
-      (dir.x * this.parent.speed) / 3.5 - 0.3 * this.parent.velocity.x;
+    // This line is the wall bug.
+    // this.parent.velocity.x +=
+    //   (dir.x * this.parent.speed) / 3.5 - 0.3 * this.parent.velocity.x;
+
+    // This works
+    this.parent.velocity.x = dir.x * this.parent.speed;
 
     this.owner.move(this.parent.velocity.scaled(deltaT));
 
