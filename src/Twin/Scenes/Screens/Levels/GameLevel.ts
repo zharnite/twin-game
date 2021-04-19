@@ -381,7 +381,6 @@ export default class GameLevel extends Scene {
 
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup(PlayerTypes.PLAYER);
-
   }
 
   protected initGhostPlayer(): void {
@@ -412,7 +411,6 @@ export default class GameLevel extends Scene {
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
-
   }
 
   protected addLevelEnd(startingTile: Vec2, size: Vec2, group: string): void {

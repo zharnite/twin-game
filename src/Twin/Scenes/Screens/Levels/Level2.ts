@@ -19,6 +19,9 @@ export default class Level2 extends GameLevel {
       PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
+
+    // load things from parent
+    super.loadScene();
   }
 
   startScene(): void {
@@ -54,8 +57,8 @@ export default class Level2 extends GameLevel {
 
   private initLevelVariables(): void {
     // Initialize variables
-    this.playerSpawn = new Vec2(0 * 32, 0 * 32);
-    this.ghostPlayerSpawn = new Vec2(0 * 32, 0 * 32);
+    this.playerSpawn = new Vec2(2 * 32, 2 * 32);
+    this.ghostPlayerSpawn = new Vec2(2 * 32, 2 * 32);
 
     // Set up current and next level
     this.currentLevel = Level2;

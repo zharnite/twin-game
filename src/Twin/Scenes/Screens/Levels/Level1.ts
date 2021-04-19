@@ -21,6 +21,9 @@ export default class Level1 extends GameLevel {
       PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
+
+    // load things from parent
+    super.loadScene();
   }
 
   startScene(): void {
