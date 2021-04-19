@@ -89,7 +89,7 @@ export default class PauseOverlay {
     this.createScreenButton("Help", 1000, 670);
 
     // Credits button
-    this.createScreenButton("Controls", 1000, 730);
+    this.createScreenButton("Credits", 1000, 730);
   }
 
   createScreenButton(name: string, x: number, y: number): void {
