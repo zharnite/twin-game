@@ -370,7 +370,7 @@ export default class GameLevel extends Scene {
     // Spawn location
     this.player.position.copy(this.playerSpawn);
 
-    this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 15)));
+    this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 16)));
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
@@ -400,7 +400,7 @@ export default class GameLevel extends Scene {
     // Spawn location
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
 
-    this.ghostPlayer.addPhysics(new AABB(Vec2.ZERO, new Vec2(8, 15)));
+    this.ghostPlayer.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 16)));
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
