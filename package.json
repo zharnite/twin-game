@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tian Brown, Brant Eckert, and Zhen Yi Pan",
+  "author": "Zhen Yi Pan, Tian Brown, and Brant Eckert",
   "license": "ISC",
   "devDependencies": {
     "browserify": "^16.5.1",

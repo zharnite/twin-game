@@ -1,6 +1,6 @@
 # Twin
 
-### by Tian Brown, Brant Eckert, and Zhen Yi Pan
+### by Zhen Yi Pan, Tian Brown, and Brant Eckert
 
 CSE 380 Spring 2021 Group Project
 
