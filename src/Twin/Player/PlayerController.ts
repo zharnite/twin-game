@@ -72,10 +72,7 @@ export default class PlayerController extends StateMachineAI {
   changeState(stateName: string): void {
     // If we jump or fall, push the state so we can go back to our current state later
     // unless we're going from jump to fall or something
-    if (
-      (stateName === PlayerStates.JUMP || stateName === PlayerStates.FALL) &&
-      !(this.stack.peek() instanceof InAir)
-    ) {
+    if ((stateName === PlayerStates.JUMP || stateName === PlayerStates.FALL) && !(this.stack.peek() instanceof InAir)) {
       this.stack.push(this.stateMap.get(stateName));
     }
 
