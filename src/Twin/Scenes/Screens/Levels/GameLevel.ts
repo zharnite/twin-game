@@ -149,26 +149,26 @@ export default class GameLevel extends Scene {
       let pc = <PlayerController>this.player.ai;
       let gpc = <PlayerController>this.ghostPlayer.ai;
       if (this.controlNodesIndex === 0) {
-        pc.MIN_SPEED = pc.SAVED_MIN_SPEED;
-        pc.MAX_SPEED = pc.SAVED_MAX_SPEED;
-        pc.JUMP_HEIGHT = pc.SAVED_JUMP_HEIGHT;
-        gpc.MIN_SPEED = pc.SAVED_MIN_SPEED;
-        gpc.MAX_SPEED = pc.SAVED_MAX_SPEED;
-        gpc.JUMP_HEIGHT = gpc.SAVED_JUMP_HEIGHT;
+        if (this.player.frozen) {
+          this.player.unfreeze();
+        }
+        if (this.ghostPlayer.frozen) {
+          this.ghostPlayer.unfreeze();
+        }
       } else if (this.controlNodesIndex === 1) {
-        pc.MIN_SPEED = pc.SAVED_MIN_SPEED;
-        pc.MAX_SPEED = pc.SAVED_MAX_SPEED;
-        pc.JUMP_HEIGHT = pc.SAVED_JUMP_HEIGHT;
-        gpc.MIN_SPEED = 0;
-        gpc.MAX_SPEED = 0;
-        gpc.JUMP_HEIGHT = 0;
+        if (this.player.frozen) {
+          this.player.unfreeze();
+        }
+        if (!this.ghostPlayer.frozen) {
+          this.ghostPlayer.freeze();
+        }
       } else if (this.controlNodesIndex === 2) {
-        pc.MIN_SPEED = 0;
-        pc.MAX_SPEED = 0;
-        pc.JUMP_HEIGHT = 0;
-        gpc.MIN_SPEED = pc.SAVED_MIN_SPEED;
-        gpc.MAX_SPEED = pc.SAVED_MAX_SPEED;
-        gpc.JUMP_HEIGHT = gpc.SAVED_JUMP_HEIGHT;
+        if (!this.player.frozen) {
+          this.player.freeze();
+        }
+        if (this.ghostPlayer.frozen) {
+          this.ghostPlayer.unfreeze();
+        }
       }
     }
 
