@@ -49,7 +49,10 @@ export default class GameLevel extends Scene {
 
   // Follow node index for viewport swapping between game characters
   private followNodeIndex: number;
-  private previousFollowNodeIndex: number;
+
+  // Change controls index for controlling a single game character
+  protected controlNodes: AnimatedSprite[];
+  private controlNodesIndex: number;
 
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
@@ -84,10 +87,14 @@ export default class GameLevel extends Scene {
 
     // Initialize follow node index for viewport following
     this.followNodeIndex = 0;
-    if (this.previousFollowNodeIndex) {
-      this.followNodeIndex = this.previousFollowNodeIndex;
-    }
     this.viewport.follow(this.followNodes[this.followNodeIndex]);
+
+    // Define nodes that we can control
+    this.controlNodes = [];
+    this.controlNodes.push(null);
+    this.controlNodes.push(this.player);
+    this.controlNodes.push(this.ghostPlayer);
+    this.controlNodesIndex = 0;
 
     // Initialize the timers
     this.levelTransitionTimer = new Timer(500);
@@ -132,6 +139,37 @@ export default class GameLevel extends Scene {
     // pause key input
     if (Input.isJustPressed("pause")) {
       this.pauseTracker.toggle();
+    }
+
+    // change character control input
+    if (Input.isJustPressed("change control")) {
+      this.controlNodesIndex++;
+      this.controlNodesIndex =
+        this.controlNodesIndex % this.controlNodes.length;
+      let pc = <PlayerController>this.player.ai;
+      let gpc = <PlayerController>this.ghostPlayer.ai;
+      if (this.controlNodesIndex === 0) {
+        pc.MIN_SPEED = pc.SAVED_MIN_SPEED;
+        pc.MAX_SPEED = pc.SAVED_MAX_SPEED;
+        pc.JUMP_HEIGHT = pc.SAVED_JUMP_HEIGHT;
+        gpc.MIN_SPEED = pc.SAVED_MIN_SPEED;
+        gpc.MAX_SPEED = pc.SAVED_MAX_SPEED;
+        gpc.JUMP_HEIGHT = gpc.SAVED_JUMP_HEIGHT;
+      } else if (this.controlNodesIndex === 1) {
+        pc.MIN_SPEED = pc.SAVED_MIN_SPEED;
+        pc.MAX_SPEED = pc.SAVED_MAX_SPEED;
+        pc.JUMP_HEIGHT = pc.SAVED_JUMP_HEIGHT;
+        gpc.MIN_SPEED = 0;
+        gpc.MAX_SPEED = 0;
+        gpc.JUMP_HEIGHT = 0;
+      } else if (this.controlNodesIndex === 2) {
+        pc.MIN_SPEED = 0;
+        pc.MAX_SPEED = 0;
+        pc.JUMP_HEIGHT = 0;
+        gpc.MIN_SPEED = pc.SAVED_MIN_SPEED;
+        gpc.MAX_SPEED = pc.SAVED_MAX_SPEED;
+        gpc.JUMP_HEIGHT = gpc.SAVED_JUMP_HEIGHT;
+      }
     }
 
     // Handle events and update the UI if needed
@@ -375,7 +413,7 @@ export default class GameLevel extends Scene {
       playerType: "platformer",
       tilemap: "Main",
       characterType: "body",
-      jumpHeight: -350,
+      JUMP_HEIGHT: -350,
       fallFactor: 1.0,
     });
 
@@ -405,7 +443,7 @@ export default class GameLevel extends Scene {
       playerType: "platformer",
       tilemap: "Main",
       characterType: "soul",
-      jumpHeight: -450,
+      JUMP_HEIGHT: -450,
       fallFactor: 0.9,
     });
 
