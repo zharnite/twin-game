@@ -5,8 +5,7 @@ import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import PlayerState from "./PlayerState";
 
 export default class OnGround extends PlayerState {
-  onEnter(options: Record<string, any>): void {
-  }
+  onEnter(options: Record<string, any>): void {}
 
   handleInput(event: GameEvent): void {}
 
@@ -24,8 +23,7 @@ export default class OnGround extends PlayerState {
 
     if (Input.isJustPressed("jump")) {
       this.finished("jump");
-      this.parent.velocity.y = this.parent.jumpHeight;
-
+      this.parent.velocity.y = this.parent.JUMP_HEIGHT;
     } else if (!this.owner.onGround) {
       this.finished("fall");
     }
