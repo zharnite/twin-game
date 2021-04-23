@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.4" tiledversion="1.4.3" name="Twin-Tilemap" tilewidth="16" tileheight="16" tilecount="256" columns="16">
- <image source="dist/assets/tilemaps/Twin_Tilemap.png" width="256" height="256"/>
+ <image source="dist/assets/tilemaps/Twin-Tilemap.png" width="256" height="256"/>
 </tileset>
