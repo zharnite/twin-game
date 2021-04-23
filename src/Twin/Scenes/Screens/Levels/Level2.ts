@@ -8,7 +8,7 @@ import { PlayerTypes } from "../../Enums/PlayerEnums";
 
 export default class Level2 extends GameLevel {
   loadScene(): void {
-    this.load.image("background", "assets/sprites/2bitbackground.png");
+    this.load.image("background", "assets/sprites/Twin-Background.png");
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("level2", "assets/tilemaps/untitled.json");
     this.load.spritesheet(
