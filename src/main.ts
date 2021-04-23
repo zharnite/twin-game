@@ -20,6 +20,7 @@ import Splash from "./Twin/Scenes/Screens/Splash";
       { name: "swap view", keys: ["v"] }, // swaps views between player and ghost player (for debugging)
       { name: "pause", keys: ["escape", "p"] },
       { name: "change control", keys: ["c"] },
+      { name: "interact", keys: ["e"] },
     ],
     useWebGL: false, // Tell the game we want to use webgl
     showDebug: false, // Whether to show debug messages. You can change this to true if you want
