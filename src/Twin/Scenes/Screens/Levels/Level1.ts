@@ -10,7 +10,7 @@ import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
   loadScene(): void {
-    this.load.image("background", "assets/sprites/2bitbackground.png");
+    this.load.image("background", "assets/sprites/Twin-Background.png");
     this.load.image("coin", "assets/sprites/coin.png");
     this.load.tilemap("test_level", "assets/tilemaps/testing_level.json");
     this.load.spritesheet(
