@@ -4,6 +4,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../../Wolfie2D/Input/Input";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import PlayerController from "../PlayerController";
+import { Events } from "../../Enums/EventEnums";
 
 export default abstract class PlayerState extends State {
   owner: GameNode;
@@ -26,5 +27,57 @@ export default abstract class PlayerState extends State {
   update(deltaT: number): void {
     // Do gravity.
     this.parent.velocity.y += this.gravity * deltaT;
+  }
+
+  // Handle collisions for when the player jumps into a coin block.
+  handleCoinblockCollision () {
+    let pos = this.owner.position.clone();
+
+    // Go up plus some extra
+    pos.y -= this.owner.collisionShape.halfSize.y + 10;
+    pos.x -= 16;
+    let rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile1 = this.parent.tilemap.getTileAtRowCol(rowCol);
+    pos.x += 16;
+    rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile2 = this.parent.tilemap.getTileAtRowCol(rowCol);
+    pos.x += 16;
+    rowCol = this.parent.tilemap.getColRowAt(pos);
+    let tile3 = this.parent.tilemap.getTileAtRowCol(rowCol);
+
+    // Determine if we are checking collision for the soul or the body and set values accordingly.
+    let coinBlockNum = (this.parent.characterType === "soul") ? 41 : 33;
+
+    let t1 = tile1 === coinBlockNum;
+    let t2 = tile2 === coinBlockNum;
+    let t3 = tile3 === coinBlockNum;
+    let air1 = tile1 === 0;
+    let air2 = tile2 === 0;
+    let air3 = tile3 === 0;
+    let majority = (t1 && t2) || (t1 && t3) || (t2 && t3) || (t1 && t2 && t3);
+    let minorityButAir =
+      (t1 && air2 && air3) || (air1 && t2 && air3) || (air1 && air2 && t3);
+
+    // If coin block, change to empty coin block
+    if (majority || minorityButAir) {
+      if (minorityButAir) {
+        // Get the correct position
+        if (t1) {
+          pos.x -= 32;
+        } else if (t2) {
+          pos.x -= 16;
+        }
+        rowCol = this.parent.tilemap.getColRowAt(pos);
+      } else {
+        pos.x -= 16;
+        rowCol = this.parent.tilemap.getColRowAt(pos);
+      }
+
+      this.parent.tilemap.setTileAtRowCol(rowCol, coinBlockNum + 1);
+    }
+  }
+
+  handleLeverActivation () {
+
   }
 }
