@@ -30,14 +30,20 @@ export default class OrthogonalTilemap extends Tilemap {
 
         // Whether the tilemap is collidable or not
         this.isCollidable = false;
-        if(layer.properties){
-            for(let item of layer.properties){
-                if(item.name === "Collidable"){
+        if (layer.properties) {
+            for (let item of layer.properties) {
+                if (item.name === "Collidable") {
                     this.isCollidable = item.value;
 
                     // Set all tiles besides "empty: 0" to be collidable
                     for(let i = 1; i < this.collisionMap.length; i++){
                         this.collisionMap[i] = true;
+                    }
+                }
+                if (item.name === "Interactable") {
+                    // Set all tiles to be interactable
+                    for(let i = 0; i < this.interactionMap.length; i++){
+                        this.interactionMap[i] = true;
                     }
                 }
             }
