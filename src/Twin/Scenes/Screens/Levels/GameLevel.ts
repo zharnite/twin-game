@@ -141,11 +141,6 @@ export default class GameLevel extends Scene {
       this.pauseTracker.toggle();
     }
 
-    // Interact with object input
-    if (Input.isJustPressed("interact")) {
-      // Add interaction functionality here.
-    }
-
     // change character control input
     if (Input.isJustPressed("change control")) {
       this.controlNodesIndex++;

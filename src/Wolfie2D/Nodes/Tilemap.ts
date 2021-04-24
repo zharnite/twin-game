@@ -20,6 +20,9 @@ export default abstract class Tilemap extends CanvasNode {
     /** An array of tile collision data */
     protected collisionMap: Array<boolean>;
 
+    // An array of tile interaction data
+    protected interactionMap: Array<boolean>;
+
     /** The name of the tilemap */
     name: string;
 
@@ -36,8 +39,10 @@ export default abstract class Tilemap extends CanvasNode {
         }
 
         this.collisionMap = new Array(tilecount);
+        this.interactionMap = new Array(tilecount);
         for(let i = 0; i < this.collisionMap.length; i++){
             this.collisionMap[i] = false;
+            this.interactionMap[i] = false;
         }
 
         // Defer parsing of the data to child classes - this allows for isometric vs. orthographic tilemaps and handling of Tiled data or other data
