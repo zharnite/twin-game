@@ -105,7 +105,6 @@ export default abstract class PlayerState extends State {
         rowCol = this.parent.tilemap.getColRowAt(pos);
       }
       this.parent.tilemap.setTileAtRowCol(rowCol, blockIDNum + 1);
-
     }
   }
 }
