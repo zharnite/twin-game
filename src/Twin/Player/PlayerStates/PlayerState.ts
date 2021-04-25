@@ -4,6 +4,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../../Wolfie2D/Input/Input";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import PlayerController from "../PlayerController";
+import { Events } from "../../Enums/EventEnums";
 
 export default abstract class PlayerState extends State {
   owner: GameNode;
@@ -30,7 +31,7 @@ export default abstract class PlayerState extends State {
     this.parent.velocity.y += this.gravity * deltaT;
 
     if (this.owner.onGround) {
-
+      this.handleSpikeCollision();
     }
   }
 
@@ -41,41 +42,55 @@ export default abstract class PlayerState extends State {
     // Go up plus some extra
     pos.y -= this.owner.collisionShape.halfSize.y + 10;
 
-    // Find data on the three surrounding blocks
-    let tiles = this.findThreeSurroundingBlocks(pos);
-
     // Determine if we are checking collision for the soul or the body and set values accordingly.
     let coinBlockIDNum = (this.parent.characterType === "soul") ? 41 : 33;
-    // Change the block.
-    this.changeTileID(pos, tiles, coinBlockIDNum);
+
+    // Find data on the three surrounding blocks
+    let rowCol = this.findCorrectBlock(pos, coinBlockIDNum);
+
+    if (rowCol.x !== 0 && rowCol.y !== 0) {
+      this.parent.tilemap.setTileAtRowCol(rowCol, coinBlockIDNum + 1);
+    }
+  }
+
+
+  // Handle collisions between the player and spikes on the ground.
+  handleSpikeCollision () {
+    let pos = this.owner.position.clone();
+    // Go down plus some extra
+    pos.y += this.owner.collisionShape.halfSize.y;
+
+    // Determine if we are checking collision for the soul or the body and set values accordingly.
+    let spikeBlockIDNum = (this.parent.characterType === "soul") ? 141 : 134;
+
+    // Find data on the three surrounding blocks
+    let rowCol = this.findCorrectBlock(pos, spikeBlockIDNum);
+
+    if (rowCol.x !== 0 && rowCol.y !== 0) {
+      this.emitter.fireEvent(Events.PLAYER_HIT_SPIKE);
+    }
   }
 
   // ---------------------------------------- HELPER FUNCTIONS ----------------------------------------
 
   // Helper function to get information on surrounding blocks for the player (Joe's code).
-  findThreeSurroundingBlocks(pos: Vec2): number[] {
+  findCorrectBlock(pos: Vec2, blockIDNum: number): Vec2 {
     pos.x -= 8;
     let tile1 = this.parent.tilemap.getTileAtRowCol(this.parent.tilemap.getColRowAt(pos));
     pos.x += 8;
     let tile2 = this.parent.tilemap.getTileAtRowCol(this.parent.tilemap.getColRowAt(pos));
     pos.x += 8;
     let tile3 = this.parent.tilemap.getTileAtRowCol(this.parent.tilemap.getColRowAt(pos));
-    return [tile1, tile2, tile3];
-  }
-
-
-  // Helper function to change the ID of a tile block (Joe's code).
-  changeTileID(pos: Vec2, tiles: number[], blockIDNum: number): void {
-    let t1 = (tiles[0] === blockIDNum);
-    let t2 = (tiles[1] === blockIDNum);
-    let t3 = (tiles[2] === blockIDNum);
-    let air1 = (tiles[0] === 0);
-    let air2 = (tiles[1] === 0);
-    let air3 = (tiles[2] === 0);
+    let t1 = (tile1 === blockIDNum);
+    let t2 = (tile2 === blockIDNum);
+    let t3 = (tile3 === blockIDNum);
+    let air1 = (tile1 === 0);
+    let air2 = (tile2 === 0);
+    let air3 = (tile3 === 0);
     let majority = (t1 && t2) || (t1 && t3) || (t2 && t3) || (t1 && t2 && t3);
     let minorityButAir = (t1 && air2 && air3) || (air1 && t2 && air3) || (air1 && air2 && t3);
 
-    // If coin block, change to empty coin block
+    // Find the correct row and column of the block, if it exists.
     let rowCol;
     if (majority || minorityButAir) {
       if (minorityButAir) {
@@ -88,7 +103,10 @@ export default abstract class PlayerState extends State {
         pos.x -= 16;
         rowCol = this.parent.tilemap.getColRowAt(pos);
       }
-      this.parent.tilemap.setTileAtRowCol(rowCol, blockIDNum + 1);
+      return rowCol;
     }
+    return new Vec2(0, 0);
   }
+
+
 }
