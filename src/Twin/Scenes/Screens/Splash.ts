@@ -9,8 +9,9 @@ export default class Splash extends Scene {
   private layer: string;
 
   loadScene(): void {
-    this.load.image("background", "assets/images/TwinSplashScreen.png");
-    this.load.image("backgroundText", "assets/images/ClickAnywhereToContinue.png");
+    this.load.image("splashScreen", "assets/images/TwinSplashScreen.png");
+    this.load.image("splashScreenText", "assets/images/ClickAnywhereToContinue.png");
+    this.load.image("movingBackground", "assets/images/TwinMovingBackground.png");
   }
 
   startScene(): void {
@@ -33,18 +34,36 @@ export default class Splash extends Scene {
    */
   public createBackground(): void {
     // Create background layer and attach background image to center
-    this.addLayer("bg");
-    let bg = this.add.sprite("background", "bg");
-    bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
+    this.addLayer("background");
+    let background = this.add.sprite("movingBackground", "background");
+    background.position.set(background.boundary.halfSize.x, background.boundary.halfSize.y);
 
-    this.addLayer("bgText");
-    let bgText = this.add.sprite("backgroundText", "bgText");
-    bgText.position.set(bgText.boundary.halfSize.x, bgText.boundary.halfSize.y);
+    this.addLayer("splash");
+    let splash = this.add.sprite("splashScreen", "splash");
+    splash.position.set(splash.boundary.halfSize.x, splash.boundary.halfSize.y);
+
+    this.addLayer("splashText");
+    let splashText = this.add.sprite("splashScreenText", "splashText");
+    splashText.position.set(splashText.boundary.halfSize.x, splashText.boundary.halfSize.y);
 
 
 
-    // Add fade in animations for both background images
-    bg.tweens.add("fadeIn", {
+    // Add fade in animations for all images
+    background.tweens.add("moveLeft", {
+      startDelay: 0,
+      reverseOnComplete: true,
+      loop: true,
+      duration: 80000,
+      effects: [
+        {
+          property: TweenableProperties.posX,
+          start: 0,
+          end: background.boundary.x,
+          ease: EaseFunctionType.LINEAR,
+        },
+      ],
+    });
+    splash.tweens.add("fadeIn", {
       startDelay: 0,
       duration: 2000,
       effects: [
@@ -57,7 +76,7 @@ export default class Splash extends Scene {
       ],
     });
 
-    bgText.tweens.add("fadeInText", {
+    splashText.tweens.add("fadeInText", {
       startDelay: 0,
       duration: 4000,
       effects: [
@@ -71,8 +90,9 @@ export default class Splash extends Scene {
     });
 
     // Play fadeIn animation
-    bg.tweens.play("fadeIn");
-    bgText.tweens.play("fadeInText");
+    background.tweens.play("moveLeft");
+    splash.tweens.play("fadeIn");
+    splashText.tweens.play("fadeInText");
   }
 
   updateScene(): void {}

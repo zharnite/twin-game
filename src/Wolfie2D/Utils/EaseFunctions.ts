@@ -42,6 +42,10 @@ export default class EaseFunctions {
     private static easeInWithDelay(x: number): number {
         return (x > 0.5) ? (x - 0.5) * 2 : 0;
     }
+
+    private static linear(x: number): number {
+        return x;
+    }
 }
 
 export enum EaseFunctionType {
@@ -60,4 +64,7 @@ export enum EaseFunctionType {
 
     // CUSTOM DELAY
     EASE_IN_WITH_DELAY = "easeInWithDelay",
+
+    // CUSTOM LINEAR
+    LINEAR = "linear",
 }
