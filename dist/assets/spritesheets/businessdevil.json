@@ -1,0 +1,45 @@
+{
+  "name": "Business Devil",
+  "spriteSheetImage": "businessdevil.png",
+  "spriteWidth": 32,
+  "spriteHeight": 32,
+  "columns": 3,
+  "rows": 3,
+  "durationType": "time",
+  "animations": [
+    {
+      "name": "IDLE",
+      "frames": [
+        { "index": 0, "duration": 60 },
+        { "index": 1, "duration": 10 },
+        { "index": 2, "duration": 280 },
+        { "index": 1, "duration": 10 }
+      ]
+    },
+    {
+      "name": "RUBHANDS",
+      "frames": [
+        { "index": 0, "duration": 10 },
+        { "index": 1, "duration": 10 },
+        { "index": 2, "duration": 10 },
+        { "index": 3, "duration": 20 },
+        { "index": 4, "duration": 20 },
+        { "index": 3, "duration": 20 },
+        { "index": 5, "duration": 20 },
+        { "index": 3, "duration": 20 },
+        { "index": 2, "duration": 10 },
+        { "index": 1, "duration": 20 }
+      ]
+    },
+    {
+      "name": "SHOW-PORTAL",
+      "frames": [
+        { "index": 0, "duration": 10 },
+        { "index": 6, "duration": 20 },
+        { "index": 7, "duration": 80 },
+        { "index": 6, "duration": 20 },
+	{ "index": 0, "duration": 80 }
+      ]
+    }
+	
+}
