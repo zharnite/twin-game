@@ -21,6 +21,8 @@ export default class Level1 extends GameLevel {
       PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
+    this.load.spritesheet("BodyLever", "assets/spritesheets/BodyLever.json");
+    this.load.spritesheet("SoulLever", "assets/spritesheets/SoulLever.json");
 
     // load things from parent
     super.loadScene();
@@ -45,6 +47,9 @@ export default class Level1 extends GameLevel {
 
     // Set up exits
     this.setUpExits();
+
+    // Add interactables
+    this.setUpInteractables();
   }
 
   private initLevelVariables(): void {
@@ -70,6 +75,11 @@ export default class Level1 extends GameLevel {
       new Vec2(1, 1),
       PlayerTypes.GHOST_PLAYER
     );
+  }
+
+  private setUpInteractables(): void {
+    this.addInteractable("BodyLever", new Vec2(7, 2));
+    this.addInteractable("SoulLever", new Vec2(23, 1));
   }
 
   updateScene(deltaT: number): void {

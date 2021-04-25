@@ -28,11 +28,6 @@ export default abstract class PlayerState extends State {
   update(deltaT: number): void {
     // Do gravity.
     this.parent.velocity.y += this.gravity * deltaT;
-
-    // Send an input to interact with an object if the E key is pressed.
-		if (Input.isJustPressed("interact") && this.owner.onGround) {
-			this.handleLeverActivation();
-		}
   }
 
 
@@ -49,21 +44,6 @@ export default abstract class PlayerState extends State {
     let coinBlockIDNum = (this.parent.characterType === "soul") ? 41 : 33;
     // Change the block.
     this.changeTileID(pos, tiles, coinBlockIDNum);
-  }
-
-
-  // Handle the player pressing E to activate a lever. 
-  handleLeverActivation () {
-    let pos = this.owner.position.clone();
-    pos.y += this.owner.collisionShape.halfSize.y;
-
-    // Find data on the three surrounding blocks
-    let tiles = this.findThreeSurroundingBlocks(pos);
-
-    // Determine if we are checking collision for the soul or the body and set values accordingly.
-    let leverBlockIDNum = (this.parent.characterType === "soul" ? 139 : 132);
-    // Change the block.
-    this.changeTileID(pos, tiles, leverBlockIDNum);
   }
 
   // ---------------------------------------- HELPER FUNCTIONS ----------------------------------------

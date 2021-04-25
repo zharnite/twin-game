@@ -64,6 +64,9 @@ export default class GameLevel extends Scene {
   protected exitSize: Vec2;
   protected levelEndAreas: { [character: string]: Rect };
 
+  // Interactable variables
+  protected interactables: Map<AnimatedSprite, string>;
+
   loadScene(): void {
     // load pause items
     this.load.object("Controls", "assets/texts/controls.json");
@@ -119,6 +122,9 @@ export default class GameLevel extends Scene {
 
     // Track exit locations
     this.levelEndAreas = {};
+
+    // Initialize interactables list
+    this.interactables = new Map();
   }
 
   updateScene(deltaT: number) {
@@ -140,6 +146,16 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("pause")) {
       this.pauseTracker.toggle();
     }
+
+    // Send an input to interact with an object if the E key is pressed.
+		if (Input.isJustPressed("interact")) {
+      // Check and see if the player or ghost player are overlapping any interactable objects.
+      this.interactables.forEach((value: string, key: AnimatedSprite) => {
+        if (this.player.boundary.overlaps(key.boundary) || this.ghostPlayer.boundary.overlaps(key.boundary)) {
+          this.handlePlayerFlippingLever(key);
+        }
+      });
+		}
 
     // change character control input
     if (Input.isJustPressed("change control")) {
@@ -229,6 +245,29 @@ export default class GameLevel extends Scene {
           }
           break;
 
+        case Events.PLAYER_FLIPPED_LEVER_ON:
+          {
+            // There are no built-in filtering functions for Maps so we have to do this bad code :(
+            this.interactables.forEach((value: string, key: AnimatedSprite) => {
+              if (value === "on") {
+                key.imageOffset = new Vec2(16, 0);
+              }
+            });
+            
+          }
+          break;
+
+        case Events.PLAYER_FLIPPED_LEVER_OFF:
+          {
+            // There are no built-in filtering functions for Maps so we have to do this bad code :(
+            this.interactables.forEach((value: string, key: AnimatedSprite) => {
+              if (value === "off") {
+                key.imageOffset = new Vec2(0, 0);
+              }
+            });
+          }
+          break;
+
         case Events.ENEMY_DIED:
           {
             // An enemy finished its dying animation, hide it
@@ -313,6 +352,8 @@ export default class GameLevel extends Scene {
       Events.PLAYER_ENTERED_LEVEL_END,
       Events.LEVEL_START,
       Events.LEVEL_END,
+      Events.PLAYER_FLIPPED_LEVER_ON,
+      Events.PLAYER_FLIPPED_LEVER_OFF,
     ]);
   }
 
@@ -481,6 +522,17 @@ export default class GameLevel extends Scene {
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
+  // Use this function to create stationary interactable objects.
+  protected addInteractable (
+    spriteKey: string,
+    tilePos: Vec2,
+  ): void {
+    let interactable = this.add.animatedSprite(spriteKey, "primary");
+    interactable.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
+    interactable.scale.set(2, 2);
+    this.interactables.set(interactable, "off")
+  }
+
   protected handlePlayerEnemyCollision(
     player: AnimatedSprite,
     enemy: AnimatedSprite
@@ -518,6 +570,20 @@ export default class GameLevel extends Scene {
       } else {
         this.respawnPlayer();
       }
+    }
+  }
+
+  protected handlePlayerFlippingLever(
+    interactable: AnimatedSprite
+  ) {
+    if (this.interactables.get(interactable) === "off") {
+      this.interactables.set(interactable, "on");
+      interactable.animation.play("on", undefined, Events.PLAYER_FLIPPED_LEVER_ON);
+    }
+    else {
+      this.interactables.set(interactable, "off");
+      interactable.imageOffset = new Vec2(0, 0);
+      interactable.animation.play("off", undefined, Events.PLAYER_FLIPPED_LEVER_OFF);
     }
   }
 
