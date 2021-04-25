@@ -11,4 +11,5 @@ export enum Events {
   // New events
   PLAYER_FLIPPED_LEVER_ON = "PlayerFlippedLeverOn",
   PLAYER_FLIPPED_LEVER_OFF = "PlayerFlippedLeverOff",
+  PLAYER_HIT_SPIKE = "PlayerHitSpike",
 }

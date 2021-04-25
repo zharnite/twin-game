@@ -268,6 +268,12 @@ export default class GameLevel extends Scene {
           }
           break;
 
+        case Events.PLAYER_HIT_SPIKE:
+          {
+            this.respawnPlayer();
+          }
+          break;
+
         case Events.ENEMY_DIED:
           {
             // An enemy finished its dying animation, hide it
@@ -354,6 +360,7 @@ export default class GameLevel extends Scene {
       Events.LEVEL_END,
       Events.PLAYER_FLIPPED_LEVER_ON,
       Events.PLAYER_FLIPPED_LEVER_OFF,
+      Events.PLAYER_HIT_SPIKE,
     ]);
   }
 

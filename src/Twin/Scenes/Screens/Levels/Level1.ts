@@ -78,8 +78,8 @@ export default class Level1 extends GameLevel {
   }
 
   private setUpInteractables(): void {
-    this.addInteractable("BodyLever", new Vec2(7, 2));
-    this.addInteractable("SoulLever", new Vec2(23, 1));
+    this.addInteractable("BodyLever", new Vec2(3, 2));
+    this.addInteractable("SoulLever", new Vec2(25, 6));
   }
 
   updateScene(deltaT: number): void {

@@ -124,8 +124,7 @@
         "tilecount":256,
         "tileheight":16,
         "tilewidth":16
-       }],
- "tilewidth":16,
+       }], "tilewidth":16,
  "type":"map",
  "version":1.4,
  "width":32
