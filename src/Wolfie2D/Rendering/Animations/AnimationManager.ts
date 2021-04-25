@@ -76,6 +76,10 @@ export default class AnimationManager {
      * @returns The index in the current animation
      */
     getIndex(): number {
+        // Don't try and advance animations automatically for sprites without physics.
+        if (!this.owner.hasPhysics) {
+            return 0;
+        }
         if(this.animations.has(this.currentAnimation)){
             return this.animations.get(this.currentAnimation).frames[this.currentFrame].index;
         } else {

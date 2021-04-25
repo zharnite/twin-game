@@ -9,5 +9,6 @@ export enum Events {
   LEVEL_START = "LevelStart",
   LEVEL_END = "LevelEnd",
   // New events
-  PLAYER_FLIPPED_LEVER = "PlayerFlippedLever",
+  PLAYER_FLIPPED_LEVER_ON = "PlayerFlippedLeverOn",
+  PLAYER_FLIPPED_LEVER_OFF = "PlayerFlippedLeverOff",
 }
