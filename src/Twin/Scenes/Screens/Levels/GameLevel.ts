@@ -542,6 +542,7 @@ export default class GameLevel extends Scene {
       if (value === "on") {
         key.imageOffset = new Vec2(16, 0);
       }
+    // Switch blocks
     });
   }
 
@@ -554,6 +555,7 @@ export default class GameLevel extends Scene {
       if (value === "off") {
         key.imageOffset = new Vec2(0, 0);
       }
+      // Switch blocks
     });
   }
 
@@ -668,6 +670,7 @@ export default class GameLevel extends Scene {
 
   protected handlePlayerFlippingLever(interactable: AnimatedSprite) {
     if (this.interactables.get(interactable) === "off") {
+      // Do the lever flip animation
       this.interactables.set(interactable, "on");
       interactable.animation.play(
         "on",
@@ -675,6 +678,7 @@ export default class GameLevel extends Scene {
         Events.PLAYER_FLIPPED_LEVER_ON
       );
     } else {
+      // Do the lever flip animation
       this.interactables.set(interactable, "off");
       interactable.imageOffset = new Vec2(0, 0);
       interactable.animation.play(
