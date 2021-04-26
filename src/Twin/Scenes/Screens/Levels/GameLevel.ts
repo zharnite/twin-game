@@ -148,14 +148,17 @@ export default class GameLevel extends Scene {
     }
 
     // Send an input to interact with an object if the E key is pressed.
-		if (Input.isJustPressed("interact")) {
+    if (Input.isJustPressed("interact")) {
       // Check and see if the player or ghost player are overlapping any interactable objects.
       this.interactables.forEach((value: string, key: AnimatedSprite) => {
-        if (this.player.boundary.overlaps(key.boundary) || this.ghostPlayer.boundary.overlaps(key.boundary)) {
+        if (
+          this.player.boundary.overlaps(key.boundary) ||
+          this.ghostPlayer.boundary.overlaps(key.boundary)
+        ) {
           this.handlePlayerFlippingLever(key);
         }
       });
-		}
+    }
 
     // change character control input
     if (Input.isJustPressed("change control")) {
@@ -253,7 +256,6 @@ export default class GameLevel extends Scene {
                 key.imageOffset = new Vec2(16, 0);
               }
             });
-            
           }
           break;
 
@@ -530,14 +532,11 @@ export default class GameLevel extends Scene {
   }
 
   // Use this function to create stationary interactable objects.
-  protected addInteractable (
-    spriteKey: string,
-    tilePos: Vec2,
-  ): void {
+  protected addInteractable(spriteKey: string, tilePos: Vec2): void {
     let interactable = this.add.animatedSprite(spriteKey, "primary");
     interactable.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
     interactable.scale.set(2, 2);
-    this.interactables.set(interactable, "off")
+    this.interactables.set(interactable, "off");
   }
 
   protected handlePlayerEnemyCollision(
@@ -580,17 +579,22 @@ export default class GameLevel extends Scene {
     }
   }
 
-  protected handlePlayerFlippingLever(
-    interactable: AnimatedSprite
-  ) {
+  protected handlePlayerFlippingLever(interactable: AnimatedSprite) {
     if (this.interactables.get(interactable) === "off") {
       this.interactables.set(interactable, "on");
-      interactable.animation.play("on", undefined, Events.PLAYER_FLIPPED_LEVER_ON);
-    }
-    else {
+      interactable.animation.play(
+        "on",
+        undefined,
+        Events.PLAYER_FLIPPED_LEVER_ON
+      );
+    } else {
       this.interactables.set(interactable, "off");
       interactable.imageOffset = new Vec2(0, 0);
-      interactable.animation.play("off", undefined, Events.PLAYER_FLIPPED_LEVER_OFF);
+      interactable.animation.play(
+        "off",
+        undefined,
+        Events.PLAYER_FLIPPED_LEVER_OFF
+      );
     }
   }
 
@@ -622,5 +626,30 @@ export default class GameLevel extends Scene {
   unloadScene(): void {
     // Reset zoom level. Only game levels have a zoom level of 2.
     this.viewport.setZoomLevel(1);
+  }
+
+  /****** PUBLIC METHODS ******/
+  /**
+   * Set player's spawn location
+   * @param location Player spawn location
+   * @param move Whether to move the player to the new spawn location
+   */
+  public setPlayerSpawn(location: Vec2, move?: boolean): void {
+    this.playerSpawn = location;
+    if (move) {
+      this.player.position.copy(this.playerSpawn);
+    }
+  }
+
+  /**
+   * Set ghost player's spawn location
+   * @param location Player spawn location
+   * @param move Whether to move the player to the new spawn location
+   */
+  public setGhostPlayerSpawn(location: Vec2, move?: boolean): void {
+    this.ghostPlayerSpawn = location;
+    if (move) {
+      this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+    }
   }
 }
