@@ -65,6 +65,10 @@ export default class GameLevel extends Scene {
   protected levelTransitionTimer: Timer;
   protected levelTransitionScreen: Rect;
 
+  // Variable to track levels. Used to track if game is paused
+  protected currentLevel: new (...args: any) => GameLevel;
+  protected pauseTracker: PauseTracker;
+
   // Game nodes that the viewport can follow
   protected followNodes: AnimatedSprite[];
 
@@ -72,17 +76,10 @@ export default class GameLevel extends Scene {
   private followNodeIndex: number;
 
   // Change controls index for controlling a single game character
-  protected controlNodes: AnimatedSprite[];
+  protected controlNodes: AnimatedSprite[][];
   private controlNodesIndex: number;
 
-  // Variable to track levels. Used to track if game is paused
-  protected currentLevel: new (...args: any) => GameLevel;
-  protected pauseTracker: PauseTracker;
-
   // Exit variables
-  protected playerExitLocation: Vec2;
-  protected ghostPlayerExitLocation: Vec2;
-  protected exitSize: Vec2;
   protected levelEndAreas: { [character: string]: Rect };
 
   // Interactable variables
@@ -104,22 +101,6 @@ export default class GameLevel extends Scene {
     this.subscribeToEvents();
     this.addUI();
 
-    // Define nodes that the viewport can follow
-    this.followNodes = [];
-    this.followNodes.push(this.player);
-    this.followNodes.push(this.ghostPlayer);
-
-    // Initialize follow node index for viewport following
-    this.followNodeIndex = 0;
-    this.viewport.follow(this.followNodes[this.followNodeIndex]);
-
-    // Define nodes that we can control
-    this.controlNodes = [];
-    this.controlNodes.push(null);
-    this.controlNodes.push(this.player);
-    this.controlNodes.push(this.ghostPlayer);
-    this.controlNodesIndex = 0;
-
     // Initialize the timers
     this.levelTransitionTimer = new Timer(500);
     this.levelEndTimer = new Timer(3000, () => {
@@ -133,224 +114,14 @@ export default class GameLevel extends Scene {
     // Initially disable player movement
     Input.disableInput();
 
-    // Start unpaused
-    this.pauseTracker = new PauseTracker(
-      this,
-      this.viewport,
-      this.layers,
-      this.sceneManager
-    );
-
-    // Track exit locations
-    this.levelEndAreas = {};
+    // Twin game specific supported initializations
+    this.initPauseTracker();
+    this.initViewportFollow();
+    this.initControlNodes(); // debugging
+    this.initLevelEndAreas();
 
     // Initialize interactables list
     this.interactables = new Map();
-  }
-
-  updateScene(deltaT: number) {
-    // Handle the player making inputs
-
-    // swap view key input
-    if (Input.isJustPressed("swap view")) {
-      this.followNodeIndex++;
-      this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
-      this.viewport.follow(this.followNodes[this.followNodeIndex]);
-    }
-
-    // restart key input
-    if (Input.isJustPressed("restart")) {
-      this.respawnPlayer();
-    }
-
-    // pause key input
-    if (Input.isJustPressed("pause")) {
-      this.pauseTracker.toggle();
-    }
-
-    // Send an input to interact with an object if the E key is pressed.
-    if (Input.isJustPressed("interact")) {
-      // Check and see if the player or ghost player are overlapping any interactable objects.
-      this.interactables.forEach((value: string, key: AnimatedSprite) => {
-        if (
-          this.player.boundary.overlaps(key.boundary) ||
-          this.ghostPlayer.boundary.overlaps(key.boundary)
-        ) {
-          this.handlePlayerFlippingLever(key);
-        }
-      });
-    }
-
-    // change character control input
-    if (Input.isJustPressed("change control")) {
-      this.controlNodesIndex++;
-      this.controlNodesIndex =
-        this.controlNodesIndex % this.controlNodes.length;
-      let pc = <PlayerController>this.player.ai;
-      let gpc = <PlayerController>this.ghostPlayer.ai;
-      if (this.controlNodesIndex === 0) {
-        if (this.player.frozen) {
-          this.player.unfreeze();
-        }
-        if (this.ghostPlayer.frozen) {
-          this.ghostPlayer.unfreeze();
-        }
-      } else if (this.controlNodesIndex === 1) {
-        if (this.player.frozen) {
-          this.player.unfreeze();
-        }
-        if (!this.ghostPlayer.frozen) {
-          this.ghostPlayer.freeze();
-        }
-      } else if (this.controlNodesIndex === 2) {
-        if (!this.player.frozen) {
-          this.player.freeze();
-        }
-        if (this.ghostPlayer.frozen) {
-          this.ghostPlayer.unfreeze();
-        }
-      }
-    }
-
-    // Handle events and update the UI if needed
-    while (this.receiver.hasNextEvent()) {
-      let event = this.receiver.getNextEvent();
-
-      switch (event.type) {
-        case Events.PLAYER_HIT_COIN:
-          {
-            // Hit a coin
-            let coin;
-            if (
-              event.data.get("node") === this.player.id ||
-              event.data.get("node") === this.ghostPlayer.id
-            ) {
-              // Other is coin, disable
-              coin = this.sceneGraph.getNode(event.data.get("other"));
-            } else {
-              // Node is coin, disable
-              coin = this.sceneGraph.getNode(event.data.get("node"));
-            }
-
-            // Remove from physics and scene
-            coin.active = false;
-            coin.visible = false;
-
-            // Increment our number of coins
-            this.incPlayerCoins(1);
-          }
-          break;
-
-        case Events.PLAYER_HIT_COIN_BLOCK:
-          {
-            // Hit a coin block, so increment our number of coins
-            this.incPlayerCoins(1);
-          }
-          break;
-
-        case Events.PLAYER_HIT_ENEMY:
-          {
-            let node = this.sceneGraph.getNode(event.data.get("node"));
-            let other = this.sceneGraph.getNode(event.data.get("other"));
-
-            if (node === this.player || node === this.ghostPlayer) {
-              // Node is player, other is enemy
-              this.handlePlayerEnemyCollision(
-                <AnimatedSprite>node,
-                <AnimatedSprite>other
-              );
-            } else {
-              // Other is player, node is enemy
-              this.handlePlayerEnemyCollision(
-                <AnimatedSprite>other,
-                <AnimatedSprite>node
-              );
-            }
-          }
-          break;
-
-        case Events.PLAYER_FLIPPED_LEVER_ON:
-          {
-            // There are no built-in filtering functions for Maps so we have to do this bad code :(
-            this.interactables.forEach((value: string, key: AnimatedSprite) => {
-              if (value === "on") {
-                key.imageOffset = new Vec2(16, 0);
-              }
-            });
-          }
-          break;
-
-        case Events.PLAYER_FLIPPED_LEVER_OFF:
-          {
-            // There are no built-in filtering functions for Maps so we have to do this bad code :(
-            this.interactables.forEach((value: string, key: AnimatedSprite) => {
-              if (value === "off") {
-                key.imageOffset = new Vec2(0, 0);
-              }
-            });
-          }
-          break;
-
-        case Events.PLAYER_HIT_SPIKE:
-          {
-            this.respawnPlayer();
-          }
-          break;
-
-        case Events.ENEMY_DIED:
-          {
-            // An enemy finished its dying animation, hide it
-            let node = this.sceneGraph.getNode(event.data.get("owner"));
-            node.visible = false;
-          }
-          break;
-
-        case Events.PLAYER_ENTERED_LEVEL_END:
-          {
-            // Determines if both characters are colliding with exit
-            if (!this.handlePlayerExitCollision()) {
-              break;
-            }
-
-            if (
-              !this.levelEndTimer.hasRun() &&
-              this.levelEndTimer.isStopped()
-            ) {
-              // The player has reached the end of the level
-              this.levelEndTimer.start();
-              this.levelEndLabel.tweens.play("slideIn");
-            }
-          }
-          break;
-
-        case Events.LEVEL_START:
-          {
-            // Re-enable controls
-            console.log("Enabling input");
-            Input.enableInput();
-          }
-          break;
-
-        case Events.LEVEL_END:
-          {
-            // Go to the next level
-            if (this.nextLevel) {
-              console.log("Going to next level!");
-              let sceneOptions = SceneOptions.getSceneOptions();
-              this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
-            }
-          }
-          break;
-      }
-    }
-
-    // If player falls into a pit, kill them off and reset their position
-    if (
-      this.player.position.y > 100 * 64 ||
-      this.ghostPlayer.position.y > 100 * 64
-    ) {
-      this.respawnPlayer();
-    }
   }
 
   protected initLayers(): void {
@@ -522,19 +293,258 @@ export default class GameLevel extends Scene {
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
   }
 
-  protected addLevelEnd(startingTile: Vec2, size: Vec2, group: string): void {
-    this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
-      position: startingTile.add(size.scaled(0.5)).scale(32),
-      size: size.scale(32),
-    });
-    this.levelEndArea.addPhysics(undefined, undefined, false, true);
-    this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
-    this.levelEndAreas[group] = this.levelEndArea;
+  private initPauseTracker(): void {
+    this.pauseTracker = new PauseTracker(
+      this,
+      this.viewport,
+      this.layers,
+      this.sceneManager
+    );
+  }
 
-    // Set colors to be different for testing purposes: can be alpha overlay later
-    if (group === PlayerTypes.PLAYER) this.levelEndArea.color = Color.GREEN;
-    if (group === PlayerTypes.GHOST_PLAYER)
-      this.levelEndArea.color = Color.MAGENTA;
+  private initViewportFollow(): void {
+    // Define nodes that the viewport can follow
+    this.followNodes = [];
+    this.followNodes.push(this.player);
+    this.followNodes.push(this.ghostPlayer);
+
+    // Initialize follow node index for viewport following
+    this.followNodeIndex = 0;
+    this.viewport.follow(this.followNodes[this.followNodeIndex]);
+  }
+
+  private initControlNodes(): void {
+    this.controlNodes = [];
+    this.controlNodes.push([this.player, this.ghostPlayer]);
+    this.controlNodes.push([this.player]);
+    this.controlNodes.push([this.ghostPlayer]);
+    this.controlNodesIndex = 0;
+  }
+
+  private initLevelEndAreas(): void {
+    this.levelEndAreas = {};
+  }
+
+  updateScene(deltaT: number) {
+    this.handleInputs(deltaT);
+    this.handleEvents(deltaT);
+
+    // If player falls into a pit, kill them off and reset their position
+    if (
+      this.player.position.y > 100 * 64 ||
+      this.ghostPlayer.position.y > 100 * 64
+    ) {
+      this.respawnPlayer();
+    }
+  }
+
+  /**
+   * Handle the player making inputs
+   * Game inputs: swap views, restart, pause
+   * Debug inputs: change control nodes
+   * Level inputs: interact
+   * @param deltaT
+   */
+  private handleInputs(deltaT: number): void {
+    // Game inputs
+    this.handleInputSwapView();
+    this.handleInputRestart();
+    this.handleInputPause();
+
+    // Debug input
+    this.handleInputChangeControls();
+
+    // Send an input to interact with an object if the E key is pressed.
+    if (Input.isJustPressed("interact")) {
+      // Check and see if the player or ghost player are overlapping any interactable objects.
+      this.interactables.forEach((value: string, key: AnimatedSprite) => {
+        if (
+          this.player.boundary.overlaps(key.boundary) ||
+          this.ghostPlayer.boundary.overlaps(key.boundary)
+        ) {
+          this.handlePlayerFlippingLever(key);
+        }
+      });
+    }
+  }
+
+  private handleInputSwapView(): void {
+    if (Input.isJustPressed("swap view")) {
+      this.followNodeIndex++;
+      this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
+      this.viewport.follow(this.followNodes[this.followNodeIndex]);
+    }
+  }
+
+  private handleInputRestart(): void {
+    if (Input.isJustPressed("restart")) {
+      this.respawnPlayer();
+    }
+  }
+
+  private handleInputPause(): void {
+    if (Input.isJustPressed("pause")) {
+      this.pauseTracker.toggle();
+    }
+  }
+
+  private handleInputChangeControls(): void {
+    // change character control input
+    if (Input.isJustPressed("change control")) {
+      // Freeze all nodes
+      this.controlNodes[0].forEach((node) => {
+        if (!node.frozen) {
+          node.freeze();
+        }
+      });
+
+      // Unfreeze nodes in the array
+      this.controlNodesIndex++;
+      this.controlNodesIndex =
+        this.controlNodesIndex % this.controlNodes.length;
+      this.controlNodes[this.controlNodesIndex].forEach((node) => {
+        if (node.frozen) {
+          node.unfreeze();
+        }
+      });
+    }
+  }
+
+  /**
+   * Handle events and update the UI if needed
+   * @param deltaT
+   */
+  private handleEvents(deltaT: number): void {
+    while (this.receiver.hasNextEvent()) {
+      let event = this.receiver.getNextEvent();
+
+      switch (event.type) {
+        case Events.PLAYER_HIT_COIN:
+          {
+            // Hit a coin
+            let coin;
+            if (
+              event.data.get("node") === this.player.id ||
+              event.data.get("node") === this.ghostPlayer.id
+            ) {
+              // Other is coin, disable
+              coin = this.sceneGraph.getNode(event.data.get("other"));
+            } else {
+              // Node is coin, disable
+              coin = this.sceneGraph.getNode(event.data.get("node"));
+            }
+
+            // Remove from physics and scene
+            coin.active = false;
+            coin.visible = false;
+
+            // Increment our number of coins
+            this.incPlayerCoins(1);
+          }
+          break;
+
+        case Events.PLAYER_HIT_COIN_BLOCK:
+          {
+            // Hit a coin block, so increment our number of coins
+            this.incPlayerCoins(1);
+          }
+          break;
+
+        case Events.PLAYER_HIT_ENEMY:
+          {
+            let node = this.sceneGraph.getNode(event.data.get("node"));
+            let other = this.sceneGraph.getNode(event.data.get("other"));
+
+            if (node === this.player || node === this.ghostPlayer) {
+              // Node is player, other is enemy
+              this.handlePlayerEnemyCollision(
+                <AnimatedSprite>node,
+                <AnimatedSprite>other
+              );
+            } else {
+              // Other is player, node is enemy
+              this.handlePlayerEnemyCollision(
+                <AnimatedSprite>other,
+                <AnimatedSprite>node
+              );
+            }
+          }
+          break;
+
+        case Events.PLAYER_FLIPPED_LEVER_ON:
+          {
+            // There are no built-in filtering functions for Maps so we have to do this bad code :(
+            this.interactables.forEach((value: string, key: AnimatedSprite) => {
+              if (value === "on") {
+                key.imageOffset = new Vec2(16, 0);
+              }
+            });
+          }
+          break;
+
+        case Events.PLAYER_FLIPPED_LEVER_OFF:
+          {
+            // There are no built-in filtering functions for Maps so we have to do this bad code :(
+            this.interactables.forEach((value: string, key: AnimatedSprite) => {
+              if (value === "off") {
+                key.imageOffset = new Vec2(0, 0);
+              }
+            });
+          }
+          break;
+
+        case Events.PLAYER_HIT_SPIKE:
+          {
+            this.respawnPlayer();
+          }
+          break;
+
+        case Events.ENEMY_DIED:
+          {
+            // An enemy finished its dying animation, hide it
+            let node = this.sceneGraph.getNode(event.data.get("owner"));
+            node.visible = false;
+          }
+          break;
+
+        case Events.PLAYER_ENTERED_LEVEL_END:
+          {
+            // Determines if both characters are colliding with exit
+            if (!this.isLevelComplete()) {
+              break;
+            }
+
+            if (
+              !this.levelEndTimer.hasRun() &&
+              this.levelEndTimer.isStopped()
+            ) {
+              // The player has reached the end of the level
+              this.levelEndTimer.start();
+              this.levelEndLabel.tweens.play("slideIn");
+            }
+          }
+          break;
+
+        case Events.LEVEL_START:
+          {
+            // Re-enable controls
+            console.log("Enabling input");
+            Input.enableInput();
+          }
+          break;
+
+        case Events.LEVEL_END:
+          {
+            // Go to the next level
+            if (this.nextLevel) {
+              console.log("Going to next level!");
+              let sceneOptions = SceneOptions.getSceneOptions();
+              this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
+            }
+          }
+          break;
+      }
+    }
   }
 
   protected addEnemy(
@@ -620,17 +630,16 @@ export default class GameLevel extends Scene {
   }
 
   /**
-   * Handles player collision with exit
+   * Determines if the player can progress to the next level
    * @returns boolean true if exit condition is met
    */
-  protected handlePlayerExitCollision(): boolean {
+  protected isLevelComplete(): boolean {
     let playerOverlap = this.player.boundary.overlaps(
       this.levelEndAreas[PlayerTypes.PLAYER].boundary
     );
     let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
       this.levelEndAreas[PlayerTypes.GHOST_PLAYER].boundary
     );
-
     return playerOverlap && ghostPlayerOverlap;
   }
 
@@ -650,6 +659,24 @@ export default class GameLevel extends Scene {
   }
 
   /****** PUBLIC METHODS ******/
+
+  /*** Adders ***/
+  public addExit(startingTile: Vec2, size: Vec2, group: string): void {
+    this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
+      position: startingTile,
+      size: size,
+    });
+    this.levelEndArea.addPhysics(undefined, undefined, false, true);
+    this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
+    this.levelEndAreas[group] = this.levelEndArea;
+
+    // Set colors to be different for testing purposes: can be alpha overlay later
+    if (group === PlayerTypes.PLAYER) this.levelEndArea.color = Color.GREEN;
+    if (group === PlayerTypes.GHOST_PLAYER)
+      this.levelEndArea.color = Color.MAGENTA;
+  }
+
+  /*** Setters ***/
   /**
    * Set player's spawn location
    * @param location Player spawn location
