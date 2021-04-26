@@ -1,5 +1,6 @@
 import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import Input from "../../../../Wolfie2D/Input/Input";
 import GameNode, {
   TweenableProperties,
@@ -415,135 +416,190 @@ export default class GameLevel extends Scene {
    * @param deltaT
    */
   private handleEvents(deltaT: number): void {
+    // ZHEN TODO - split up and add more events for the game
     while (this.receiver.hasNextEvent()) {
       let event = this.receiver.getNextEvent();
 
       switch (event.type) {
         case Events.PLAYER_HIT_COIN:
           {
-            // Hit a coin
-            let coin;
-            if (
-              event.data.get("node") === this.player.id ||
-              event.data.get("node") === this.ghostPlayer.id
-            ) {
-              // Other is coin, disable
-              coin = this.sceneGraph.getNode(event.data.get("other"));
-            } else {
-              // Node is coin, disable
-              coin = this.sceneGraph.getNode(event.data.get("node"));
-            }
-
-            // Remove from physics and scene
-            coin.active = false;
-            coin.visible = false;
-
-            // Increment our number of coins
-            this.incPlayerCoins(1);
+            this.handleEventPlayerHitCoin(deltaT, event);
           }
           break;
 
         case Events.PLAYER_HIT_COIN_BLOCK:
           {
-            // Hit a coin block, so increment our number of coins
-            this.incPlayerCoins(1);
+            this.handleEventPlayerHitCoinBlock(deltaT, event);
           }
           break;
 
         case Events.PLAYER_HIT_ENEMY:
           {
-            let node = this.sceneGraph.getNode(event.data.get("node"));
-            let other = this.sceneGraph.getNode(event.data.get("other"));
-
-            if (node === this.player || node === this.ghostPlayer) {
-              // Node is player, other is enemy
-              this.handlePlayerEnemyCollision(
-                <AnimatedSprite>node,
-                <AnimatedSprite>other
-              );
-            } else {
-              // Other is player, node is enemy
-              this.handlePlayerEnemyCollision(
-                <AnimatedSprite>other,
-                <AnimatedSprite>node
-              );
-            }
+            this.handleEventPlayerHitEnemy(deltaT, event);
           }
           break;
 
         case Events.PLAYER_FLIPPED_LEVER_ON:
           {
-            // There are no built-in filtering functions for Maps so we have to do this bad code :(
-            this.interactables.forEach((value: string, key: AnimatedSprite) => {
-              if (value === "on") {
-                key.imageOffset = new Vec2(16, 0);
-              }
-            });
+            this.handleEventPlayerFlippedLeverOn(deltaT, event);
           }
           break;
 
         case Events.PLAYER_FLIPPED_LEVER_OFF:
           {
-            // There are no built-in filtering functions for Maps so we have to do this bad code :(
-            this.interactables.forEach((value: string, key: AnimatedSprite) => {
-              if (value === "off") {
-                key.imageOffset = new Vec2(0, 0);
-              }
-            });
+            this.handleEventPlayerFlippedLeverOff(deltaT, event);
           }
           break;
 
         case Events.PLAYER_HIT_SPIKE:
           {
-            this.respawnPlayer();
+            this.handleEventPlayerHitSpike(deltaT, event);
           }
           break;
 
         case Events.ENEMY_DIED:
           {
-            // An enemy finished its dying animation, hide it
-            let node = this.sceneGraph.getNode(event.data.get("owner"));
-            node.visible = false;
+            this.handleEventEnemyDied(deltaT, event);
           }
           break;
 
         case Events.PLAYER_ENTERED_LEVEL_END:
           {
-            // Determines if both characters are colliding with exit
-            if (!this.isLevelComplete()) {
-              break;
-            }
-
-            if (
-              !this.levelEndTimer.hasRun() &&
-              this.levelEndTimer.isStopped()
-            ) {
-              // The player has reached the end of the level
-              this.levelEndTimer.start();
-              this.levelEndLabel.tweens.play("slideIn");
-            }
+            this.handleEventPlayerEnteredLevelEnd(deltaT, event);
           }
           break;
 
         case Events.LEVEL_START:
           {
-            // Re-enable controls
-            console.log("Enabling input");
-            Input.enableInput();
+            this.handleEventLevelStart(deltaT, event);
           }
           break;
 
         case Events.LEVEL_END:
           {
-            // Go to the next level
-            if (this.nextLevel) {
-              console.log("Going to next level!");
-              let sceneOptions = SceneOptions.getSceneOptions();
-              this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
-            }
+            this.handleEventLevelEnd(deltaT, event);
           }
           break;
       }
+    }
+  }
+
+  private handleEventPlayerHitCoin(deltaT: number, event: GameEvent): void {
+    // Hit a coin
+    let coin;
+    if (
+      event.data.get("node") === this.player.id ||
+      event.data.get("node") === this.ghostPlayer.id
+    ) {
+      // Other is coin, disable
+      coin = this.sceneGraph.getNode(event.data.get("other"));
+    } else {
+      // Node is coin, disable
+      coin = this.sceneGraph.getNode(event.data.get("node"));
+    }
+
+    // Remove from physics and scene
+    coin.active = false;
+    coin.visible = false;
+
+    // Increment our number of coins
+    this.incPlayerCoins(1);
+  }
+
+  private handleEventPlayerHitCoinBlock(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // Hit a coin block, so increment our number of coins
+    this.incPlayerCoins(1);
+  }
+
+  private handleEventPlayerHitEnemy(deltaT: number, event: GameEvent): void {
+    let node = this.sceneGraph.getNode(event.data.get("node"));
+    let other = this.sceneGraph.getNode(event.data.get("other"));
+
+    if (node === this.player || node === this.ghostPlayer) {
+      // Node is player, other is enemy
+      this.handlePlayerEnemyCollision(
+        <AnimatedSprite>node,
+        <AnimatedSprite>other
+      );
+    } else {
+      // Other is player, node is enemy
+      this.handlePlayerEnemyCollision(
+        <AnimatedSprite>other,
+        <AnimatedSprite>node
+      );
+    }
+  }
+
+  private handleEventPlayerFlippedLeverOn(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // There are no built-in filtering functions for Maps so we have to do this bad code :(
+    this.interactables.forEach((value: string, key: AnimatedSprite) => {
+      if (value === "on") {
+        key.imageOffset = new Vec2(16, 0);
+      }
+    });
+  }
+
+  private handleEventPlayerFlippedLeverOff(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // There are no built-in filtering functions for Maps so we have to do this bad code :(
+    this.interactables.forEach((value: string, key: AnimatedSprite) => {
+      if (value === "off") {
+        key.imageOffset = new Vec2(0, 0);
+      }
+    });
+  }
+
+  private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
+    this.respawnPlayer();
+  }
+
+  private handleEventEnemyDied(deltaT: number, event: GameEvent): void {
+    // An enemy finished its dying animation, hide it
+    let node = this.sceneGraph.getNode(event.data.get("owner"));
+    node.visible = false;
+  }
+
+  private handleEventPlayerEnteredLevelEnd(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // Determines if both characters are colliding with exit
+    if (!this.isLevelComplete()) {
+      return;
+    }
+
+    // Only progress when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
+      return;
+    }
+
+    if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
+      // The player has reached the end of the level
+      this.levelEndTimer.start();
+      this.levelEndLabel.tweens.play("slideIn");
+    }
+  }
+
+  private handleEventLevelStart(deltaT: number, event: GameEvent): void {
+    // Re-enable controls
+    console.log("Enabling input");
+    Input.enableInput();
+  }
+
+  private handleEventLevelEnd(deltaT: number, event: GameEvent): void {
+    // Go to the next level
+    if (this.nextLevel) {
+      console.log("Going to next level!");
+      let sceneOptions = SceneOptions.getSceneOptions();
+      this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
     }
   }
 
