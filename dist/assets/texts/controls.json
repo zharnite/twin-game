@@ -1,12 +1,13 @@
 {
   "layer": "Controls",
   "Controls": [
-    "- [A] - Move left                                       ",
-    "- [D] - Move right                                      ",
-    "- [Space] - Jump                                        ",
-    "- [R] - Restart level                                   ",
-    "- [Esc]/[P] - Pause                                     ",
-    "- [V] - Swap between Body and Soul                      ",
-    "- [E] - Use Object                                      "
+    "[A] - Move left                                       ",
+    "[D] - Move right                                      ",
+    "[Space] - Jump                                        ",
+    "[R] - Restart level                                   ",
+    "[Esc]/[P] - Pause                                     ",
+    "[V] - Swap between Body and Soul                      ",
+    "[E] - Use Object                                      ",
+    "[C] - Freeze/Unfreeze Character                       "
   ]
 }
