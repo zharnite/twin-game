@@ -21,27 +21,8 @@ import { PlayerTypes } from "../../Enums/PlayerEnums";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
-
-// After you update a level files, replace the "tilesets" section with this:
-
-/*
-  
-"tilesets":[
-       {
-        "columns":16,
-        "firstgid":1,
-        "image":"Twin-Tilemap.png",
-        "imageheight":256,
-        "imagewidth":256,
-        "margin":0,
-        "name":"Twin-Tilemap_tileset",
-        "spacing":0,
-        "tilecount":256,
-        "tileheight":16,
-        "tilewidth":16
-       }],
-
-*/
+import TerrainManager from "./LevelHelpers/TerrainManager";
+import Lever from "../../../Interactables/Lever";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -84,7 +65,8 @@ export default class GameLevel extends Scene {
   protected levelEndAreas: { [character: string]: Rect };
 
   // Interactable variables
-  protected interactables: Map<AnimatedSprite, string>;
+  // protected interactables: Map<AnimatedSprite, string>;
+  protected levers: Lever[];
 
   loadScene(): void {
     // load pause items
@@ -122,7 +104,7 @@ export default class GameLevel extends Scene {
     this.initLevelEndAreas();
 
     // Initialize interactables list
-    this.interactables = new Map();
+    this.levers = [];
   }
 
   protected initLayers(): void {
@@ -357,15 +339,16 @@ export default class GameLevel extends Scene {
 
     // Send an input to interact with an object if the E key is pressed.
     if (Input.isJustPressed("interact")) {
-      // Check and see if the player or ghost player are overlapping any interactable objects.
-      this.interactables.forEach((value: string, key: AnimatedSprite) => {
-        if (
-          this.player.boundary.overlaps(key.boundary) ||
-          this.ghostPlayer.boundary.overlaps(key.boundary)
-        ) {
-          this.handlePlayerFlippingLever(key);
+      // Check and see if the player or ghost player are overlapping any interactable objects of the right kind.
+      for (var i in this.levers) {
+        let sprite = this.levers[i].sprite;
+        if (this.player.boundary.overlaps(sprite.boundary) && sprite.imageId === "BodyLever") {
+          this.handlePlayerFlippingLever(this.levers[i]);
         }
-      });
+        else if (this.ghostPlayer.boundary.overlaps(sprite.boundary) && sprite.imageId === "SoulLever") {
+          this.handlePlayerFlippingLever(this.levers[i]);
+        }
+      }
     }
   }
 
@@ -538,12 +521,26 @@ export default class GameLevel extends Scene {
     event: GameEvent
   ): void {
     // There are no built-in filtering functions for Maps so we have to do this bad code :(
-    this.interactables.forEach((value: string, key: AnimatedSprite) => {
-      if (value === "on") {
-        key.imageOffset = new Vec2(16, 0);
+    for (let i in this.levers) {
+      if (this.levers[i].getState() === "on") {
+        this.levers[i].sprite.imageOffset = new Vec2(16, 0);
+
+        // IDEALLY WE COULD ADJUST BLOCK VALUES HERE
+
+        // Adjust all of the lever's associated blocks.
+        // let terrainManager = this.currentLevel.prototype.terrainManager;
+        // terrainManager.parseTilemap();
+        // let mainTiles = terrainManager.getLayerTiles("Main");
+        // let count = 0;
+        // for (let tile in mainTiles) {
+          // if (terrainManager.getLocationFromIndex(mainTiles[tile]) === this.levers[i].associatedBlocks[count]) {
+            // mainTiles[tile] = 0;
+            // console.log("removed a block");
+            // count++;
+          // }
+        // }
       }
-    // Switch blocks
-    });
+    }
   }
 
   private handleEventPlayerFlippedLeverOff(
@@ -551,12 +548,11 @@ export default class GameLevel extends Scene {
     event: GameEvent
   ): void {
     // There are no built-in filtering functions for Maps so we have to do this bad code :(
-    this.interactables.forEach((value: string, key: AnimatedSprite) => {
-      if (value === "off") {
-        key.imageOffset = new Vec2(0, 0);
+    for (let i in this.levers) {
+      if (this.levers[i].getState() === "off") {
+        this.levers[i].sprite.imageOffset = new Vec2(0, 0);
       }
-      // Switch blocks
-    });
+    }
   }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
@@ -620,12 +616,14 @@ export default class GameLevel extends Scene {
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
-  // Use this function to create stationary interactable objects.
-  protected addInteractable(spriteKey: string, tilePos: Vec2): void {
-    let interactable = this.add.animatedSprite(spriteKey, "primary");
-    interactable.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
-    interactable.scale.set(2, 2);
-    this.interactables.set(interactable, "off");
+  // Use this function to create levers.
+  protected addLever(state: string, spriteKey: string, tilePos: Vec2, asssociatedBlocks: Vec2[]): void {
+    let sprite = this.add.animatedSprite(spriteKey, "primary");
+    sprite.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
+    sprite.scale.set(2, 2);
+    let newLever = new Lever(state, sprite, asssociatedBlocks);
+    // Add new lever to array.
+    this.levers.push(newLever);
   }
 
   protected handlePlayerEnemyCollision(
@@ -668,20 +666,21 @@ export default class GameLevel extends Scene {
     }
   }
 
-  protected handlePlayerFlippingLever(interactable: AnimatedSprite) {
-    if (this.interactables.get(interactable) === "off") {
-      // Do the lever flip animation
-      this.interactables.set(interactable, "on");
-      interactable.animation.play(
+  protected handlePlayerFlippingLever(lever: Lever) {
+    if (lever.getState() === "off") {
+      // Do the lever flip animation to ON
+      lever.setState("on");
+      lever.sprite.animation.play(
         "on",
         undefined,
         Events.PLAYER_FLIPPED_LEVER_ON
       );
-    } else {
-      // Do the lever flip animation
-      this.interactables.set(interactable, "off");
-      interactable.imageOffset = new Vec2(0, 0);
-      interactable.animation.play(
+    } 
+    else {
+      // Do the lever flip animation to ON
+      lever.setState("off");
+      lever.sprite.imageOffset = new Vec2(0, 0);
+      lever.sprite.animation.play(
         "off",
         undefined,
         Events.PLAYER_FLIPPED_LEVER_OFF

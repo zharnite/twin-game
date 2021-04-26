@@ -11,6 +11,7 @@ import TerrainManager from "./LevelHelpers/TerrainManager";
 
 export default class Level1 extends GameLevel {
   private tilemap: string = "Level1";
+  public terrainManager: TerrainManager;
 
   loadScene(): void {
     this.load.image("background", "assets/sprites/Twin-Background.png");
@@ -42,8 +43,8 @@ export default class Level1 extends GameLevel {
     this.initLevelVariables();
 
     // Set up TerrainManager to parse tiles
-    let terrainManger = new TerrainManager(this, this.tilemap);
-    terrainManger.parseTilemap();
+    this.terrainManager = new TerrainManager(this, this.tilemap);
+    this.terrainManager.parseTilemap();
 
     // Add interactables
     this.setUpInteractables();
@@ -68,8 +69,19 @@ export default class Level1 extends GameLevel {
   }
 
   private setUpInteractables(): void {
-    this.addInteractable("BodyLever", new Vec2(3, 2));
-    this.addInteractable("SoulLever", new Vec2(25, 6));
+    // for a lever: State - Sprite Key - Position - List of Associated Blocks
+    this.addLever("off", "BodyLever", new Vec2(19, 14), [
+      new Vec2(20, 11),
+      new Vec2(20, 12),
+      new Vec2(20, 13),
+      new Vec2(20, 14),
+    ]);
+    this.addLever("off", "SoulLever", new Vec2(22, 14), [
+      new Vec2(23, 11),
+      new Vec2(23, 12),
+      new Vec2(23, 13),
+      new Vec2(23, 14),
+    ]);
   }
 
   updateScene(deltaT: number): void {
