@@ -32,12 +32,24 @@ export default class Level1 extends GameLevel {
   }
 
   startScene(): void {
-    // Set up TerrainManager to parse tiles
-    let terrainManger = new TerrainManager(this, this.tilemap);
+    // Set up the initial scene
+    this.setUpScene();
 
-    // Set up level variables
+    // Do generic setup for a GameLevel
+    super.startScene();
+
+    // Initialize level specific variables
     this.initLevelVariables();
 
+    // Set up TerrainManager to parse tiles
+    let terrainManger = new TerrainManager(this, this.tilemap);
+    terrainManger.parseTilemap();
+
+    // Add interactables
+    this.setUpInteractables();
+  }
+
+  private setUpScene(): void {
     // Add a background layer and set the background image on it
     this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
     let bg = this.add.sprite("background", "bg");
@@ -47,40 +59,12 @@ export default class Level1 extends GameLevel {
     // Add the level 1 tilemap
     this.add.tilemap(this.tilemap, new Vec2(2, 2));
     this.viewport.setBounds(0, 0, 32 * 32, 16 * 32);
-
-    // Do generic setup for a GameLevel
-    super.startScene();
-
-    // Set up exits
-    this.setUpExits();
-
-    // Add interactables
-    this.setUpInteractables();
   }
 
   private initLevelVariables(): void {
-    // Initialize variables
-    // this.playerSpawn = new Vec2(4.5 * 32, 14.5 * 32);
-    // this.ghostPlayerSpawn = new Vec2(19 * 32, 14 * 32);
-
     // Set up current and next level
     this.currentLevel = Level1;
     this.nextLevel = Level2;
-  }
-
-  private setUpExits(): void {
-    // Set up exit locations
-    this.playerExitLocation = new Vec2(14, 14);
-    this.ghostPlayerExitLocation = new Vec2(30, 14);
-    this.exitSize = new Vec2(1, 1);
-
-    // Set up exits for player and ghostPlayer
-    this.addLevelEnd(new Vec2(14, 14), new Vec2(1, 1), PlayerTypes.PLAYER);
-    this.addLevelEnd(
-      new Vec2(30, 14),
-      new Vec2(1, 1),
-      PlayerTypes.GHOST_PLAYER
-    );
   }
 
   private setUpInteractables(): void {
@@ -90,6 +74,5 @@ export default class Level1 extends GameLevel {
 
   updateScene(deltaT: number): void {
     super.updateScene(deltaT);
-    Debug.log("playerpos", this.player.position.toString());
   }
 }
