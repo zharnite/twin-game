@@ -4,4 +4,5 @@ export enum TilemapLayers {
   FOREGROUND = "Foreground",
   COINS = "Coins",
   INTERACTABLE = "Interactable",
+  DOORS = "Doors",
 }

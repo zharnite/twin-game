@@ -60,8 +60,8 @@ export default class Level1 extends GameLevel {
 
   private initLevelVariables(): void {
     // Initialize variables
-    this.playerSpawn = new Vec2(4.5 * 32, 14.5 * 32);
-    this.ghostPlayerSpawn = new Vec2(19 * 32, 14 * 32);
+    // this.playerSpawn = new Vec2(4.5 * 32, 14.5 * 32);
+    // this.ghostPlayerSpawn = new Vec2(19 * 32, 14 * 32);
 
     // Set up current and next level
     this.currentLevel = Level1;
