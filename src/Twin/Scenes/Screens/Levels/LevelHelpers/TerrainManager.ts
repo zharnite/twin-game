@@ -5,8 +5,10 @@ import {
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import { GraphicType } from "../../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../../../../Wolfie2D/Nodes/Graphics/Rect";
+import OrthogonalTilemap from "../../../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Color from "../../../../../Wolfie2D/Utils/Color";
 import { Events } from "../../../../Enums/EventEnums";
+import PlayerController from "../../../../Player/PlayerController";
 import { PlayerTypes } from "../../../Enums/PlayerEnums";
 import GameLevel from "../GameLevel";
 import { Terrains } from "./Enums/TerrainEnums";
@@ -17,6 +19,7 @@ export default class TerrainManager {
   private level: GameLevel;
   private tilemapName: string;
   private tilemap: TiledTilemapData;
+  private orthogonalTilemap: OrthogonalTilemap;
 
   // Static variables
   private singleBlockSize: Vec2;
@@ -31,7 +34,7 @@ export default class TerrainManager {
   // Exits
   public levelEndAreas: { [character: string]: Rect };
   // Levers
-  public levelLeverAreas: { [character: string]: Rect };
+  public levelLeverAreas: { [character: number]: Rect };
   public leverToDoorsMap: Map<number, Vec2[]>;
 
   constructor(level: GameLevel, tilemapName: string) {
@@ -193,6 +196,8 @@ export default class TerrainManager {
     console.log(this.leverToDoorsMap);
   }
 
+  /*** HELPERS ***/
+
   /**
    * Gets all tiles for a layer
    * @param name The layer's name (Main, Background, Doors)
@@ -230,7 +235,20 @@ export default class TerrainManager {
     return new Vec2(col, row);
   }
 
-  /****** SCENE ADDERS ******/
+  private getLocationFromWorldLocation(worldCoords: Vec2): Vec2 {
+    let coord = worldCoords
+      .scaled(1 / this.scaleFactor)
+      .add(this.singleBlockSize.scaled(-0.5));
+
+    return coord;
+  }
+
+  private getIndexFromLocation(coord: Vec2): number {
+    return coord.y * this.tilemap.width + coord.x;
+  }
+
+  /****** PUBLIC METHODS ******/
+  /*** SCENE ADDERS ***/
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
     let levelEndArea = <Rect>this.level.add.graphic(
       GraphicType.RECT,
@@ -262,5 +280,86 @@ export default class TerrainManager {
       lever.setTrigger(group, Events.PLAYER_OVERLAPS_LEVER, null)
     );
     this.levelLeverAreas[leverType] = lever;
+  }
+
+  /*** TILE MODIFIERS ***/
+
+  public toggleLever(nodeid: number, leverid: number): void {
+    // If id is odd (on / locked), go up
+    // If id is even (off / unlocked), go down
+    if (leverid % 2 === 0) {
+      this.toggleLeverOn(leverid);
+    } else {
+      this.toggleLeverOff(leverid);
+    }
+  }
+
+  private toggleLeverOn(leverid: number) {
+    // Turn on the lever: (off / unlocked / even) -> (on / locked / odd)
+    let leverLayer = this.getLayerTiles(TilemapLayers.LEVERS);
+    let leverDoorLayer = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
+    let leverDoorBGLayer = this.getLayerTiles(
+      TilemapLayers.LEVER_DOORS_BACKGROUND
+    );
+    let leverOnID = leverid - 1;
+    let leverOffID = leverid;
+    let lockedDoorID = leverid + 1;
+    let unlockedDoorID = leverid + 2;
+
+    // Update lever
+    let leverArea = this.levelLeverAreas[leverOffID];
+    let leverLocation = this.getLocationFromWorldLocation(leverArea.position);
+    let index = this.getIndexFromLocation(leverLocation);
+    // Update levelLeverAreas
+    this.levelLeverAreas[leverOnID] = leverArea;
+    this.levelLeverAreas[leverOffID] = null;
+
+    // Update lever doors
+    let doors = this.leverToDoorsMap.get(leverOffID);
+    doors.forEach((door) => {
+      let index = this.getIndexFromLocation(
+        this.getLocationFromWorldLocation(door)
+      );
+      leverDoorLayer[index] = lockedDoorID; // set door
+      leverDoorBGLayer[index] = 0; // clear unlocked door
+    });
+    // Update leverToDoorsMap
+    this.leverToDoorsMap.set(leverOnID, doors);
+    this.leverToDoorsMap.delete(leverOffID);
+  }
+
+  private toggleLeverOff(leverid: number) {
+    // Turn off the lever: (on / locked / odd) -> (off / unlocked / even)
+    let leverLayer = this.getLayerTiles(TilemapLayers.LEVERS);
+    let leverDoorLayer = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
+    let leverDoorBGLayer = this.getLayerTiles(
+      TilemapLayers.LEVER_DOORS_BACKGROUND
+    );
+    let leverOnID = leverid;
+    let leverOffID = leverid + 1;
+    let lockedDoorID = leverid + 2;
+    let unlockedDoorID = leverid + 3;
+
+    // Update lever
+    let leverArea = this.levelLeverAreas[leverOnID];
+    let leverLocation = this.getLocationFromWorldLocation(leverArea.position);
+    let index = this.getIndexFromLocation(leverLocation);
+    leverLayer[index] = leverOffID;
+    // Update levelLeverAreas
+    this.levelLeverAreas[leverOffID] = leverArea;
+    this.levelLeverAreas[leverOnID] = null;
+
+    // Update lever doors
+    let doors = this.leverToDoorsMap.get(leverOnID);
+    doors.forEach((door) => {
+      let index = this.getIndexFromLocation(
+        this.getLocationFromWorldLocation(door)
+      );
+      leverDoorLayer[index] = 0; // clear door
+      leverDoorBGLayer[index] = unlockedDoorID; // set unlocked door
+    });
+    // Update leverToDoorsMap
+    this.leverToDoorsMap.set(leverOffID, doors);
+    this.leverToDoorsMap.delete(leverOnID);
   }
 }
