@@ -365,7 +365,11 @@ export default class GameLevel extends Scene {
 
   private handleInputRestart(): void {
     if (Input.isJustPressed("restart")) {
-      this.respawnPlayer();
+      this.sceneManager.changeToScene(
+        this.currentLevel,
+        {},
+        SceneOptions.getSceneOptions()
+      );
     }
   }
 
