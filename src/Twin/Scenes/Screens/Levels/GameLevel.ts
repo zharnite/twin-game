@@ -533,11 +533,14 @@ export default class GameLevel extends Scene {
       return;
     }
 
-    // Get node which was toggled
+    // Get the node id (body or soul) which toggled the switch
+    let id = event.data.get("node");
+
+    // Get the lever that the player overlaps with
+    let leverid = this.getOverlappingLever(id);
+
     // Toggle lever and doors
-    // ZHEN TODO - iterate through levelLeverAreas and find which lever the player overlaps with.
-    // once that is found, use that lever position to reverse find the index in the tilemap.
-    // from that index, use the map to locate all doors and update those values
+    this.terrainManager.toggleLever(id, leverid);
   }
 
   // private handleEventPlayerFlippedLeverOn(
@@ -580,6 +583,7 @@ export default class GameLevel extends Scene {
   // }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
+    // ZHEN TODO - change to player died event
     this.respawnPlayer();
   }
 
@@ -731,7 +735,28 @@ export default class GameLevel extends Scene {
     this.viewport.setZoomLevel(1);
   }
 
-  /****** HELPER CHECKER METHODS ******/
+  /****** HELPER METHODS ******/
+
+  protected getOverlappingLever(id: number): number {
+    let keys = Object.keys(this.terrainManager.levelLeverAreas);
+    let entity = this.getSceneGraph().getNode(id);
+    let leverAreas = this.terrainManager.levelLeverAreas;
+
+    // Find the lever id
+    let leverid = null;
+    for (let i = 0; i < keys.length; i++) {
+      let key = parseInt(keys[i]);
+      if (
+        leverAreas[key] &&
+        entity.boundary.overlaps(leverAreas[key].boundary)
+      ) {
+        leverid = key;
+        break;
+      }
+    }
+
+    return leverid;
+  }
 
   /**
    * Determines if the player can progress to the next level
