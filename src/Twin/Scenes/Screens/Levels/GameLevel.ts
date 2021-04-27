@@ -38,7 +38,6 @@ export default class GameLevel extends Scene {
   protected coinCountLabel: Label;
 
   // Stuff to end the level and go to the next level
-  protected levelEndArea: Rect;
   protected nextLevel: new (...args: any) => GameLevel;
   protected levelEndTimer: Timer;
   protected levelEndLabel: Label;
@@ -46,6 +45,9 @@ export default class GameLevel extends Scene {
   // Screen fade in/out for level start and end
   protected levelTransitionTimer: Timer;
   protected levelTransitionScreen: Rect;
+
+  // Terrain manager
+  protected terrainManager: TerrainManager;
 
   // Variable to track levels. Used to track if game is paused
   protected currentLevel: new (...args: any) => GameLevel;
@@ -61,12 +63,12 @@ export default class GameLevel extends Scene {
   protected controlNodes: AnimatedSprite[][];
   private controlNodesIndex: number;
 
-  // Exit variables
-  protected levelEndAreas: { [character: string]: Rect };
+  // // Exit variables
+  // protected levelEndAreas: { [character: string]: Rect };
 
   // Interactable variables
   // protected interactables: Map<AnimatedSprite, string>;
-  protected levers: Lever[];
+  // protected levers: Lever[];
 
   loadScene(): void {
     // load pause items
@@ -101,10 +103,9 @@ export default class GameLevel extends Scene {
     this.initPauseTracker();
     this.initViewportFollow();
     this.initControlNodes(); // debugging
-    this.initLevelEndAreas();
 
     // Initialize interactables list
-    this.levers = [];
+    // this.levers = [];
   }
 
   protected initLayers(): void {
@@ -135,6 +136,7 @@ export default class GameLevel extends Scene {
       Events.PLAYER_ENTERED_LEVEL_END,
       Events.LEVEL_START,
       Events.LEVEL_END,
+      Events.PLAYER_OVERLAPS_LEVER,
       Events.PLAYER_FLIPPED_LEVER_ON,
       Events.PLAYER_FLIPPED_LEVER_OFF,
       Events.PLAYER_HIT_SPIKE,
@@ -304,10 +306,6 @@ export default class GameLevel extends Scene {
     this.controlNodesIndex = 0;
   }
 
-  private initLevelEndAreas(): void {
-    this.levelEndAreas = {};
-  }
-
   updateScene(deltaT: number) {
     this.handleInputs(deltaT);
     this.handleEvents(deltaT);
@@ -337,19 +335,24 @@ export default class GameLevel extends Scene {
     // Debug input
     this.handleInputChangeControls();
 
-    // Send an input to interact with an object if the E key is pressed.
-    if (Input.isJustPressed("interact")) {
-      // Check and see if the player or ghost player are overlapping any interactable objects of the right kind.
-      for (var i in this.levers) {
-        let sprite = this.levers[i].sprite;
-        if (this.player.boundary.overlaps(sprite.boundary) && sprite.imageId === "BodyLever") {
-          this.handlePlayerFlippingLever(this.levers[i]);
-        }
-        else if (this.ghostPlayer.boundary.overlaps(sprite.boundary) && sprite.imageId === "SoulLever") {
-          this.handlePlayerFlippingLever(this.levers[i]);
-        }
-      }
-    }
+    // // Send an input to interact with an object if the E key is pressed.
+    // if (Input.isJustPressed("interact")) {
+    //   // Check and see if the player or ghost player are overlapping any interactable objects of the right kind.
+    //   for (var i in this.levers) {
+    //     let sprite = this.levers[i].sprite;
+    //     if (
+    //       this.player.boundary.overlaps(sprite.boundary) &&
+    //       sprite.imageId === "BodyLever"
+    //     ) {
+    //       this.handlePlayerFlippingLever(this.levers[i]);
+    //     } else if (
+    //       this.ghostPlayer.boundary.overlaps(sprite.boundary) &&
+    //       sprite.imageId === "SoulLever"
+    //     ) {
+    //       this.handlePlayerFlippingLever(this.levers[i]);
+    //     }
+    //   }
+    // }
   }
 
   private handleInputSwapView(): void {
@@ -399,11 +402,16 @@ export default class GameLevel extends Scene {
    * @param deltaT
    */
   private handleEvents(deltaT: number): void {
-    // ZHEN TODO - split up and add more events for the game
     while (this.receiver.hasNextEvent()) {
       let event = this.receiver.getNextEvent();
 
       switch (event.type) {
+        case Events.PLAYER_HIT_ENEMY:
+          {
+            this.handleEventPlayerHitEnemy(deltaT, event);
+          }
+          break;
+
         case Events.PLAYER_HIT_COIN:
           {
             this.handleEventPlayerHitCoin(deltaT, event);
@@ -416,23 +424,23 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case Events.PLAYER_HIT_ENEMY:
+        case Events.PLAYER_OVERLAPS_LEVER:
           {
-            this.handleEventPlayerHitEnemy(deltaT, event);
+            this.handleEventPlayerOverlapsLever(deltaT, event);
           }
           break;
 
-        case Events.PLAYER_FLIPPED_LEVER_ON:
-          {
-            this.handleEventPlayerFlippedLeverOn(deltaT, event);
-          }
-          break;
+        // case Events.PLAYER_FLIPPED_LEVER_ON:
+        //   {
+        //     // this.handleEventPlayerFlippedLeverOn(deltaT, event);
+        //   }
+        //   break;
 
-        case Events.PLAYER_FLIPPED_LEVER_OFF:
-          {
-            this.handleEventPlayerFlippedLeverOff(deltaT, event);
-          }
-          break;
+        // case Events.PLAYER_FLIPPED_LEVER_OFF:
+        //   {
+        //     // this.handleEventPlayerFlippedLeverOff(deltaT, event);
+        //   }
+        //   break;
 
         case Events.PLAYER_HIT_SPIKE:
           {
@@ -467,6 +475,25 @@ export default class GameLevel extends Scene {
     }
   }
 
+  private handleEventPlayerHitEnemy(deltaT: number, event: GameEvent): void {
+    let node = this.sceneGraph.getNode(event.data.get("node"));
+    let other = this.sceneGraph.getNode(event.data.get("other"));
+
+    if (node === this.player || node === this.ghostPlayer) {
+      // Node is player, other is enemy
+      this.handlePlayerEnemyCollision(
+        <AnimatedSprite>node,
+        <AnimatedSprite>other
+      );
+    } else {
+      // Other is player, node is enemy
+      this.handlePlayerEnemyCollision(
+        <AnimatedSprite>other,
+        <AnimatedSprite>node
+      );
+    }
+  }
+
   private handleEventPlayerHitCoin(deltaT: number, event: GameEvent): void {
     // Hit a coin
     let coin;
@@ -497,63 +524,60 @@ export default class GameLevel extends Scene {
     this.incPlayerCoins(1);
   }
 
-  private handleEventPlayerHitEnemy(deltaT: number, event: GameEvent): void {
-    let node = this.sceneGraph.getNode(event.data.get("node"));
-    let other = this.sceneGraph.getNode(event.data.get("other"));
-
-    if (node === this.player || node === this.ghostPlayer) {
-      // Node is player, other is enemy
-      this.handlePlayerEnemyCollision(
-        <AnimatedSprite>node,
-        <AnimatedSprite>other
-      );
-    } else {
-      // Other is player, node is enemy
-      this.handlePlayerEnemyCollision(
-        <AnimatedSprite>other,
-        <AnimatedSprite>node
-      );
-    }
-  }
-
-  private handleEventPlayerFlippedLeverOn(
+  private handleEventPlayerOverlapsLever(
     deltaT: number,
     event: GameEvent
   ): void {
-    // There are no built-in filtering functions for Maps so we have to do this bad code :(
-    for (let i in this.levers) {
-      if (this.levers[i].getState() === "on") {
-        this.levers[i].sprite.imageOffset = new Vec2(16, 0);
-
-        // IDEALLY WE COULD ADJUST BLOCK VALUES HERE
-
-        // Adjust all of the lever's associated blocks.
-        // let terrainManager = this.currentLevel.prototype.terrainManager;
-        // terrainManager.parseTilemap();
-        // let mainTiles = terrainManager.getLayerTiles("Main");
-        // let count = 0;
-        // for (let tile in mainTiles) {
-          // if (terrainManager.getLocationFromIndex(mainTiles[tile]) === this.levers[i].associatedBlocks[count]) {
-            // mainTiles[tile] = 0;
-            // console.log("removed a block");
-            // count++;
-          // }
-        // }
-      }
+    // Only do things when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
+      return;
     }
+
+    // Get node which was toggled
+    // Toggle lever and doors
+    // ZHEN TODO - iterate through levelLeverAreas and find which lever the player overlaps with.
+    // once that is found, use that lever position to reverse find the index in the tilemap.
+    // from that index, use the map to locate all doors and update those values
   }
 
-  private handleEventPlayerFlippedLeverOff(
-    deltaT: number,
-    event: GameEvent
-  ): void {
-    // There are no built-in filtering functions for Maps so we have to do this bad code :(
-    for (let i in this.levers) {
-      if (this.levers[i].getState() === "off") {
-        this.levers[i].sprite.imageOffset = new Vec2(0, 0);
-      }
-    }
-  }
+  // private handleEventPlayerFlippedLeverOn(
+  //   deltaT: number,
+  //   event: GameEvent
+  // ): void {
+  //   // There are no built-in filtering functions for Maps so we have to do this bad code :(
+  //   for (let i in this.levers) {
+  //     if (this.levers[i].getState() === "on") {
+  //       this.levers[i].sprite.imageOffset = new Vec2(16, 0);
+
+  //       // IDEALLY WE COULD ADJUST BLOCK VALUES HERE
+
+  //       // Adjust all of the lever's associated blocks.
+  //       // let terrainManager = this.currentLevel.prototype.terrainManager;
+  //       // terrainManager.parseTilemap();
+  //       // let mainTiles = terrainManager.getLayerTiles("Main");
+  //       // let count = 0;
+  //       // for (let tile in mainTiles) {
+  //       // if (terrainManager.getLocationFromIndex(mainTiles[tile]) === this.levers[i].associatedBlocks[count]) {
+  //       // mainTiles[tile] = 0;
+  //       // console.log("removed a block");
+  //       // count++;
+  //       // }
+  //       // }
+  //     }
+  //   }
+  // }
+
+  // private handleEventPlayerFlippedLeverOff(
+  //   deltaT: number,
+  //   event: GameEvent
+  // ): void {
+  //   // There are no built-in filtering functions for Maps so we have to do this bad code :(
+  //   for (let i in this.levers) {
+  //     if (this.levers[i].getState() === "off") {
+  //       this.levers[i].sprite.imageOffset = new Vec2(0, 0);
+  //     }
+  //   }
+  // }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
     this.respawnPlayer();
@@ -569,13 +593,13 @@ export default class GameLevel extends Scene {
     deltaT: number,
     event: GameEvent
   ): void {
-    // Determines if both characters are colliding with exit
-    if (!this.isLevelComplete()) {
+    // Only progress when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
       return;
     }
 
-    // Only progress when interact [e] is pressed, do nothing otherwise
-    if (!Input.isJustPressed("interact")) {
+    // Determines if both characters are colliding with exit
+    if (!this.isLevelComplete()) {
       return;
     }
 
@@ -617,14 +641,19 @@ export default class GameLevel extends Scene {
   }
 
   // Use this function to create levers.
-  protected addLever(state: string, spriteKey: string, tilePos: Vec2, asssociatedBlocks: Vec2[]): void {
-    let sprite = this.add.animatedSprite(spriteKey, "primary");
-    sprite.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
-    sprite.scale.set(2, 2);
-    let newLever = new Lever(state, sprite, asssociatedBlocks);
-    // Add new lever to array.
-    this.levers.push(newLever);
-  }
+  // protected addLever(
+  //   state: string,
+  //   spriteKey: string,
+  //   tilePos: Vec2,
+  //   asssociatedBlocks: Vec2[]
+  // ): void {
+  //   let sprite = this.add.animatedSprite(spriteKey, "primary");
+  //   sprite.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
+  //   sprite.scale.set(2, 2);
+  //   let newLever = new Lever(state, sprite, asssociatedBlocks);
+  //   // Add new lever to array.
+  //   this.levers.push(newLever);
+  // }
 
   protected handlePlayerEnemyCollision(
     player: AnimatedSprite,
@@ -675,8 +704,7 @@ export default class GameLevel extends Scene {
         undefined,
         Events.PLAYER_FLIPPED_LEVER_ON
       );
-    } 
-    else {
+    } else {
       // Do the lever flip animation to ON
       lever.setState("off");
       lever.sprite.imageOffset = new Vec2(0, 0);
@@ -686,20 +714,6 @@ export default class GameLevel extends Scene {
         Events.PLAYER_FLIPPED_LEVER_OFF
       );
     }
-  }
-
-  /**
-   * Determines if the player can progress to the next level
-   * @returns boolean true if exit condition is met
-   */
-  protected isLevelComplete(): boolean {
-    let playerOverlap = this.player.boundary.overlaps(
-      this.levelEndAreas[PlayerTypes.PLAYER].boundary
-    );
-    let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
-      this.levelEndAreas[PlayerTypes.GHOST_PLAYER].boundary
-    );
-    return playerOverlap && ghostPlayerOverlap;
   }
 
   protected incPlayerCoins(amt: number): void {
@@ -717,24 +731,23 @@ export default class GameLevel extends Scene {
     this.viewport.setZoomLevel(1);
   }
 
-  /****** PUBLIC METHODS ******/
+  /****** HELPER CHECKER METHODS ******/
 
-  /*** Adders ***/
-  public addExit(startingTile: Vec2, size: Vec2, group: string): void {
-    this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {
-      position: startingTile,
-      size: size,
-    });
-    this.levelEndArea.addPhysics(undefined, undefined, false, true);
-    this.levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
-    this.levelEndAreas[group] = this.levelEndArea;
-
-    // Set colors to be different for testing purposes: can be alpha overlay later
-    if (group === PlayerTypes.PLAYER) this.levelEndArea.color = Color.GREEN;
-    if (group === PlayerTypes.GHOST_PLAYER)
-      this.levelEndArea.color = Color.MAGENTA;
+  /**
+   * Determines if the player can progress to the next level
+   * @returns boolean true if exit condition is met
+   */
+  protected isLevelComplete(): boolean {
+    let playerOverlap = this.player.boundary.overlaps(
+      this.terrainManager.levelEndAreas[PlayerTypes.PLAYER].boundary
+    );
+    let ghostPlayerOverlap = this.ghostPlayer.boundary.overlaps(
+      this.terrainManager.levelEndAreas[PlayerTypes.GHOST_PLAYER].boundary
+    );
+    return playerOverlap && ghostPlayerOverlap;
   }
 
+  /****** PUBLIC METHODS ******/
   /*** Setters ***/
   /**
    * Set player's spawn location

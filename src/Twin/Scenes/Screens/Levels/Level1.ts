@@ -1,22 +1,21 @@
-// Twin TODO [Benchmark 2] (Code & Art) - Make levels; read "World Rendering" part of  Benchmark 2
-// Twin TODO [Benchmark 2] (Code) - Figure out file format for levels
 // Twin TODO (optional) - optimize this along with Level2
 
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import Debug from "../../../../Wolfie2D/Debug/Debug";
+import { Levels } from "../../Enums/LevelEnums";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
 import GameLevel from "./GameLevel";
 import Level2 from "./Level2";
 import TerrainManager from "./LevelHelpers/TerrainManager";
 
 export default class Level1 extends GameLevel {
-  private tilemap: string = "Level1";
-  public terrainManager: TerrainManager;
+  private level: string;
 
   loadScene(): void {
+    this.level = Levels.LEVEL_1;
+
     this.load.image("background", "assets/sprites/Twin-Background.png");
     this.load.image("coin", "assets/sprites/coin.png");
-    this.load.tilemap(this.tilemap, "assets/tilemaps/untitled.json");
+    this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
     this.load.spritesheet(
       PlayerTypes.PLAYER,
       "assets/spritesheets/platformPlayer.json"
@@ -43,11 +42,11 @@ export default class Level1 extends GameLevel {
     this.initLevelVariables();
 
     // Set up TerrainManager to parse tiles
-    this.terrainManager = new TerrainManager(this, this.tilemap);
+    this.terrainManager = new TerrainManager(this, this.level);
     this.terrainManager.parseTilemap();
 
     // Add interactables
-    this.setUpInteractables();
+    // this.setUpInteractables();
   }
 
   private setUpScene(): void {
@@ -58,8 +57,9 @@ export default class Level1 extends GameLevel {
     bg.position.set(bg.boundary.halfSize.x, 76);
 
     // Add the level 1 tilemap
-    this.add.tilemap(this.tilemap, new Vec2(2, 2));
-    this.viewport.setBounds(0, 0, 32 * 32, 16 * 32);
+    this.add.tilemap(this.level, new Vec2(2, 2));
+    let tilemap = this.load.getTilemap(this.level);
+    this.viewport.setBounds(0, 0, tilemap.width * 32, tilemap.height * 32);
   }
 
   private initLevelVariables(): void {
@@ -68,21 +68,21 @@ export default class Level1 extends GameLevel {
     this.nextLevel = Level2;
   }
 
-  private setUpInteractables(): void {
-    // for a lever: State - Sprite Key - Position - List of Associated Blocks
-    this.addLever("off", "BodyLever", new Vec2(19, 14), [
-      new Vec2(20, 11),
-      new Vec2(20, 12),
-      new Vec2(20, 13),
-      new Vec2(20, 14),
-    ]);
-    this.addLever("off", "SoulLever", new Vec2(22, 14), [
-      new Vec2(23, 11),
-      new Vec2(23, 12),
-      new Vec2(23, 13),
-      new Vec2(23, 14),
-    ]);
-  }
+  // private setUpInteractables(): void {
+  //   // for a lever: State - Sprite Key - Position - List of Associated Blocks
+  //   this.addLever("off", "BodyLever", new Vec2(19, 14), [
+  //     new Vec2(20, 11),
+  //     new Vec2(20, 12),
+  //     new Vec2(20, 13),
+  //     new Vec2(20, 14),
+  //   ]);
+  //   this.addLever("off", "SoulLever", new Vec2(22, 14), [
+  //     new Vec2(23, 11),
+  //     new Vec2(23, 12),
+  //     new Vec2(23, 13),
+  //     new Vec2(23, 14),
+  //   ]);
+  // }
 
   updateScene(deltaT: number): void {
     super.updateScene(deltaT);
