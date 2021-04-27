@@ -129,6 +129,7 @@ export default class TerrainManager {
    * Parses levers and lever doors
    */
   private parseLeversAndLeverDoors(): void {
+    this.levelLeverAreas = {};
     this.leverToDoorsMap = new Map();
 
     let levers = this.getLayerTiles(TilemapLayers.LEVERS);
