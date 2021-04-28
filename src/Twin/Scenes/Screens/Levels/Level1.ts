@@ -15,7 +15,7 @@ export default class Level1 extends GameLevel {
 
     this.load.image("background", "assets/sprites/Twin-Background.png");
     this.load.image("coin", "assets/sprites/coin.png");
-    this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
+    this.load.tilemap(this.level, "assets/tilemaps/testing_level.json");
     this.load.spritesheet(
       PlayerTypes.PLAYER,
       "assets/spritesheets/platformPlayer.json"
@@ -42,8 +42,8 @@ export default class Level1 extends GameLevel {
     this.initLevelVariables();
 
     // Set up TerrainManager to parse tiles
-    this.terrainManager = new TerrainManager(this, this.level);
-    this.terrainManager.parseTilemap();
+    // this.terrainManager = new TerrainManager(this, this.level);
+    // this.terrainManager.parseTilemap();
 
     // Add interactables
     // this.setUpInteractables();
