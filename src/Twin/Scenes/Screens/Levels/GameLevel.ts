@@ -63,13 +63,6 @@ export default class GameLevel extends Scene {
   protected controlNodes: AnimatedSprite[][];
   private controlNodesIndex: number;
 
-  // // Exit variables
-  // protected levelEndAreas: { [character: string]: Rect };
-
-  // Interactable variables
-  // protected interactables: Map<AnimatedSprite, string>;
-  // protected levers: Lever[];
-
   loadScene(): void {
     // load pause items
     this.load.object("Controls", "assets/texts/controls.json");
@@ -365,11 +358,7 @@ export default class GameLevel extends Scene {
 
   private handleInputRestart(): void {
     if (Input.isJustPressed("restart")) {
-      this.sceneManager.changeToScene(
-        this.currentLevel,
-        {},
-        SceneOptions.getSceneOptions()
-      );
+      this.restartLevel();
     }
   }
 
@@ -587,7 +576,6 @@ export default class GameLevel extends Scene {
   // }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
-    // ZHEN TODO - change to player died event
     this.respawnPlayer();
   }
 
@@ -647,21 +635,6 @@ export default class GameLevel extends Scene {
     enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
-
-  // Use this function to create levers.
-  // protected addLever(
-  //   state: string,
-  //   spriteKey: string,
-  //   tilePos: Vec2,
-  //   asssociatedBlocks: Vec2[]
-  // ): void {
-  //   let sprite = this.add.animatedSprite(spriteKey, "primary");
-  //   sprite.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
-  //   sprite.scale.set(2, 2);
-  //   let newLever = new Lever(state, sprite, asssociatedBlocks);
-  //   // Add new lever to array.
-  //   this.levers.push(newLever);
-  // }
 
   protected handlePlayerEnemyCollision(
     player: AnimatedSprite,
@@ -732,6 +705,15 @@ export default class GameLevel extends Scene {
   protected respawnPlayer(): void {
     this.player.position.copy(this.playerSpawn);
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+  }
+
+  protected restartLevel(): void {
+    GameLevel.coinCount = 0;
+    this.sceneManager.changeToScene(
+      this.currentLevel,
+      {},
+      SceneOptions.getSceneOptions()
+    );
   }
 
   unloadScene(): void {

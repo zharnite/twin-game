@@ -58,6 +58,7 @@ export default class TerrainManager {
   public parseTilemap(): void {
     this.parseDoors();
     this.parseLeversAndLeverDoors();
+    // this.parseCoins();
   }
 
   /**
