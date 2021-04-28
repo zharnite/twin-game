@@ -1,12 +1,19 @@
 export enum Terrains {
-  BODY_ENTRANCE = 1,
-  BODY_EXIT = 2,
-  SOUL_ENTRANCE = 3,
-  SOUL_EXIT = 4,
-  PORTAL1_IN = 5,
-  PORTAL1_OUT = 6,
-  PORTAL2_IN = 7,
-  PORTAL2_OUT = 8,
+  // Doors
+  BOTH_ENTRANCE = 1,
+  BOTH_EXIT = 2,
+  BODY_ENTRANCE = 3,
+  BODY_EXIT = 4,
+  SOUL_ENTRANCE = 5,
+  SOUL_EXIT = 6,
+  // Portals
+  PORTAL1_IN = 7,
+  PORTAL1_OUT = 8,
+  PORTAL2_IN = 9,
+  PORTAL2_OUT = 10,
+  PORTAL3_IN = 11,
+  PORTAL3_OUT = 12,
+  // Levers
   LEVER1_ON = 17,
   LEVER1_OFF = 18,
   LEVER1_DOOR_LOCKED = 19,
@@ -19,4 +26,14 @@ export enum Terrains {
   LEVER3_OFF = 26,
   LEVER3_DOOR_LOCKED = 27,
   LEVER3_DOOR_UNLOCKED = 28,
+  // Coin blocks
+  COIN1 = 33,
+  COIN1_BLOCK = 34,
+  COIN1_BLOCK_HIT = 35,
+  COIN2 = 36,
+  COIN2_BLOCK = 37,
+  COIN2_BLOCK_HIT = 38,
+  COIN3 = 39,
+  COIN3_BLOCK = 40,
+  COIN3_BLOCK_HIT = 41,
 }
