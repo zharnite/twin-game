@@ -206,7 +206,11 @@ export default class TerrainManager {
    */
   private getLayerTiles(name: string): number[] {
     let layers = this.tilemap.layers;
-    let tiles = layers.filter((layer) => layer.name === name)[0].data;
+    let layer = layers.filter((layer) => layer.name === name)[0];
+    let tiles: number[] = [];
+    if (layer) {
+      tiles = layer.data;
+    }
     return tiles;
   }
 
