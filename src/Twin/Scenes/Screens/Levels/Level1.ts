@@ -24,8 +24,6 @@ export default class Level1 extends GameLevel {
       PlayerTypes.GHOST_PLAYER,
       "assets/spritesheets/platformGhostPlayer.json"
     );
-    this.load.spritesheet("BodyLever", "assets/spritesheets/BodyLever.json");
-    this.load.spritesheet("SoulLever", "assets/spritesheets/SoulLever.json");
 
     // load things from parent
     super.loadScene();
@@ -44,9 +42,6 @@ export default class Level1 extends GameLevel {
     // Set up TerrainManager to parse tiles
     this.terrainManager = new TerrainManager(this, this.level);
     this.terrainManager.parseTilemap();
-
-    // Add interactables
-    // this.setUpInteractables();
   }
 
   private setUpScene(): void {
@@ -67,22 +62,6 @@ export default class Level1 extends GameLevel {
     this.currentLevel = Level1;
     this.nextLevel = Level2;
   }
-
-  // private setUpInteractables(): void {
-  //   // for a lever: State - Sprite Key - Position - List of Associated Blocks
-  //   this.addLever("off", "BodyLever", new Vec2(19, 14), [
-  //     new Vec2(20, 11),
-  //     new Vec2(20, 12),
-  //     new Vec2(20, 13),
-  //     new Vec2(20, 14),
-  //   ]);
-  //   this.addLever("off", "SoulLever", new Vec2(22, 14), [
-  //     new Vec2(23, 11),
-  //     new Vec2(23, 12),
-  //     new Vec2(23, 13),
-  //     new Vec2(23, 14),
-  //   ]);
-  // }
 
   updateScene(deltaT: number): void {
     super.updateScene(deltaT);
