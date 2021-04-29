@@ -49,11 +49,8 @@ export default class Level1 extends GameLevel {
     // Initialize all enemies in the level
     this.setUpEnemies();
 
-    // Set Mr. Satan's required coin value for this level. 
-    console.log("try to set S coin value");
-    console.log(super.satan);
-    super.satan.setRequiredCoinValue(1);
-    super.satan.setTilePosition(new Vec2(19, 5));
+    // Initialize Mr. Satan's level-dependent properties.
+    this.setUpSatan();
 
     // Set up TerrainManager to parse tiles
     this.terrainManager = new TerrainManager(this, this.level);
@@ -83,6 +80,13 @@ export default class Level1 extends GameLevel {
     // All enemies in the level go here.
     this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
     this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(12, 8), {});
+  }
+
+  private setUpSatan(): void {
+    // Set Mr. Satan's required coin value and position for this level. 
+    console.log(super.satan);
+    super.satan.setRequiredCoinValue(1);
+    super.satan.setTilePosition(new Vec2(19, 5));
   }
 
   updateScene(deltaT: number): void {
