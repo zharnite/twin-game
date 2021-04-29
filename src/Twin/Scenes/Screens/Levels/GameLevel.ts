@@ -16,13 +16,14 @@ import Color from "../../../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import EnemyController from "../../../Enemies/EnemyController";
 import { Events } from "../../../Enums/EventEnums";
+import Satan from "../../../Interactables/Satan";
 import PlayerController from "../../../Player/PlayerController";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
+import { InteractableTypes } from "../../Enums/InteractableEnums";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
-import Lever from "../../../Interactables/Lever";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -63,11 +64,15 @@ export default class GameLevel extends Scene {
   protected controlNodes: AnimatedSprite[][];
   private controlNodesIndex: number;
 
+  // Mr. Satan stuff
+  protected satan: Satan;
+
   loadScene(): void {
     // load pause items
     this.load.object("Controls", "assets/texts/controls.json");
     this.load.object("Help", "assets/texts/help.json");
     this.load.object("Credits", "assets/texts/credits.json");
+    this.load.spritesheet(InteractableTypes.MR_SATAN, "assets/spritesheets/businessdevil.json");
   }
 
   startScene(): void {
@@ -98,6 +103,12 @@ export default class GameLevel extends Scene {
     this.initControlNodes(); // debugging
 
     GameLevel.coinCount = 0;
+
+    // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
+    let satanSprite = this.add.animatedSprite(InteractableTypes.MR_SATAN, "primary");
+    satanSprite.scale.set(2, 2);
+    satanSprite.addPhysics();
+    this.satan = new Satan("waiting", satanSprite, 0);
   }
 
   protected initLayers(): void {
@@ -600,27 +611,6 @@ export default class GameLevel extends Scene {
       } else {
         this.respawnPlayer();
       }
-    }
-  }
-
-  protected handlePlayerFlippingLever(lever: Lever) {
-    if (lever.getState() === "off") {
-      // Do the lever flip animation to ON
-      lever.setState("on");
-      lever.sprite.animation.play(
-        "on",
-        undefined,
-        Events.PLAYER_FLIPPED_LEVER_ON
-      );
-    } else {
-      // Do the lever flip animation to ON
-      lever.setState("off");
-      lever.sprite.imageOffset = new Vec2(0, 0);
-      lever.sprite.animation.play(
-        "off",
-        undefined,
-        Events.PLAYER_FLIPPED_LEVER_OFF
-      );
     }
   }
 
