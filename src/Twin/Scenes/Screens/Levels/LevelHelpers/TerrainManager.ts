@@ -194,10 +194,12 @@ export default class TerrainManager {
       }
     }
 
+    // ZHEN TODO - Lever doors background
+
     console.log(this.leverToDoorsMap);
   }
 
-  /*** HELPERS ***/
+  /****** HELPERS ******/
 
   /**
    * Gets all tiles for a layer
@@ -252,8 +254,18 @@ export default class TerrainManager {
     return coord.y * this.tilemap.width + coord.x;
   }
 
-  /****** PUBLIC METHODS ******/
-  /*** SCENE ADDERS ***/
+  /**
+   * ZHEN TODO
+   * - change tile at index i to a different index (for toggle lever and coin block)
+   * - get tile above, below, right, left of Vec2
+   * - get overlapping tiles (at most 2 tiles) above, below, right, left of Vec2
+   * - find world location (round position to world index)
+   * - set new world location by modifying x and y
+   * - get location from world location, get index from location
+   * - tab, view
+   */
+
+  /****** SCENE ADDERS ******/
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
     let levelEndArea = <Rect>this.level.add.graphic(
       GraphicType.RECT,
@@ -269,7 +281,7 @@ export default class TerrainManager {
     this.levelEndAreas[group] = levelEndArea;
   }
 
-  public addLever(
+  private addLever(
     leverType: number,
     startingTile: Vec2,
     size: Vec2,
@@ -289,6 +301,7 @@ export default class TerrainManager {
 
   /*** TILE MODIFIERS ***/
 
+  /*** LEVERS ***/
   public toggleLever(nodeid: number, leverid: number): void {
     // If id is odd (on / locked), go up
     // If id is even (off / unlocked), go down
@@ -297,6 +310,8 @@ export default class TerrainManager {
     } else {
       this.toggleLeverOff(leverid);
     }
+
+    // ZHEN TODO - Toggle both doors and door backgrounds
   }
 
   private toggleLeverOn(leverid: number) {
