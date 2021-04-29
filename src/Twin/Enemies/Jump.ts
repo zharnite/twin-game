@@ -6,7 +6,6 @@ export default class Jump extends EnemyState {
   onEnter(): void {
     (<AnimatedSprite>this.owner).animation.play("JUMP", true);
     (<AnimatedSprite>this.owner).tweens.play("jump", true);
-    // this.gravity = 50;
   }
 
   update(deltaT: number): void {
