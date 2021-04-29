@@ -7,7 +7,7 @@ import EnemyController from "./EnemyController";
 
 export default abstract class EnemyState extends State {
 	owner: GameNode;
-	gravity: number = 1000;
+	gravity: number = 10000;
 	parent: EnemyController
 
 	constructor(parent: StateMachine, owner: GameNode){

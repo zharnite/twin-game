@@ -8,14 +8,8 @@ export default abstract class InAir extends PlayerState {
 
     let dir = this.getInputDirection();
 
-    // NOTE: I have switched back to the original code here and it seems to work!
-
-    // This line is the wall bug.
     this.parent.velocity.x +=
       (dir.x * this.parent.speed) / 3.5 - 0.3 * this.parent.velocity.x;
-
-    // This works
-    // this.parent.velocity.x = dir.x * this.parent.speed;
 
     // This seems to help with the wall clip bug.
     if (this.owner.onWall) {
