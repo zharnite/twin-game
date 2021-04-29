@@ -291,15 +291,88 @@ export default class TerrainManager {
     return this.getIndexFromLocation(this.getLocationFromWorldLocation(coord));
   }
 
-  /**
-   * ZHEN TODO
-   * - change tile at index i to a different index (for toggle lever and coin block)
-   * - get tile above, below, right, left of Vec2
-   * - get overlapping tiles (at most 2 tiles) above, below, right, left of Vec2
-   * - find world location (round position to world index)
-   * - set new world location by modifying x and y
-   * - get location from world location, get index from location
-   */
+  private getIndexFromAnyLocation(coord: Vec2): number {
+    return this.getIndexFromLocation(this.getLocationFromAnyLocation(coord));
+  }
+
+  private getLocationFromAnyLocation(coord: Vec2): Vec2 {
+    let col = Math.floor(coord.x / this.scaleFactor);
+    let row = Math.floor(coord.y / this.scaleFactor);
+    return new Vec2(col, row);
+  }
+
+  public getTilesAboveAnyLocation(location: Vec2, size: Vec2): Vec2[] {
+    let tiles: Vec2[] = [];
+    let topY = location.y - size.y - 2;
+    let leftTile = new Vec2(location.x - size.x / 2, topY);
+    let rightTile = new Vec2(location.x + size.x / 2, topY);
+    tiles.push(leftTile);
+    tiles.push(rightTile);
+    return tiles;
+  }
+
+  public getTileIndexesAboveAnyLocation(location: Vec2, size: Vec2): number[] {
+    let tiles: number[] = [];
+    this.getTilesAboveAnyLocation(location, size).forEach((tileCoord) =>
+      tiles.push(this.getIndexFromAnyLocation(tileCoord))
+    );
+    return tiles;
+  }
+
+  public getTilesBelowAnyLocation(location: Vec2, size: Vec2): Vec2[] {
+    let tiles: Vec2[] = [];
+    let bottomY = location.y + size.y + 2;
+    let leftTile = new Vec2(location.x - size.x / 2, bottomY);
+    let rightTile = new Vec2(location.x + size.x / 2, bottomY);
+    tiles.push(leftTile);
+    tiles.push(rightTile);
+    return tiles;
+  }
+
+  public getTileIndexesBelowAnyLocation(location: Vec2, size: Vec2): number[] {
+    let tiles: number[] = [];
+    this.getTilesBelowAnyLocation(location, size).forEach((tileCoord) =>
+      tiles.push(this.getIndexFromAnyLocation(tileCoord))
+    );
+    return tiles;
+  }
+
+  public getTilesLeftAnyLocation(location: Vec2, size: Vec2): Vec2[] {
+    let tiles: Vec2[] = [];
+    let leftX = location.x - size.x - 2;
+    let topTile = new Vec2(leftX, location.y - size.y / 2);
+    let bottomTile = new Vec2(leftX, location.y + size.y / 2);
+    tiles.push(topTile);
+    tiles.push(bottomTile);
+    return tiles;
+  }
+
+  public getTileIndexesLeftAnyLocation(location: Vec2, size: Vec2): number[] {
+    let tiles: number[] = [];
+    this.getTilesLeftAnyLocation(location, size).forEach((tileCoord) =>
+      tiles.push(this.getIndexFromAnyLocation(tileCoord))
+    );
+    return tiles;
+  }
+
+  public getTilesRightAnyLocation(location: Vec2, size: Vec2): Vec2[] {
+    let tiles: Vec2[] = [];
+    let rightX = location.x + size.x + 2;
+    let topTile = new Vec2(rightX, location.y - size.y / 2);
+    let bottomTile = new Vec2(rightX, location.y + size.y / 2);
+    tiles.push(topTile);
+    tiles.push(bottomTile);
+    console.log(topTile);
+    return tiles;
+  }
+
+  public getTileIndexesRightAnyLocation(location: Vec2, size: Vec2): number[] {
+    let tiles: number[] = [];
+    this.getTilesRightAnyLocation(location, size).forEach((tileCoord) =>
+      tiles.push(this.getIndexFromAnyLocation(tileCoord))
+    );
+    return tiles;
+  }
 
   /****** SCENE ADDERS ******/
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
@@ -336,6 +409,19 @@ export default class TerrainManager {
   }
 
   /*** TILE MODIFIERS ***/
+  /*** GENERAL BLOCK MODIFIERS ***/
+  public setLayerAtIndexToTile(
+    layerName: string,
+    index: number,
+    tileid: number
+  ) {
+    let layer = this.getLayerTiles(layerName);
+    layer[index] = tileid;
+  }
+
+  public setBackgroundAtIndex(index: number, tileid: number) {
+    this.setLayerAtIndexToTile(TilemapLayers.BACKGROUND, index, tileid);
+  }
 
   /*** LEVERS ***/
   public toggleLever(nodeid: number, leverid: number): void {
