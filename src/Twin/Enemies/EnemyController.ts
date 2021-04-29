@@ -19,7 +19,7 @@ export default class EnemyController extends StateMachineAI {
   jumpy: boolean;
   direction: Vec2 = Vec2.ZERO;
   velocity: Vec2 = Vec2.ZERO;
-  speed: number = 200;
+  speed: number = 100;
 
   initializeAI(owner: GameNode, options: Record<string, any>) {
     this.owner = owner;

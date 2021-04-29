@@ -3,14 +3,16 @@
   "spriteSheetImage": "portal.png",
   "spriteWidth": 16,
   "spriteHeight": 24,
-  "columns": 1,
+  "columns": 3,
   "rows": 3,
   "durationType": "time",
   "animations": [
     {
       "name": "OPEN",
       "frames": [
-        { "index": 6, "duration": 540 }
+        { "index": 6, "duration": 1080 },
+        { "index": 7, "duration": 6 },
+        { "index": 8, "duration": 6 }
       ]
     },
     {
@@ -31,4 +33,5 @@
         { "index": 0, "duration": 540 }
       ]
     }
+  ]
 }
