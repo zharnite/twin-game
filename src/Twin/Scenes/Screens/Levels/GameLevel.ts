@@ -82,7 +82,7 @@ export default class GameLevel extends Scene {
     this.initViewport();
     this.initPlayer();
     this.initGhostPlayer();
-    this.initSatan();
+    this.initInteractables();
     this.subscribeToEvents();
     this.addUI();
 
@@ -275,12 +275,12 @@ export default class GameLevel extends Scene {
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
   }
 
-  protected initSatan(): void {
+  protected initInteractables(): void {
     // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
     let satanSprite = this.add.animatedSprite(InteractableTypes.MR_SATAN, "primary");
     satanSprite.scale.set(2, 2);
     satanSprite.addPhysics();
-    satanSprite.freeze();
+    satanSprite.disablePhysics();
     this.satan = new Satan("waiting", satanSprite, 0);
   }
 

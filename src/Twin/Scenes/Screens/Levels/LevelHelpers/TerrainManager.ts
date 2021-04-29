@@ -62,6 +62,13 @@ export default class TerrainManager {
   }
 
   /**
+   * Returns the specified exit location.
+   */
+  public getExitLocation(type: string): Vec2 {
+    return (type === "body") ? this.bodyExitLocation : this.soulExitLocation;
+  }
+
+  /**
    * Parses entrance and exits
    */
   private parseDoors(): void {
