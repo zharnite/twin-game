@@ -72,8 +72,6 @@ export default class GameLevel extends Scene {
     this.load.object("Controls", "assets/texts/controls.json");
     this.load.object("Help", "assets/texts/help.json");
     this.load.object("Credits", "assets/texts/credits.json");
-    // Load satan's spritesheet
-    this.load.spritesheet(InteractableTypes.MR_SATAN, "assets/spritesheets/businessdevil.json");
   }
 
   startScene(): void {
@@ -277,7 +275,10 @@ export default class GameLevel extends Scene {
 
   protected initInteractables(): void {
     // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
-    let satanSprite = this.add.animatedSprite(InteractableTypes.MR_SATAN, "primary");
+    let satanSprite = this.add.animatedSprite(
+      InteractableTypes.MR_SATAN,
+      "primary"
+    );
     satanSprite.scale.set(2, 2);
     satanSprite.addPhysics();
     satanSprite.disablePhysics();
