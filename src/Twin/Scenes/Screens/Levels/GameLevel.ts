@@ -72,6 +72,7 @@ export default class GameLevel extends Scene {
     this.load.object("Controls", "assets/texts/controls.json");
     this.load.object("Help", "assets/texts/help.json");
     this.load.object("Credits", "assets/texts/credits.json");
+    // Load satan's spritesheet
     this.load.spritesheet(InteractableTypes.MR_SATAN, "assets/spritesheets/businessdevil.json");
   }
 
@@ -81,6 +82,7 @@ export default class GameLevel extends Scene {
     this.initViewport();
     this.initPlayer();
     this.initGhostPlayer();
+    this.initSatan();
     this.subscribeToEvents();
     this.addUI();
 
@@ -103,12 +105,6 @@ export default class GameLevel extends Scene {
     this.initControlNodes(); // debugging
 
     GameLevel.coinCount = 0;
-
-    // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
-    let satanSprite = this.add.animatedSprite(InteractableTypes.MR_SATAN, "primary");
-    satanSprite.scale.set(2, 2);
-    satanSprite.addPhysics();
-    this.satan = new Satan("waiting", satanSprite, 0);
   }
 
   protected initLayers(): void {
@@ -277,6 +273,15 @@ export default class GameLevel extends Scene {
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
+  }
+
+  protected initSatan(): void {
+    // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
+    let satanSprite = this.add.animatedSprite(InteractableTypes.MR_SATAN, "primary");
+    satanSprite.scale.set(2, 2);
+    satanSprite.addPhysics();
+    satanSprite.freeze();
+    this.satan = new Satan("waiting", satanSprite, 0);
   }
 
   private initPauseTracker(): void {
