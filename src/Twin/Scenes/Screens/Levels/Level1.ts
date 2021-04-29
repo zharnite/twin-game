@@ -4,10 +4,11 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import { Levels } from "../../Enums/LevelEnums";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
 import { EnemyTypes } from "../../Enums/EnemyEnums";
-import { InteractableTypes } from "../../Enums/InteractableEnums";
 import GameLevel from "./GameLevel";
 import Level2 from "./Level2";
 import TerrainManager from "./LevelHelpers/TerrainManager";
+// import Satan from "../../../Interactables/Satan";
+// import { InteractableTypes } from "../../Enums/InteractableEnums";
 
 export default class Level1 extends GameLevel {
   private level: string;
@@ -27,7 +28,6 @@ export default class Level1 extends GameLevel {
     );
     this.load.spritesheet(EnemyTypes.BOAR, "assets/spritesheets/boar.json");
     this.load.spritesheet(EnemyTypes.HELLHAWK, "assets/spritesheets/hellhawk.json");
-    this.load.spritesheet(InteractableTypes.MR_SATAN, "assets/spritesheets/businessdevil.json");
 
     // Testing assets
     this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
@@ -48,6 +48,12 @@ export default class Level1 extends GameLevel {
 
     // Initialize all enemies in the level
     this.setUpEnemies();
+
+    // Set Mr. Satan's required coin value for this level. 
+    console.log("try to set S coin value");
+    console.log(super.satan);
+    super.satan.setRequiredCoinValue(1);
+    super.satan.setTilePosition(new Vec2(19, 5));
 
     // Set up TerrainManager to parse tiles
     this.terrainManager = new TerrainManager(this, this.level);
