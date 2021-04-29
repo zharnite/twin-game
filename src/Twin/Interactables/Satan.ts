@@ -1,35 +1,39 @@
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 
-export default class Satan  {
-    private state: string;
-    sprite: AnimatedSprite;
-    private requiredCoinValue: number;
+export default class Satan {
+  private state: string;
+  public sprite: AnimatedSprite;
+  private requiredCoinValue: number;
 
-    constructor (state: string, sprite: AnimatedSprite, requiredCoinValue: number) {
-        this.state = state;
-        this.sprite = sprite;
-        this.requiredCoinValue = requiredCoinValue;
-    }
-    
-    // Waiting / Accepted
-    setState (newState: string): void {
-        this.state = newState;
-    }
+  constructor(
+    state: string,
+    sprite: AnimatedSprite,
+    requiredCoinValue: number
+  ) {
+    this.state = state;
+    this.sprite = sprite;
+    this.requiredCoinValue = requiredCoinValue;
+  }
 
-    getState (): string {
-        return this.state;
-    }
+  // Waiting / Accepted
+  setState(newState: string): void {
+    this.state = newState;
+  }
 
-    setRequiredCoinValue (value: number): void {
-        this.requiredCoinValue = value;
-    }
+  getState(): string {
+    return this.state;
+  }
 
-    getRequiredCoinValue (): number {
-        return this.requiredCoinValue;
-    }
+  setRequiredCoinValue(value: number): void {
+    this.requiredCoinValue = value;
+  }
 
-    setTilePosition (tilePos: Vec2): void {
-        this.sprite.position.set(tilePos.x * 32, tilePos.y * 32);
-    }
+  getRequiredCoinValue(): number {
+    return this.requiredCoinValue;
+  }
+
+  setTilePosition(tilePos: Vec2): void {
+    this.sprite.position.set(tilePos.x * 32, tilePos.y * 32);
+  }
 }
