@@ -24,6 +24,7 @@ import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
+import { TilemapLayers } from "./LevelHelpers/Enums/TilemapLayerEnums";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -341,6 +342,16 @@ export default class GameLevel extends Scene {
 
     // Debug input
     this.handleInputChangeControls();
+
+    // Debug
+    if (Input.isJustPressed("interact")) {
+      // let locs = this.terrainManager.getTileIndexesAboveAnyLocation(
+      //   this.player.position,
+      //   this.player.size
+      // );
+      // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[0], 7);
+      // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[1], 7);
+    }
   }
 
   private handleInputSwapView(): void {
