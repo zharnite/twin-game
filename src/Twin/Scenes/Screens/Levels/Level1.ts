@@ -7,6 +7,9 @@ import { EnemyTypes } from "../../Enums/EnemyEnums";
 import GameLevel from "./GameLevel";
 import Level2 from "./Level2";
 import TerrainManager from "./LevelHelpers/TerrainManager";
+import { InteractableTypes } from "../../Enums/InteractableEnums";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Satan from "../../../Interactables/Satan";
 // import Satan from "../../../Interactables/Satan";
 // import { InteractableTypes } from "../../Enums/InteractableEnums";
 
@@ -28,9 +31,11 @@ export default class Level1 extends GameLevel {
     );
     this.load.spritesheet(EnemyTypes.BOAR, "assets/spritesheets/boar.json");
     this.load.spritesheet(EnemyTypes.HELLHAWK, "assets/spritesheets/hellhawk.json");
+    this.load.spritesheet(InteractableTypes.LEVEL_END_PORTAL, "assets/spritesheets/portal.json");
 
     // Testing assets
     this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
+    this.load.spritesheet(InteractableTypes.MR_SATAN, "assets/spritesheets/businessdevil.json");
 
     // load things from parent
     super.loadScene();
@@ -49,12 +54,12 @@ export default class Level1 extends GameLevel {
     // Initialize all enemies in the level
     this.setUpEnemies();
 
-    // Initialize Mr. Satan's level-dependent properties.
-    this.setUpSatan();
-
     // Set up TerrainManager to parse tiles
     this.terrainManager = new TerrainManager(this, this.level);
     this.terrainManager.parseTilemap();
+
+    // Initialize interactables (Mr. Satan, exit portal sprites) with their level-dependent properties.
+    this.setUpInteractables();
   }
 
   private setUpScene(): void {
@@ -78,15 +83,31 @@ export default class Level1 extends GameLevel {
 
   private setUpEnemies(): void {
     // All enemies in the level go here.
-    this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
-    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(12, 8), {});
+    // this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
+    // this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(12, 8), {});
   }
 
-  private setUpSatan(): void {
+  private setUpInteractables(): void {
     // Set Mr. Satan's required coin value and position for this level. 
     console.log(super.satan);
-    super.satan.setRequiredCoinValue(1);
-    super.satan.setTilePosition(new Vec2(19, 5));
+    // super.satan.setRequiredCoinValue(1);
+    // super.satan.setTilePosition(new Vec2(19, 5));
+    // super.satan.sprite.animation.play("RUBHANDS", true)
+    // Place the level end portal in the world over the body and soul exit tile locations.
+    let bodyPortalSprite = this.setUpPortalSprite("body");
+    let soulPortalSprite = this.setUpPortalSprite("soul");
+    bodyPortalSprite.animation.play("OPEN", true);
+    soulPortalSprite.animation.play("OPEN", true);
+  }
+
+  // Build an animated portal sprite.
+  private setUpPortalSprite(type: string): AnimatedSprite {
+    let portalSprite = this.add.animatedSprite(InteractableTypes.LEVEL_END_PORTAL, "primary");
+    portalSprite.scale.set(2, 2);
+    portalSprite.addPhysics();
+    portalSprite.disablePhysics();
+    portalSprite.position.set(this.terrainManager.getExitLocation(type).x, this.terrainManager.getExitLocation(type).y - 8);
+    return portalSprite;
   }
 
   updateScene(deltaT: number): void {
