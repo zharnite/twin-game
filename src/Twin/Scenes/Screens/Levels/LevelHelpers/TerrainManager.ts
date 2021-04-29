@@ -35,7 +35,7 @@ export default class TerrainManager {
   public levelEndAreas: { [character: string]: Rect };
   // Levers
   public levelLeverAreas: { [character: number]: Rect };
-  public leverToDoorsMap: Map<number, Vec2[]>;
+  public leverToDoorsMap: Map<number, number[][]>; // Lever id to list of indexes of doors and door bgs on tilemap
 
   constructor(level: GameLevel, tilemapName: string) {
     // Class variables
@@ -65,7 +65,7 @@ export default class TerrainManager {
    * Returns the specified exit location.
    */
   public getExitLocation(type: string): Vec2 {
-    return (type === "body") ? this.bodyExitLocation : this.soulExitLocation;
+    return type === "body" ? this.bodyExitLocation : this.soulExitLocation;
   }
 
   /**
@@ -143,10 +143,8 @@ export default class TerrainManager {
     this.levelLeverAreas = {};
     this.leverToDoorsMap = new Map();
 
-    let levers = this.getLayerTiles(TilemapLayers.LEVERS);
-    let leverDoors = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
-
     // Levers
+    let levers = this.getLayerTiles(TilemapLayers.LEVERS);
     for (let i = 0; i < levers.length; i++) {
       if (levers[i] === Terrains.LEVER1_ON) {
         // Both body and soul can interact with lever 1
@@ -181,29 +179,57 @@ export default class TerrainManager {
       }
     }
 
-    // Lever doors
+    // Lever doors and level door backgrounds
+    let leverDoors = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
+    let leverDoorsBackground = this.getLayerTiles(
+      TilemapLayers.LEVER_DOORS_BACKGROUND
+    );
     for (let i = 0; i < leverDoors.length; i++) {
+      // lever doors
       if (
         leverDoors[i] === Terrains.LEVER1_DOOR_LOCKED ||
         leverDoors[i] === Terrains.LEVER2_DOOR_LOCKED ||
         leverDoors[i] === Terrains.LEVER3_DOOR_LOCKED
       ) {
         let key = leverDoors[i] - 2;
-        let doors: Vec2[] = [];
-        if (this.leverToDoorsMap.has(key)) {
-          doors = this.leverToDoorsMap.get(key);
-        } else {
-          this.leverToDoorsMap.set(key, doors);
-        }
+        this.addDoorToMapWithKey(key, i, "door");
+      }
 
-        let location = this.getWorldLocationFromIndex(i);
-        doors.push(location);
+      // lever door background
+      else if (
+        leverDoorsBackground[i] === Terrains.LEVER1_DOOR_UNLOCKED ||
+        leverDoorsBackground[i] === Terrains.LEVER2_DOOR_UNLOCKED ||
+        leverDoorsBackground[i] === Terrains.LEVER3_DOOR_UNLOCKED
+      ) {
+        let key = leverDoorsBackground[i] - 3;
+        this.addDoorToMapWithKey(key, i, "doorbg");
       }
     }
+  }
 
-    // ZHEN TODO - Lever doors background
+  private addDoorToMapWithKey(
+    key: number,
+    door: number,
+    identifier: string
+  ): void {
+    let doorsAndDoorsBG: number[][] = [];
+    doorsAndDoorsBG[0] = [];
+    doorsAndDoorsBG[1] = [];
 
-    console.log(this.leverToDoorsMap);
+    if (this.leverToDoorsMap.has(key)) {
+      doorsAndDoorsBG = this.leverToDoorsMap.get(key);
+    } else {
+      this.leverToDoorsMap.set(key, doorsAndDoorsBG);
+    }
+
+    let doors = null;
+    if (identifier === "door") {
+      doors = doorsAndDoorsBG[0];
+      doors.push(door);
+    } else if (identifier === "doorbg") {
+      doors = doorsAndDoorsBG[1];
+      doors.push(door);
+    }
   }
 
   /****** HELPERS ******/
@@ -261,6 +287,10 @@ export default class TerrainManager {
     return coord.y * this.tilemap.width + coord.x;
   }
 
+  private getIndexFromWorldLocation(coord: Vec2): number {
+    return this.getIndexFromLocation(this.getLocationFromWorldLocation(coord));
+  }
+
   /**
    * ZHEN TODO
    * - change tile at index i to a different index (for toggle lever and coin block)
@@ -269,7 +299,6 @@ export default class TerrainManager {
    * - find world location (round position to world index)
    * - set new world location by modifying x and y
    * - get location from world location, get index from location
-   * - tab, view
    */
 
   /****** SCENE ADDERS ******/
@@ -310,83 +339,56 @@ export default class TerrainManager {
 
   /*** LEVERS ***/
   public toggleLever(nodeid: number, leverid: number): void {
-    // If id is odd (on / locked), go up
-    // If id is even (off / unlocked), go down
+    // Toggle lever
+    this.toggleLeverOnly(leverid);
+
+    // Toggle doors
+    this.toggleLeverDoorsAndDoorsBG(leverid);
+  }
+
+  private toggleLeverOnly(leverid: number): void {
+    let leverLayer = this.getLayerTiles(TilemapLayers.LEVERS);
+    let leverArea = this.levelLeverAreas[leverid];
+    let index = this.getIndexFromWorldLocation(leverArea.position);
+    let newLeverID = 0;
     if (leverid % 2 === 0) {
-      this.toggleLeverOn(leverid);
+      newLeverID = leverid - 1;
     } else {
-      this.toggleLeverOff(leverid);
+      newLeverID = leverid + 1;
     }
-
-    // ZHEN TODO - Toggle both doors and door backgrounds
+    this.levelLeverAreas[newLeverID] = leverArea;
+    leverLayer[index] = newLeverID;
+    this.levelLeverAreas[leverid] = null;
   }
 
-  private toggleLeverOn(leverid: number) {
-    // Turn on the lever: (off / unlocked / even) -> (on / locked / odd)
-    let leverLayer = this.getLayerTiles(TilemapLayers.LEVERS);
+  private toggleLeverDoorsAndDoorsBG(leverid: number): void {
     let leverDoorLayer = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
     let leverDoorBGLayer = this.getLayerTiles(
       TilemapLayers.LEVER_DOORS_BACKGROUND
     );
-    let leverOnID = leverid - 1;
-    let leverOffID = leverid;
-    let lockedDoorID = leverid + 1;
-    let unlockedDoorID = leverid + 2;
 
-    // Update lever
-    let leverArea = this.levelLeverAreas[leverOffID];
-    let leverLocation = this.getLocationFromWorldLocation(leverArea.position);
-    let index = this.getIndexFromLocation(leverLocation);
-    // Update levelLeverAreas
-    this.levelLeverAreas[leverOnID] = leverArea;
-    this.levelLeverAreas[leverOffID] = null;
+    let mapID = leverid;
+    if (mapID % 2 === 0) {
+      mapID--;
+    }
+    let lockedDoorID = mapID + 2;
+    let unlockedDoorID = mapID + 3;
+    let doorsAndDoorsBG = this.leverToDoorsMap.get(mapID);
+    let doors = doorsAndDoorsBG[0];
+    let doorsBG = doorsAndDoorsBG[1];
 
-    // Update lever doors
-    let doors = this.leverToDoorsMap.get(leverOffID);
-    doors.forEach((door) => {
-      let index = this.getIndexFromLocation(
-        this.getLocationFromWorldLocation(door)
-      );
-      leverDoorLayer[index] = lockedDoorID; // set door
-      leverDoorBGLayer[index] = 0; // clear unlocked door
-    });
-    // Update leverToDoorsMap
-    this.leverToDoorsMap.set(leverOnID, doors);
-    this.leverToDoorsMap.delete(leverOffID);
-  }
-
-  private toggleLeverOff(leverid: number) {
-    // Turn off the lever: (on / locked / odd) -> (off / unlocked / even)
-    let leverLayer = this.getLayerTiles(TilemapLayers.LEVERS);
-    let leverDoorLayer = this.getLayerTiles(TilemapLayers.LEVER_DOORS);
-    let leverDoorBGLayer = this.getLayerTiles(
-      TilemapLayers.LEVER_DOORS_BACKGROUND
-    );
-    let leverOnID = leverid;
-    let leverOffID = leverid + 1;
-    let lockedDoorID = leverid + 2;
-    let unlockedDoorID = leverid + 3;
-
-    // Update lever
-    let leverArea = this.levelLeverAreas[leverOnID];
-    let leverLocation = this.getLocationFromWorldLocation(leverArea.position);
-    let index = this.getIndexFromLocation(leverLocation);
-    leverLayer[index] = leverOffID;
-    // Update levelLeverAreas
-    this.levelLeverAreas[leverOffID] = leverArea;
-    this.levelLeverAreas[leverOnID] = null;
-
-    // Update lever doors
-    let doors = this.leverToDoorsMap.get(leverOnID);
-    doors.forEach((door) => {
-      let index = this.getIndexFromLocation(
-        this.getLocationFromWorldLocation(door)
-      );
-      leverDoorLayer[index] = 0; // clear door
+    doors.forEach((index) => {
+      leverDoorLayer[index] = 0; // unlock door
       leverDoorBGLayer[index] = unlockedDoorID; // set unlocked door
     });
-    // Update leverToDoorsMap
-    this.leverToDoorsMap.set(leverOffID, doors);
-    this.leverToDoorsMap.delete(leverOnID);
+    doorsBG.forEach((index) => {
+      leverDoorLayer[index] = lockedDoorID; // lock door
+      leverDoorBGLayer[index] = 0; // clear unlocked door
+    });
+
+    // update map: swap doors and door bgs
+    let tmp = doorsAndDoorsBG[0];
+    doorsAndDoorsBG[0] = doorsAndDoorsBG[1];
+    doorsAndDoorsBG[1] = tmp;
   }
 }
