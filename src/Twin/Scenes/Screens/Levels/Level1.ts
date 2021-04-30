@@ -73,7 +73,7 @@ export default class Level1 extends GameLevel {
     this.terrainManager = new TerrainManager(this, this.level);
     this.terrainManager.parseTilemap();
 
-    // Initialize interactables (Mr. Satan, exit portal sprites) with their level-dependent properties.
+    // Initialize interactables with their level-dependent properties.
     this.setUpInteractables();
   }
 
@@ -104,7 +104,6 @@ export default class Level1 extends GameLevel {
 
   private setUpInteractables(): void {
     // Set Mr. Satan's required coin value and position for this level.
-    console.log(this.satan);
     this.satan.setRequiredCoinValue(1);
     this.satan.setTilePosition(new Vec2(19, 5));
     this.satan.sprite.animation.play("RUBHANDS", true);
