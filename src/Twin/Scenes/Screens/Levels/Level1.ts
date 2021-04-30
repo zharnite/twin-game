@@ -104,14 +104,14 @@ export default class Level1 extends GameLevel {
 
   private setUpInteractables(): void {
     // Set Mr. Satan's required coin value and position for this level.
-    this.satan.setRequiredCoinValue(1);
-    this.satan.setTilePosition(new Vec2(19, 5));
-    this.satan.sprite.animation.play("RUBHANDS", true);
+    this.satan.setRequiredCoinValue(3);
+    this.satan.setTilePosition(new Vec2(15, 14));
+    this.satan.sprite.animation.play("IDLE", true);
     // Place the level end portal in the world over the body and soul exit tile locations.
-    let bodyPortalSprite = this.setUpPortalSprite("body");
-    let soulPortalSprite = this.setUpPortalSprite("soul");
-    bodyPortalSprite.animation.play("OPEN", true);
-    soulPortalSprite.animation.play("OPEN", true);
+    this.bodyEndPortalSprite = this.setUpPortalSprite("body");
+    this.soulEndPortalSprite = this.setUpPortalSprite("soul");
+    this.bodyEndPortalSprite.animation.play("CLOSED", true);
+    this.soulEndPortalSprite.animation.play("CLOSED", true);
   }
 
   // Build an animated portal sprite.

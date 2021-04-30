@@ -24,7 +24,7 @@ import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
-import { TilemapLayers } from "./LevelHelpers/Enums/TilemapLayerEnums";
+import Game from "../../../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -43,6 +43,10 @@ export default class GameLevel extends Scene {
   protected nextLevel: new (...args: any) => GameLevel;
   protected levelEndTimer: Timer;
   protected levelEndLabel: Label;
+
+  // Sprites for the end level portals
+  protected bodyEndPortalSprite: AnimatedSprite;
+  protected soulEndPortalSprite: AnimatedSprite;
 
   // Screen fade in/out for level start and end
   protected levelTransitionTimer: Timer;
@@ -351,6 +355,14 @@ export default class GameLevel extends Scene {
       // );
       // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[0], 7);
       // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[1], 7);
+
+      // Check if the player is overlapping with Satan when they press E
+      if (
+        this.player.boundary.overlaps(this.satan.sprite.boundary) ||
+        this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
+        ) {
+        this.satanCoinCheck();
+      }
     }
   }
 
@@ -634,6 +646,25 @@ export default class GameLevel extends Scene {
   protected incPlayerCoins(amt: number): void {
     GameLevel.coinCount += amt;
     this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
+  }
+
+  // Check if the player has enough coins to open the level end portal.
+  protected satanCoinCheck(): void {
+    if (GameLevel.coinCount >= this.satan.getRequiredCoinValue()) {
+      this.satan.sprite.animation.stop();
+      this.satan.sprite.animation.play("SHOW_PORTAL");
+      this.satan.sprite.animation.queue("IDLE");
+      // For right now, he just opens up the soul portal. We can decide which portal we want him to open when we make the levels.
+      this.soulEndPortalSprite.animation.stop();
+      this.soulEndPortalSprite.animation.play("OPENING");
+      this.soulEndPortalSprite.animation.queue("OPEN", true);
+      this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
+    }
+    else {
+      this.satan.sprite.animation.stop();
+      this.satan.sprite.animation.play("RUBHANDS");
+      this.satan.sprite.animation.queue("IDLE");
+    }
   }
 
   protected respawnPlayer(): void {
