@@ -46,6 +46,10 @@ export default class EaseFunctions {
     private static linear(x: number): number {
         return x;
     }
+
+    private static playerDying(x: number): number {
+        return (x > 0.25) ? 1 : (x * 4);
+    }
 }
 
 export enum EaseFunctionType {
@@ -62,9 +66,8 @@ export enum EaseFunctionType {
     // QUINT
     IN_OUT_QUINT = "easeInOutQuint",
 
-    // CUSTOM DELAY
+    // CUSTOM
     EASE_IN_WITH_DELAY = "easeInWithDelay",
-
-    // CUSTOM LINEAR
     LINEAR = "linear",
+    PLAYER_DYING = "playerDying",
 }
