@@ -29,6 +29,7 @@ export default class Walk extends OnGround {
 
     this.emitter.fireEvent(Events.PLAYER_MOVE, {
       position: this.owner.position.clone(),
+      imageId: this.owner.imageId,
     });
     this.owner.move(this.parent.velocity.scaled(deltaT));
   }

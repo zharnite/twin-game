@@ -8,6 +8,7 @@ import OnGround from "./OnGround";
  * The idle enemy state. Enemies don't do anything until the player comes near them.
  */
 export default class Idle extends OnGround {
+
   onEnter(): void {
     this.parent.speed = this.parent.speed;
     (<AnimatedSprite>this.owner).animation.play("IDLE", true);
@@ -18,10 +19,16 @@ export default class Idle extends OnGround {
     return {};
   }
 
+  // If the body player is close enough, the boar will start walking.
   handleInput(event: GameEvent) {
     if (event.type === Events.PLAYER_MOVE) {
-      let pos = event.data.get("position");
-      if (this.owner.position.x - pos.x < 64 * 10) {
+      let playerPos = event.data.get("position");
+      let playerType = event.data.get("imageId");
+      if (
+        Math.abs(this.owner.position.x - playerPos.x) < 16 * this.PLAYER_DETECTION_RADIUS && 
+        Math.abs(this.owner.position.y - playerPos.y) < 8 * this.PLAYER_DETECTION_RADIUS &&
+        playerType === "PlatformPlayer"
+      ) {
         this.finished(EnemyStates.WALK);
       }
     }
