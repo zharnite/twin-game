@@ -20,11 +20,6 @@ export default class Walk extends OnGround {
 	update(deltaT: number): void {
 		super.update(deltaT);
 
-		if(this.parent.jumpy && (Date.now() - this.time > 500)){
-			this.finished(EnemyStates.JUMP);
-			this.parent.velocity.y = -300;
-		}
-
 		this.parent.velocity.x = this.parent.direction.x * this.parent.speed;
 
 		this.owner.move(this.parent.velocity.scaled(deltaT));

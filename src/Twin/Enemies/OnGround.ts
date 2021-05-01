@@ -14,10 +14,6 @@ export default class OnGround extends EnemyState {
 			this.parent.velocity.y = 0;
 		}
 		super.update(deltaT);
-
-		if(!this.owner.onGround && this.parent.jumpy && this.owner.active){
-			this.finished(EnemyStates.JUMP);
-		}
 	}
 
 	onExit(): Record<string, any> {
