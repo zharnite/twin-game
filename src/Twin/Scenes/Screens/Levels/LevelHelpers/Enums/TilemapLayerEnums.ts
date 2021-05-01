@@ -3,6 +3,7 @@ export enum TilemapLayers {
   MAIN = "Main",
   FOREGROUND = "Foreground",
   COINS = "Coins",
+  COIN_BLOCKS = "CoinBlocks",
   INTERACTABLE = "Interactable",
   DOORS = "Doors",
   LEVERS = "Levers",

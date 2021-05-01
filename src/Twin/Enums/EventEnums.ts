@@ -10,7 +10,7 @@ export enum Events {
   LEVEL_END = "LevelEnd",
   // New events
   PLAYER_OVERLAPS_LEVER = "PlayerOverlapsLever",
-  PLAYER_FLIPPED_LEVER_ON = "PlayerFlippedLeverOn",
-  PLAYER_FLIPPED_LEVER_OFF = "PlayerFlippedLeverOff",
   PLAYER_HIT_SPIKE = "PlayerHitSpike",
+  PLAYER_ON_GROUND = "PlayerOnGround",
+  PLAYER_HIT_CEILING = "PlayerHitCeiling",
 }

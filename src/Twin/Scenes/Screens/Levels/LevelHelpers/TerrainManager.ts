@@ -254,7 +254,7 @@ export default class TerrainManager {
    * @param index Tile index from the current level's tilemap
    * @returns col and row corresponding to the index
    */
-  private getWorldLocationFromIndex(index: number): Vec2 {
+  public getWorldLocationFromIndex(index: number): Vec2 {
     let n = this.tilemap.width;
     let row = Math.floor(index / n);
     let col = index % n;
@@ -374,6 +374,24 @@ export default class TerrainManager {
     return tiles;
   }
 
+  public indexesThatContainsCoinBlocks(indexes: number[]): number[] {
+    let validIndexes: number[] = [];
+    let layer = this.getLayerTiles(TilemapLayers.COIN_BLOCKS);
+    indexes.forEach((index) => {
+      if (
+        layer[index] === Terrains.COIN1_BLOCK ||
+        layer[index] === Terrains.COIN2_BLOCK ||
+        layer[index] === Terrains.COIN3_BLOCK
+      ) {
+        // Only want 1 copy of index
+        if (validIndexes.indexOf(index) === -1) {
+          validIndexes.push(index);
+        }
+      }
+    });
+    return validIndexes;
+  }
+
   /****** SCENE ADDERS ******/
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
     let levelEndArea = <Rect>this.level.add.graphic(
@@ -414,13 +432,38 @@ export default class TerrainManager {
     layerName: string,
     index: number,
     tileid: number
-  ) {
+  ): void {
+    this.setLayerAtIndexToTileWithOffset(layerName, index, tileid, 0);
+  }
+
+  public setLayerAtIndexToTileWithOffset(
+    layerName: string,
+    index: number,
+    tileid: number,
+    offset: number
+  ): void {
     let layer = this.getLayerTiles(layerName);
-    layer[index] = tileid;
+    layer[index] = tileid + offset;
+  }
+
+  public setLayerAtIndexWithOffset(
+    layerName: string,
+    index: number,
+    offset: number
+  ): void {
+    let layer = this.getLayerTiles(layerName);
+    layer[index] = layer[index] + offset;
   }
 
   public setBackgroundAtIndex(index: number, tileid: number) {
     this.setLayerAtIndexToTile(TilemapLayers.BACKGROUND, index, tileid);
+  }
+
+  public setCoinBlockAtIndexToHit(indexes: number[]) {
+    let layer = this.getLayerTiles(TilemapLayers.COIN_BLOCKS);
+    indexes.forEach((index) =>
+      this.setLayerAtIndexWithOffset(TilemapLayers.COIN_BLOCKS, index, 1)
+    );
   }
 
   /*** LEVERS ***/

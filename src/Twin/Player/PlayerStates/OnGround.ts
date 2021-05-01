@@ -27,6 +27,11 @@ export default class OnGround extends PlayerState {
     } else if (!this.owner.onGround) {
       this.finished("fall");
     }
+
+    // Event that player is on ground
+    if (this.owner.onGround) {
+      this.playerOnGround();
+    }
   }
 
   onExit(): Record<string, any> {
