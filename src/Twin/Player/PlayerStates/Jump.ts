@@ -25,9 +25,7 @@ export default class Jump extends InAir {
     }
 
     if (this.owner.collidedWithTilemap && this.owner.onCeiling) {
-      // Event that player jumped
-      // We collided with a tilemap above us. First, get the tile right above us
-      super.handleCoinblockCollision();
+      this.playerHitCeiling();
     }
   }
 

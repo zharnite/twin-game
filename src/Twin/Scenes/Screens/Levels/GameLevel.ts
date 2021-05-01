@@ -131,15 +131,18 @@ export default class GameLevel extends Scene {
 
   protected subscribeToEvents() {
     this.receiver.subscribe([
+      Events.PLAYER_HIT_ENEMY,
       Events.PLAYER_HIT_COIN,
       Events.PLAYER_HIT_COIN_BLOCK,
-      Events.PLAYER_HIT_ENEMY,
       Events.ENEMY_DIED,
       Events.PLAYER_ENTERED_LEVEL_END,
       Events.LEVEL_START,
       Events.LEVEL_END,
+      // Newly added
       Events.PLAYER_OVERLAPS_LEVER,
       Events.PLAYER_HIT_SPIKE,
+      Events.PLAYER_ON_GROUND,
+      Events.PLAYER_HIT_CEILING,
     ]);
   }
 
@@ -360,7 +363,7 @@ export default class GameLevel extends Scene {
       if (
         this.player.boundary.overlaps(this.satan.sprite.boundary) ||
         this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
-        ) {
+      ) {
         this.satanCoinCheck();
       }
     }
@@ -435,18 +438,6 @@ export default class GameLevel extends Scene {
           }
           break;
 
-        case Events.PLAYER_OVERLAPS_LEVER:
-          {
-            this.handleEventPlayerOverlapsLever(deltaT, event);
-          }
-          break;
-
-        case Events.PLAYER_HIT_SPIKE:
-          {
-            this.handleEventPlayerHitSpike(deltaT, event);
-          }
-          break;
-
         case Events.ENEMY_DIED:
           {
             this.handleEventEnemyDied(deltaT, event);
@@ -468,6 +459,30 @@ export default class GameLevel extends Scene {
         case Events.LEVEL_END:
           {
             this.handleEventLevelEnd(deltaT, event);
+          }
+          break;
+
+        // Newly added
+        case Events.PLAYER_OVERLAPS_LEVER:
+          {
+            this.handleEventPlayerOverlapsLever(deltaT, event);
+          }
+          break;
+
+        case Events.PLAYER_HIT_SPIKE:
+          {
+            this.handleEventPlayerHitSpike(deltaT, event);
+          }
+          break;
+
+        case Events.PLAYER_ON_GROUND:
+          {
+            this.handleEventPlayerOnGround(deltaT, event);
+          }
+          break;
+        case Events.PLAYER_HIT_CEILING:
+          {
+            this.handleEventPlayerHitCeiling(deltaT, event);
           }
           break;
       }
@@ -519,31 +534,17 @@ export default class GameLevel extends Scene {
     deltaT: number,
     event: GameEvent
   ): void {
-    // Hit a coin block, so increment our number of coins
+    // Get coin block indexes
+    let coinBlocks = event.data.get("coinBlocks");
+
+    // Set coin blocks to hit
+    this.terrainManager.setCoinBlockAtIndexToHit(coinBlocks);
+
+    // Play coin animation
+    this.playCoinTween(coinBlocks);
+
+    // Increment number of coins by 1
     this.incPlayerCoins(1);
-  }
-
-  private handleEventPlayerOverlapsLever(
-    deltaT: number,
-    event: GameEvent
-  ): void {
-    // Only do things when interact [e] is pressed, do nothing otherwise
-    if (!Input.isJustPressed("interact")) {
-      return;
-    }
-
-    // Get the node id (body or soul) which toggled the switch
-    let id = event.data.get("node");
-
-    // Get the lever that the player overlaps with
-    let leverid = this.getOverlappingLever(id);
-
-    // Toggle lever and doors
-    this.terrainManager.toggleLever(id, leverid);
-  }
-
-  private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
-    this.respawnPlayer();
   }
 
   private handleEventEnemyDied(deltaT: number, event: GameEvent): void {
@@ -585,6 +586,49 @@ export default class GameLevel extends Scene {
       console.log("Going to next level!");
       let sceneOptions = SceneOptions.getSceneOptions();
       this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
+    }
+  }
+
+  private handleEventPlayerOverlapsLever(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // Only do things when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
+      return;
+    }
+
+    // Get the node id (body or soul) which toggled the switch
+    let id = event.data.get("node");
+
+    // Get the lever that the player overlaps with
+    let leverid = this.getOverlappingLever(id);
+
+    // Toggle lever and doors
+    this.terrainManager.toggleLever(id, leverid);
+  }
+
+  private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
+    this.respawnPlayer();
+  }
+
+  private handleEventPlayerOnGround(deltaT: number, event: GameEvent): void {}
+
+  private handleEventPlayerHitCeiling(deltaT: number, event: GameEvent): void {
+    // Get ceiling tiles
+    let ceilingIndexes = this.terrainManager.getTileIndexesAboveAnyLocation(
+      this.player.position,
+      this.player.size
+    );
+
+    // Check if the ceilings are coin blocks
+    let coinBlocks = this.terrainManager.indexesThatContainsCoinBlocks(
+      ceilingIndexes
+    );
+    if (coinBlocks.length > 0) {
+      this.emitter.fireEvent(Events.PLAYER_HIT_COIN_BLOCK, {
+        coinBlocks: coinBlocks,
+      });
     }
   }
 
@@ -659,8 +703,7 @@ export default class GameLevel extends Scene {
       this.soulEndPortalSprite.animation.play("OPENING");
       this.soulEndPortalSprite.animation.queue("OPEN", true);
       this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
-    }
-    else {
+    } else {
       this.satan.sprite.animation.stop();
       this.satan.sprite.animation.play("RUBHANDS");
       this.satan.sprite.animation.queue("IDLE");
@@ -684,6 +727,37 @@ export default class GameLevel extends Scene {
   unloadScene(): void {
     // Reset zoom level. Only game levels have a zoom level of 2.
     this.viewport.setZoomLevel(1);
+  }
+
+  /****** ANIMATION/TWEEN METHODS ******/
+  private playCoinTween(indexes: number[]): void {
+    let coin = (<PlayerController>this.player.ai).coin;
+    coin.tweens.add("found", {
+      startDelay: 0,
+      duration: 300,
+      effects: [
+        {
+          property: TweenableProperties.alpha,
+          start: 1,
+          end: 0,
+          ease: EaseFunctionType.IN_OUT_QUAD,
+        },
+        {
+          property: TweenableProperties.posY,
+          start: this.player.position.y - 30,
+          end: this.player.position.y - 100,
+          ease: EaseFunctionType.OUT_SINE,
+        },
+      ],
+    });
+
+    // animate each coin
+    indexes.forEach((index) => {
+      let position = this.terrainManager.getWorldLocationFromIndex(index);
+
+      coin.position.set(position.x, position.y);
+      coin.tweens.play("found");
+    });
   }
 
   /****** HELPER METHODS ******/
