@@ -13,4 +13,5 @@ export enum Events {
   PLAYER_HIT_SPIKE = "PlayerHitSpike",
   PLAYER_ON_GROUND = "PlayerOnGround",
   PLAYER_HIT_CEILING = "PlayerHitCeiling",
+  PLAYER_FINISHED_DYING = "PlayerFinishedDying",
 }

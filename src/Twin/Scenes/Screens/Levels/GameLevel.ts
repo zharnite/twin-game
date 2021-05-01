@@ -34,6 +34,7 @@ export default class GameLevel extends Scene {
   // Every level will have a ghost player, which will be an animated sprite
   protected ghostPlayerSpawn: Vec2;
   protected ghostPlayer: AnimatedSprite;
+  protected playerIsDying = false;
 
   // Labels for the UI
   protected static coinCount: number = 0;
@@ -143,6 +144,7 @@ export default class GameLevel extends Scene {
       Events.PLAYER_HIT_SPIKE,
       Events.PLAYER_ON_GROUND,
       Events.PLAYER_HIT_CEILING,
+      Events.PLAYER_FINISHED_DYING,
     ]);
   }
 
@@ -249,6 +251,21 @@ export default class GameLevel extends Scene {
 
     // Add triggers on colliding with coins or coinBlocks
     this.player.setGroup(PlayerTypes.PLAYER);
+
+    // Create player's dying tween.
+    this.player.tweens.add("dying", {
+      startDelay: 0,
+      duration: 2000,
+      effects: [
+        {
+          property: TweenableProperties.scaleX,
+          start: 1,
+          end: 0,
+          ease: EaseFunctionType.PLAYER_DYING,
+        },
+      ],
+      onEnd: Events.PLAYER_FINISHED_DYING
+    });
   }
 
   protected initGhostPlayer(): void {
@@ -279,6 +296,21 @@ export default class GameLevel extends Scene {
 
     // Add triggers on colliding with coins or coinBlocks
     this.ghostPlayer.setGroup(PlayerTypes.GHOST_PLAYER);
+
+    // Create player's dying tween.
+    this.ghostPlayer.tweens.add("dying", {
+      startDelay: 0,
+      duration: 2000,
+      effects: [
+        {
+          property: TweenableProperties.scaleX,
+          start: 1,
+          end: 0,
+          ease: EaseFunctionType.PLAYER_DYING,
+        },
+      ],
+      onEnd: Events.PLAYER_FINISHED_DYING
+    });
   }
 
   protected initInteractables(): void {
@@ -426,6 +458,17 @@ export default class GameLevel extends Scene {
           }
           break;
 
+        case Events.PLAYER_FINISHED_DYING:
+          {
+            this.playerIsDying = false;
+            this.player.scaleX = 2;
+            this.ghostPlayer.scaleX = 2;
+            this.player.unfreeze();
+            this.ghostPlayer.unfreeze();
+            this.respawnPlayer();
+          }
+          break;
+
         case Events.PLAYER_HIT_COIN:
           {
             this.handleEventPlayerHitCoin(deltaT, event);
@@ -493,15 +536,17 @@ export default class GameLevel extends Scene {
     let node = this.sceneGraph.getNode(event.data.get("node"));
     let other = this.sceneGraph.getNode(event.data.get("other"));
 
+    if (this.playerIsDying) { return; }
+
     if (node === this.player || node === this.ghostPlayer) {
       // Node is player, other is enemy
-      this.handlePlayerEnemyCollision(
+      this.playerDies(
         <AnimatedSprite>node,
         <AnimatedSprite>other
       );
     } else {
       // Other is player, node is enemy
-      this.handlePlayerEnemyCollision(
+      this.playerDies(
         <AnimatedSprite>other,
         <AnimatedSprite>node
       );
@@ -647,44 +692,15 @@ export default class GameLevel extends Scene {
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
-  protected handlePlayerEnemyCollision(
+  protected playerDies(
     player: AnimatedSprite,
     enemy: AnimatedSprite
   ) {
-    // Get the vector of the direction from the player to the enemy
-    let dir = player.position.dirTo(enemy.position);
-
-    if ((<EnemyController>enemy.ai).jumpy) {
-      // If it's a jumpy enemy, we want to hit it from the bottom
-      if (dir.dot(Vec2.UP) > 0.5) {
-        enemy.disablePhysics();
-        enemy.tweens.stopAll();
-        enemy.animation.play("DYING", false, Events.ENEMY_DIED);
-
-        // Stop the player's jump for some feedback
-        (<PlayerController>player.ai).velocity.y = 0;
-      } else {
-        this.respawnPlayer();
-      }
-    } else {
-      // If not, we want to hit it from the top
-      if (dir.dot(Vec2.DOWN) > 0.5) {
-        enemy.disablePhysics();
-        enemy.animation.play("DYING", false, Events.ENEMY_DIED);
-
-        // Give the player a slight jump boost
-        let playerVel = (<PlayerController>player.ai).velocity;
-        if (playerVel.y < 0) {
-          // We're going up - unlikely, but still check
-          playerVel.y += 0.2 * (<PlayerController>player.ai).velocity.y;
-        } else {
-          // We're going down, invert our bounce, but dampen it
-          playerVel.y = -0.5 * (<PlayerController>player.ai).velocity.y;
-        }
-      } else {
-        this.respawnPlayer();
-      }
-    }
+    this.playerIsDying = true;
+    this.player.tweens.play("dying");
+    this.ghostPlayer.tweens.play("dying");
+    this.player.freeze();
+    this.ghostPlayer.freeze();
   }
 
   protected incPlayerCoins(amt: number): void {
