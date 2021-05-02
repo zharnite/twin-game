@@ -14,7 +14,7 @@
       ]
     },
     {
-      "name": "WALK",
+      "name": "FLY",
       "frames": [
         { "index": 0, "duration": 8 },
         { "index": 1, "duration": 8 },
