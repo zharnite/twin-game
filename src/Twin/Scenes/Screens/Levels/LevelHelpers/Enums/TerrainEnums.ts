@@ -36,4 +36,8 @@ export enum Terrains {
   COIN3 = 39,
   COIN3_BLOCK = 40,
   COIN3_BLOCK_HIT = 41,
+  // Spike blocks
+  SPIKE1 = 49,
+  SPIKE2 = 50,
+  SPIKE3 = 51,
 }

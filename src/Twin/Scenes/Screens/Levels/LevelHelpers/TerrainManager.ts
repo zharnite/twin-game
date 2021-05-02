@@ -329,12 +329,26 @@ export default class TerrainManager {
     return tiles;
   }
 
+  public getTileDirectlyBelowAnyLocation(location: Vec2, size: Vec2): Vec2 {
+    let bottomY = location.y + size.y + 2;
+    return new Vec2(location.x, bottomY);
+  }
+
   public getTileIndexesBelowAnyLocation(location: Vec2, size: Vec2): number[] {
     let tiles: number[] = [];
     this.getTilesBelowAnyLocation(location, size).forEach((tileCoord) =>
       tiles.push(this.getIndexFromAnyLocation(tileCoord))
     );
     return tiles;
+  }
+
+  public getTileIndexDirectlyBelowAnyLocation(
+    location: Vec2,
+    size: Vec2
+  ): number {
+    return this.getIndexFromAnyLocation(
+      this.getTileDirectlyBelowAnyLocation(location, size)
+    );
   }
 
   public getTilesLeftAnyLocation(location: Vec2, size: Vec2): Vec2[] {
@@ -390,6 +404,32 @@ export default class TerrainManager {
       }
     });
     return validIndexes;
+  }
+
+  public hitSpike(position: Vec2, size: Vec2, id: number): boolean {
+    let layer = this.getLayerTiles(TilemapLayers.MAIN);
+    let tileBelowIndex = this.getTileIndexDirectlyBelowAnyLocation(
+      position,
+      size
+    );
+    // Hit both spike
+    if (layer[tileBelowIndex] === Terrains.SPIKE1) {
+      return true;
+    }
+    // Body hit body spike
+    else if (
+      layer[tileBelowIndex] === Terrains.SPIKE2 &&
+      id === this.level.getPlayerID()
+    ) {
+      return true;
+    }
+    // Soul hit soul spike
+    else if (
+      layer[tileBelowIndex] === Terrains.SPIKE3 &&
+      id === this.level.getGhostPlayerID()
+    ) {
+      return true;
+    }
   }
 
   /****** SCENE ADDERS ******/
