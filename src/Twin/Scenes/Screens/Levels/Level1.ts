@@ -35,6 +35,10 @@ export default class Level1 extends GameLevel {
       "assets/spritesheets/hellhawk.json"
     );
     this.load.spritesheet(
+      InteractableTypes.LEVEL_END_DOOR,
+      "assets/spritesheets/door.json"
+    );
+    this.load.spritesheet(
       InteractableTypes.LEVEL_END_PORTAL,
       "assets/spritesheets/portal.json"
     );
@@ -99,7 +103,7 @@ export default class Level1 extends GameLevel {
   private setUpEnemies(): void {
     // All enemies in the level go here.
     this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
-    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(19, 9), {flyer: true});
+    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(19, 11), {flyer: true});
   }
 
   private setUpInteractables(): void {
@@ -110,14 +114,14 @@ export default class Level1 extends GameLevel {
     // Place the level end portal in the world over the body and soul exit tile locations.
     this.bodyEndPortalSprite = this.setUpPortalSprite("body");
     this.soulEndPortalSprite = this.setUpPortalSprite("soul");
-    this.bodyEndPortalSprite.animation.play("CLOSED", true);
+    this.bodyEndPortalSprite.animation.play("OPEN", true);
     this.soulEndPortalSprite.animation.play("CLOSED", true);
   }
 
   // Build an animated portal sprite.
   private setUpPortalSprite(type: string): AnimatedSprite {
     let portalSprite = this.add.animatedSprite(
-      InteractableTypes.LEVEL_END_PORTAL,
+      (type === "body") ? InteractableTypes.LEVEL_END_DOOR : InteractableTypes.LEVEL_END_PORTAL,
       "primary"
     );
     portalSprite.scale.set(2, 2);
