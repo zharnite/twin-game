@@ -8,7 +8,7 @@ import EnemyController from "./EnemyController";
 export default abstract class EnemyState extends State {
 	owner: GameNode;
 	gravity: number = 10000;
-	parent: EnemyController
+	parent: EnemyController;
 	PLAYER_DETECTION_RADIUS = 11;
 
 	constructor(parent: StateMachine, owner: GameNode){
@@ -20,8 +20,10 @@ export default abstract class EnemyState extends State {
 	handleInput(event: GameEvent): void {}
 
 	update(deltaT: number): void {
-		// Do gravity
-		this.parent.velocity.y += this.gravity*deltaT;
+		// Do gravity if this enemy is not a flyer
+		if (!this.parent.flyer) {
+			this.parent.velocity.y += this.gravity*deltaT;
+		}
 
 		if(this.owner.onWall){
 			// Flip around
