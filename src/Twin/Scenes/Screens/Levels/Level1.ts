@@ -114,7 +114,8 @@ export default class Level1 extends GameLevel {
     // Place the level end portal in the world over the body and soul exit tile locations.
     this.bodyEndPortalSprite = this.setUpPortalSprite("body");
     this.soulEndPortalSprite = this.setUpPortalSprite("soul");
-    this.bodyEndPortalSprite.animation.play("OPEN", true);
+    this.bodyEndPortalSprite.animation.play("OPENING");
+    this.bodyEndPortalSprite.animation.queue("OPEN", true);
     this.soulEndPortalSprite.animation.play("CLOSED", true);
   }
 
