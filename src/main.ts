@@ -16,11 +16,13 @@ import Splash from "./Twin/Scenes/Screens/Splash";
       { name: "jump", keys: ["w", "space"] },
       { name: "run", keys: ["shift"] },
       { name: "restart", keys: ["r"] },
-      { name: "unlock", keys: ["u"] }, // unlocks all levels
-      { name: "swap view", keys: ["v"] }, // swaps views between player and ghost player (for debugging)
+      { name: "swap view", keys: ["v"] }, 
       { name: "pause", keys: ["escape", "p"] },
-      { name: "change control", keys: ["c"] },
       { name: "interact", keys: ["e"] },
+      // Cheat codes
+      { name: "change control", keys: ["c"] }, // temporarily freezes one of the characters
+      { name: "unlock", keys: ["u"] }, // unlocks all levels
+      { name: "invincible", keys: ["i"] }, // make both players invincible
     ],
     useWebGL: false, // Tell the game we want to use webgl
     showDebug: false, // Whether to show debug messages. You can change this to true if you want

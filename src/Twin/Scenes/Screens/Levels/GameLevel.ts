@@ -40,6 +40,10 @@ export default class GameLevel extends Scene {
   protected static coinCount: number = 0;
   protected coinCountLabel: Label;
 
+  // Debug labels
+  protected debugLabel: Label;
+  protected playerIsInvincible: boolean;
+
   // Stuff to end the level and go to the next level
   protected nextLevel: new (...args: any) => GameLevel;
   protected levelEndTimer: Timer;
@@ -106,7 +110,10 @@ export default class GameLevel extends Scene {
     // Twin game specific supported initializations
     this.initPauseTracker();
     this.initViewportFollow();
-    this.initControlNodes(); // debugging
+
+    // Debugging
+    this.initControlNodes();
+    this.playerIsInvincible = false;
 
     GameLevel.coinCount = 0;
   }
@@ -149,9 +156,8 @@ export default class GameLevel extends Scene {
     ]);
   }
 
+  // Add in-game labels
   protected addUI() {
-    // Twin TODO (optional) - make this more modular: repeated code
-    // In-game labels
     // Coin label
     this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
       position: new Vec2(80, 30),
@@ -162,6 +168,16 @@ export default class GameLevel extends Scene {
     this.coinCountLabel.fontSize = 40;
     this.coinCountLabel.padding = new Vec2(10, 5);
     this.coinCountLabel.backgroundColor = new Color(0, 0, 0, 0.9);
+
+    // Debug label to display debug info.
+    this.debugLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
+      position: new Vec2(80, 10),
+      text: "",
+    });
+    this.debugLabel.textColor = Color.RED;
+    this.debugLabel.font = "Squarely";
+    this.debugLabel.fontSize = 30;
+    this.debugLabel.backgroundColor = new Color(0, 0, 0, 0.9);
 
     // End of level label (start off screen)
     this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {
@@ -379,27 +395,20 @@ export default class GameLevel extends Scene {
     this.handleInputSwapView();
     this.handleInputRestart();
     this.handleInputPause();
+    this.handleInputInteract();
 
-    // Debug input
+    // Inputs for debugging/testing
     this.handleInputChangeControls();
+    this.handleInputToggleInvincibility();
 
     // Debug
-    if (Input.isJustPressed("interact")) {
+    // if (Input.isJustPressed("interact")) {
       // let locs = this.terrainManager.getTileIndexesAboveAnyLocation(
       //   this.player.position,
       //   this.player.size
       // );
       // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[0], 7);
       // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[1], 7);
-
-      // Check if the player is overlapping with Satan when they press E
-      if (
-        this.player.boundary.overlaps(this.satan.sprite.boundary) ||
-        this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
-      ) {
-        this.satanCoinCheck();
-      }
-    }
   }
 
   private handleInputSwapView(): void {
@@ -422,6 +431,17 @@ export default class GameLevel extends Scene {
     }
   }
 
+  private handleInputInteract(): void {
+    if (Input.isJustPressed("interact")) {
+      if (
+        this.player.boundary.overlaps(this.satan.sprite.boundary) ||
+        this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
+      ) {
+        this.satanCoinCheck();
+      }
+    }
+  }
+
   private handleInputChangeControls(): void {
     // change character control input
     if (Input.isJustPressed("change control")) {
@@ -431,7 +451,6 @@ export default class GameLevel extends Scene {
           node.freeze();
         }
       });
-
       // Unfreeze nodes in the array
       this.controlNodesIndex++;
       this.controlNodesIndex =
@@ -441,6 +460,13 @@ export default class GameLevel extends Scene {
           node.unfreeze();
         }
       });
+    }
+  }
+
+  private handleInputToggleInvincibility(): void {
+    if (Input.isJustPressed("invincible")) {
+      this.playerIsInvincible = !this.playerIsInvincible;
+      this.debugLabel.setText((this.playerIsInvincible) ? "INVINCIBILITY ON" : "");
     }
   }
 
@@ -542,7 +568,8 @@ export default class GameLevel extends Scene {
     let node = this.sceneGraph.getNode(event.data.get("node"));
     let other = this.sceneGraph.getNode(event.data.get("other"));
 
-    if (this.playerIsDying) {
+    // If the player is invincible (debug) or already dying, we don't want this function to trigger.
+    if (this.playerIsDying || this.playerIsInvincible) {
       return;
     }
 
