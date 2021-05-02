@@ -103,7 +103,7 @@ export default class Level1 extends GameLevel {
   private setUpEnemies(): void {
     // All enemies in the level go here.
     this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
-    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(19, 9), {flyer: true});
+    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(19, 11), {flyer: true});
   }
 
   private setUpInteractables(): void {
