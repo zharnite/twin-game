@@ -430,6 +430,37 @@ export default class TerrainManager {
     ) {
       return true;
     }
+
+    return false;
+  }
+
+  public hitTrampoline(position: Vec2, size: Vec2, id: number): boolean {
+    let layer = this.getLayerTiles(TilemapLayers.MAIN);
+    let tileBelowIndex = this.getTileIndexDirectlyBelowAnyLocation(
+      position,
+      size
+    );
+    let node = this.level.getSceneGraph().getNode(id);
+    // Hit both tramp
+    if (layer[tileBelowIndex] === Terrains.TRAMPOLINE1) {
+      return true;
+    }
+    // Body hit tramp
+    else if (
+      layer[tileBelowIndex] === Terrains.TRAMPOLINE2 &&
+      id === this.level.getPlayerID()
+    ) {
+      return true;
+    }
+    // Soul hit tramp
+    else if (
+      layer[tileBelowIndex] === Terrains.TRAMPOLINE3 &&
+      id === this.level.getGhostPlayerID()
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   /****** SCENE ADDERS ******/

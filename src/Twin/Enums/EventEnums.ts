@@ -11,6 +11,7 @@ export enum Events {
   // New events
   PLAYER_OVERLAPS_LEVER = "PlayerOverlapsLever",
   PLAYER_HIT_SPIKE = "PlayerHitSpike",
+  PLAYER_HIT_TRAMPOLINE = "PlayerHitTrampoline",
   PLAYER_ON_GROUND = "PlayerOnGround",
   PLAYER_HIT_CEILING = "PlayerHitCeiling",
   PLAYER_FINISHED_DYING = "PlayerFinishedDying",
