@@ -264,7 +264,7 @@ export default class GameLevel extends Scene {
           ease: EaseFunctionType.PLAYER_DYING,
         },
       ],
-      onEnd: Events.PLAYER_FINISHED_DYING
+      onEnd: Events.PLAYER_FINISHED_DYING,
     });
   }
 
@@ -309,7 +309,7 @@ export default class GameLevel extends Scene {
           ease: EaseFunctionType.PLAYER_DYING,
         },
       ],
-      onEnd: Events.PLAYER_FINISHED_DYING
+      onEnd: Events.PLAYER_FINISHED_DYING,
     });
   }
 
@@ -536,20 +536,16 @@ export default class GameLevel extends Scene {
     let node = this.sceneGraph.getNode(event.data.get("node"));
     let other = this.sceneGraph.getNode(event.data.get("other"));
 
-    if (this.playerIsDying) { return; }
+    if (this.playerIsDying) {
+      return;
+    }
 
     if (node === this.player || node === this.ghostPlayer) {
       // Node is player, other is enemy
-      this.playerDies(
-        <AnimatedSprite>node,
-        <AnimatedSprite>other
-      );
+      this.playerDies(<AnimatedSprite>node, <AnimatedSprite>other);
     } else {
       // Other is player, node is enemy
-      this.playerDies(
-        <AnimatedSprite>other,
-        <AnimatedSprite>node
-      );
+      this.playerDies(<AnimatedSprite>other, <AnimatedSprite>node);
     }
   }
 
@@ -588,8 +584,8 @@ export default class GameLevel extends Scene {
     // Play coin animation
     this.playCoinTween(coinBlocks);
 
-    // Increment number of coins by 1
-    this.incPlayerCoins(1);
+    // Increment number of coins by number of coin blocks
+    this.incPlayerCoins(coinBlocks.length);
   }
 
   private handleEventEnemyDied(deltaT: number, event: GameEvent): void {
@@ -654,16 +650,29 @@ export default class GameLevel extends Scene {
   }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
-    this.respawnPlayer();
+    this.emitter.fireEvent(Events.PLAYER_HIT_ENEMY);
   }
 
-  private handleEventPlayerOnGround(deltaT: number, event: GameEvent): void {}
+  private handleEventPlayerOnGround(deltaT: number, event: GameEvent): void {
+    let node = this.sceneGraph.getNode(event.data.get("id"));
+
+    // Spike block
+    if (this.terrainManager.hitSpike(node.position, node.size, node.id)) {
+      this.emitter.fireEvent(Events.PLAYER_HIT_SPIKE);
+      return;
+    }
+
+    // Freeze block
+    // TODO
+  }
 
   private handleEventPlayerHitCeiling(deltaT: number, event: GameEvent): void {
+    let node = this.sceneGraph.getNode(event.data.get("id"));
+
     // Get ceiling tiles
     let ceilingIndexes = this.terrainManager.getTileIndexesAboveAnyLocation(
-      this.player.position,
-      this.player.size
+      node.position,
+      node.size
     );
 
     // Check if the ceilings are coin blocks
@@ -673,6 +682,7 @@ export default class GameLevel extends Scene {
     if (coinBlocks.length > 0) {
       this.emitter.fireEvent(Events.PLAYER_HIT_COIN_BLOCK, {
         coinBlocks: coinBlocks,
+        node: node,
       });
     }
   }
@@ -692,10 +702,7 @@ export default class GameLevel extends Scene {
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
-  protected playerDies(
-    player: AnimatedSprite,
-    enemy: AnimatedSprite
-  ) {
+  protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
     this.playerIsDying = true;
     this.player.tweens.play("dying");
     this.ghostPlayer.tweens.play("dying");
@@ -748,29 +755,28 @@ export default class GameLevel extends Scene {
   /****** ANIMATION/TWEEN METHODS ******/
   private playCoinTween(indexes: number[]): void {
     let coin = (<PlayerController>this.player.ai).coin;
-    coin.tweens.add("found", {
-      startDelay: 0,
-      duration: 300,
-      effects: [
-        {
-          property: TweenableProperties.alpha,
-          start: 1,
-          end: 0,
-          ease: EaseFunctionType.IN_OUT_QUAD,
-        },
-        {
-          property: TweenableProperties.posY,
-          start: this.player.position.y - 30,
-          end: this.player.position.y - 100,
-          ease: EaseFunctionType.OUT_SINE,
-        },
-      ],
-    });
 
     // animate each coin
     indexes.forEach((index) => {
       let position = this.terrainManager.getWorldLocationFromIndex(index);
-
+      coin.tweens.add("found", {
+        startDelay: 0,
+        duration: 300,
+        effects: [
+          {
+            property: TweenableProperties.alpha,
+            start: 1,
+            end: 0,
+            ease: EaseFunctionType.IN_OUT_QUAD,
+          },
+          {
+            property: TweenableProperties.posY,
+            start: position.y,
+            end: position.y - 70,
+            ease: EaseFunctionType.OUT_SINE,
+          },
+        ],
+      });
       coin.position.set(position.x, position.y);
       coin.tweens.play("found");
     });
@@ -814,6 +820,15 @@ export default class GameLevel extends Scene {
   }
 
   /****** PUBLIC METHODS ******/
+  /*** Getters ***/
+  public getPlayerID(): number {
+    return this.player.id;
+  }
+
+  public getGhostPlayerID(): number {
+    return this.ghostPlayer.id;
+  }
+
   /*** Setters ***/
   /**
    * Set player's spawn location
