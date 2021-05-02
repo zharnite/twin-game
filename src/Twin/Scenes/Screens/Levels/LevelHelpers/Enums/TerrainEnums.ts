@@ -40,4 +40,8 @@ export enum Terrains {
   SPIKE1 = 49,
   SPIKE2 = 50,
   SPIKE3 = 51,
+  // Trampoline blocks
+  TRAMPOLINE1 = 52,
+  TRAMPOLINE2 = 53,
+  TRAMPOLINE3 = 54,
 }

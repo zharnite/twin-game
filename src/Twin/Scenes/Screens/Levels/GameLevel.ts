@@ -142,6 +142,7 @@ export default class GameLevel extends Scene {
       // Newly added
       Events.PLAYER_OVERLAPS_LEVER,
       Events.PLAYER_HIT_SPIKE,
+      Events.PLAYER_HIT_TRAMPOLINE,
       Events.PLAYER_ON_GROUND,
       Events.PLAYER_HIT_CEILING,
       Events.PLAYER_FINISHED_DYING,
@@ -517,6 +518,11 @@ export default class GameLevel extends Scene {
             this.handleEventPlayerHitSpike(deltaT, event);
           }
           break;
+        case Events.PLAYER_HIT_TRAMPOLINE:
+          {
+            this.handleEventPlayerHitTrampoline(deltaT, event);
+          }
+          break;
 
         case Events.PLAYER_ON_GROUND:
           {
@@ -653,6 +659,18 @@ export default class GameLevel extends Scene {
     this.emitter.fireEvent(Events.PLAYER_HIT_ENEMY);
   }
 
+  private handleEventPlayerHitTrampoline(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    let node = event.data.get("node");
+    let pc = <PlayerController>node.ai;
+    pc.velocity.y = pc.JUMP_HEIGHT * 2;
+    if (node === this.ghostPlayer) {
+      pc.velocity.y = pc.JUMP_HEIGHT * 5;
+    }
+  }
+
   private handleEventPlayerOnGround(deltaT: number, event: GameEvent): void {
     let node = this.sceneGraph.getNode(event.data.get("id"));
 
@@ -664,6 +682,14 @@ export default class GameLevel extends Scene {
 
     // Freeze block
     // TODO
+
+    // Trampoline block
+    if (this.terrainManager.hitTrampoline(node.position, node.size, node.id)) {
+      this.emitter.fireEvent(Events.PLAYER_HIT_TRAMPOLINE, {
+        node: node,
+      });
+      return;
+    }
   }
 
   private handleEventPlayerHitCeiling(deltaT: number, event: GameEvent): void {
