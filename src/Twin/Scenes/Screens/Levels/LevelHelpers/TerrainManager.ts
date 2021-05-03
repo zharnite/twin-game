@@ -7,8 +7,10 @@ import { GraphicType } from "../../../../../Wolfie2D/Nodes/Graphics/GraphicTypes
 import Rect from "../../../../../Wolfie2D/Nodes/Graphics/Rect";
 import OrthogonalTilemap from "../../../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Color from "../../../../../Wolfie2D/Utils/Color";
+import EnemyController from "../../../../Enemies/EnemyController";
 import { Events } from "../../../../Enums/EventEnums";
 import PlayerController from "../../../../Player/PlayerController";
+import { EnemyTypes } from "../../../Enums/EnemyEnums";
 import { PlayerTypes } from "../../../Enums/PlayerEnums";
 import GameLevel from "../GameLevel";
 import { Terrains } from "./Enums/TerrainEnums";
@@ -59,6 +61,7 @@ export default class TerrainManager {
     this.parseDoors();
     this.parseLeversAndLeverDoors();
     this.parseUnfreezeBlocks();
+    this.parseEnemySpawnPoints();
   }
 
   /**
@@ -272,6 +275,25 @@ export default class TerrainManager {
             .scale(this.scaleFactor),
           this.singleBlockSize.scaled(this.scaleFactor),
           [PlayerTypes.GHOST_PLAYER]
+        );
+      }
+    }
+  }
+
+  private parseEnemySpawnPoints(): void {
+    let spawnBG = this.getLayerTiles(TilemapLayers.ENEMY_SPAWN_BACKGROUND);
+    for (let i = 0; i < spawnBG.length; i++) {
+      if (spawnBG[i] === Terrains.ENEMY_SPAWN_BOAR) {
+        this.addEnemy(
+          EnemyTypes.BOAR,
+          this.getLocationFromIndex(i).add(this.singleBlockSize.scaled(0.5)),
+          {}
+        );
+      } else if (spawnBG[i] === Terrains.ENEMY_SPAWN_HELLHAWK) {
+        this.addEnemy(
+          EnemyTypes.HELLHAWK,
+          this.getLocationFromIndex(i).add(this.singleBlockSize.scaled(0.5)),
+          { flyer: true }
         );
       }
     }
@@ -540,6 +562,21 @@ export default class TerrainManager {
   }
 
   /****** SCENE ADDERS ******/
+  private addEnemy(
+    spriteKey: string,
+    tilePos: Vec2,
+    aiOptions: Record<string, any>
+  ): void {
+    let enemy = this.level.add.animatedSprite(spriteKey, "primary");
+    enemy.position.set(tilePos.x * 32, tilePos.y * 32);
+    enemy.scale.set(2, 2);
+    enemy.addPhysics();
+    enemy.addAI(EnemyController, aiOptions);
+    enemy.setGroup("enemy");
+    enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
+  }
+
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
     let levelEndArea = <Rect>this.level.add.graphic(
       GraphicType.RECT,

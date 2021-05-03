@@ -70,9 +70,6 @@ export default class Level1 extends GameLevel {
     // Initialize level specific variables
     this.initLevelVariables();
 
-    // Initialize all enemies in the level
-    this.setUpEnemies();
-
     // Set up TerrainManager to parse tiles
     this.terrainManager = new TerrainManager(this, this.level);
     this.terrainManager.parseTilemap();
@@ -100,12 +97,6 @@ export default class Level1 extends GameLevel {
     this.nextLevel = Level2;
   }
 
-  private setUpEnemies(): void {
-    // All enemies in the level go here.
-    this.addEnemy(EnemyTypes.BOAR, new Vec2(11, 8), {});
-    this.addEnemy(EnemyTypes.HELLHAWK, new Vec2(19, 11), {flyer: true});
-  }
-
   private setUpInteractables(): void {
     // Set Mr. Satan's required coin value and position for this level.
     this.satan.setRequiredCoinValue(3);
@@ -122,7 +113,9 @@ export default class Level1 extends GameLevel {
   // Build an animated portal sprite.
   private setUpPortalSprite(type: string): AnimatedSprite {
     let portalSprite = this.add.animatedSprite(
-      (type === "body") ? InteractableTypes.LEVEL_END_DOOR : InteractableTypes.LEVEL_END_PORTAL,
+      type === "body"
+        ? InteractableTypes.LEVEL_END_DOOR
+        : InteractableTypes.LEVEL_END_PORTAL,
       "primary"
     );
     portalSprite.scale.set(2, 2);
