@@ -154,8 +154,10 @@ export default class GameLevel extends Scene {
       Events.LEVEL_END,
       // Newly added
       Events.PLAYER_OVERLAPS_LEVER,
+      Events.PLAYER_OVERLAPS_UNFREEZE,
       Events.PLAYER_HIT_SPIKE,
       Events.PLAYER_HIT_TRAMPOLINE,
+      Events.PLAYER_HIT_FREEZE,
       Events.PLAYER_ON_GROUND,
       Events.PLAYER_HIT_CEILING,
       Events.PLAYER_FINISHED_DYING,
@@ -559,10 +561,20 @@ export default class GameLevel extends Scene {
             this.handleEventPlayerOverlapsLever(deltaT, event);
           }
           break;
+        case Events.PLAYER_OVERLAPS_UNFREEZE:
+          {
+            this.handleEventPlayerOverlapsUnfreeze(deltaT, event);
+          }
+          break;
 
         case Events.PLAYER_HIT_SPIKE:
           {
             this.handleEventPlayerHitSpike(deltaT, event);
+          }
+          break;
+        case Events.PLAYER_HIT_FREEZE:
+          {
+            this.handleEventPlayerHitFreeze(deltaT, event);
           }
           break;
         case Events.PLAYER_HIT_TRAMPOLINE:
@@ -703,8 +715,49 @@ export default class GameLevel extends Scene {
     this.terrainManager.toggleLever(id, leverid);
   }
 
+  private handleEventPlayerOverlapsUnfreeze(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // Only do things when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
+      return;
+    }
+
+    // get event info
+    let node = event.data.get("node");
+    let other = event.data.get("other");
+    let unfreezeBlockID = node;
+    if (node === this.player.id || node === this.ghostPlayer.id) {
+      unfreezeBlockID = other;
+    }
+
+    // Don't handle event if this unfreeze block is already used
+    if (this.terrainManager.isUnfreezeBlockUsed(unfreezeBlockID)) {
+      return;
+    }
+
+    // turn of single use unfreeze block if applicable
+    this.terrainManager.setUnfreezeBlockUsed(unfreezeBlockID);
+
+    // unfreeze all players
+    if (this.player.frozen) {
+      this.player.unfreeze();
+    }
+    if (this.ghostPlayer.frozen) {
+      this.ghostPlayer.unfreeze();
+    }
+  }
+
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
     this.emitter.fireEvent(Events.PLAYER_HIT_ENEMY);
+  }
+
+  private handleEventPlayerHitFreeze(deltaT: number, event: GameEvent): void {
+    let node = event.data.get("node");
+    if (!node.frozen) {
+      node.freeze();
+    }
   }
 
   private handleEventPlayerHitTrampoline(
@@ -729,7 +782,12 @@ export default class GameLevel extends Scene {
     }
 
     // Freeze block
-    // TODO
+    if (this.terrainManager.hitFreeze(node.position, node.size, node.id)) {
+      this.emitter.fireEvent(Events.PLAYER_HIT_FREEZE, {
+        node: node,
+      });
+      return;
+    }
 
     // Trampoline block
     if (this.terrainManager.hitTrampoline(node.position, node.size, node.id)) {

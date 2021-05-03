@@ -9,4 +9,5 @@ export enum TilemapLayers {
   LEVERS = "Levers",
   LEVER_DOORS = "LeverDoors",
   LEVER_DOORS_BACKGROUND = "LeverDoorsBackground",
+  FREEZE_BACKGROUND = "FreezeBackground",
 }
