@@ -3,6 +3,7 @@ import {
   TiledTilemapData,
 } from "../../../../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
 import { GraphicType } from "../../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../../../../Wolfie2D/Nodes/Graphics/Rect";
 import OrthogonalTilemap from "../../../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -38,6 +39,8 @@ export default class TerrainManager {
   // Levers
   public levelLeverAreas: { [character: number]: Rect };
   public leverToDoorsMap: Map<number, number[][]>; // Lever id to list of indexes of doors and door bgs on tilemap
+  // Portals
+  public portalIDToIndex: Map<number, number>;
 
   constructor(level: GameLevel, tilemapName: string) {
     // Class variables
@@ -59,6 +62,7 @@ export default class TerrainManager {
    */
   public parseTilemap(): void {
     this.parseDoors();
+    this.parsePortals();
     this.parseLeversAndLeverDoors();
     this.parseUnfreezeBlocks();
     this.parseEnemySpawnPoints();
@@ -137,6 +141,48 @@ export default class TerrainManager {
       this.singleBlockSize.scaled(this.scaleFactor),
       PlayerTypes.GHOST_PLAYER
     );
+  }
+
+  private parsePortals(): void {
+    this.portalIDToIndex = new Map();
+    let portals = this.getLayerTiles(TilemapLayers.PORTALS_BACKGROUND);
+    for (let i = 0; i < portals.length; i++) {
+      // add to map if not 0
+      if (portals[i] !== 0) {
+        this.portalIDToIndex.set(portals[i], i);
+      }
+
+      // both can enter portal 1
+      if (portals[i] === Terrains.PORTAL1_IN) {
+        this.addPortal(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.PLAYER, PlayerTypes.GHOST_PLAYER]
+        );
+      }
+      // only body can enter portal 2
+      else if (portals[i] === Terrains.PORTAL2_IN) {
+        this.addPortal(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.PLAYER]
+        );
+      }
+      // only soul can enter portal 3
+      else if (portals[i] === Terrains.PORTAL3_IN) {
+        this.addPortal(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.GHOST_PLAYER]
+        );
+      }
+    }
   }
 
   /**
@@ -455,6 +501,16 @@ export default class TerrainManager {
     return tiles;
   }
 
+  public getOutPortalLocation(id: number): Vec2 {
+    let layer = this.getLayerTiles(TilemapLayers.PORTALS_BACKGROUND);
+    let portalIndex = this.getIndexFromAnyLocation(
+      this.level.getSceneGraph().getNode(id).position
+    );
+    let portalOutID = layer[portalIndex] + 1;
+    let index = this.portalIDToIndex.get(portalOutID);
+    return this.getWorldLocationFromIndex(index);
+  }
+
   public indexesThatContainsCoinBlocks(indexes: number[]): number[] {
     let validIndexes: number[] = [];
     let layer = this.getLayerTiles(TilemapLayers.COIN_BLOCKS);
@@ -577,17 +633,18 @@ export default class TerrainManager {
     enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
   }
 
+  private createBGItem(startingTile: Vec2, size: Vec2): Rect {
+    let area = <Rect>this.level.add.graphic(GraphicType.RECT, "primary", {
+      position: startingTile,
+      size: size,
+    });
+    area.color = Color.TRANSPARENT;
+    area.addPhysics(undefined, undefined, false, true);
+    return area;
+  }
+
   private addExit(startingTile: Vec2, size: Vec2, group: string): void {
-    let levelEndArea = <Rect>this.level.add.graphic(
-      GraphicType.RECT,
-      "primary",
-      {
-        position: startingTile,
-        size: size,
-      }
-    );
-    levelEndArea.color = Color.TRANSPARENT;
-    levelEndArea.addPhysics(undefined, undefined, false, true);
+    let levelEndArea = this.createBGItem(startingTile, size);
     levelEndArea.setTrigger(group, Events.PLAYER_ENTERED_LEVEL_END, null);
     this.levelEndAreas[group] = levelEndArea;
   }
@@ -598,25 +655,22 @@ export default class TerrainManager {
     size: Vec2,
     groups: string[]
   ): void {
-    let lever = <Rect>this.level.add.graphic(GraphicType.RECT, "primary", {
-      position: startingTile,
-      size: size,
-    });
-    lever.color = Color.TRANSPARENT;
-    lever.addPhysics(undefined, undefined, false, true);
+    let lever = this.createBGItem(startingTile, size);
     groups.forEach((group) =>
       lever.setTrigger(group, Events.PLAYER_OVERLAPS_LEVER, null)
     );
     this.levelLeverAreas[leverType] = lever;
   }
 
+  private addPortal(startingTile: Vec2, size: Vec2, groups: string[]): void {
+    let portalArea = this.createBGItem(startingTile, size);
+    groups.forEach((group) =>
+      portalArea.setTrigger(group, Events.PLAYER_OVERLAPS_PORTAL, null)
+    );
+  }
+
   private addUnfreeze(startingTile: Vec2, size: Vec2, groups: string[]): void {
-    let unfreeze = <Rect>this.level.add.graphic(GraphicType.RECT, "primary", {
-      position: startingTile,
-      size: size,
-    });
-    unfreeze.color = Color.TRANSPARENT;
-    unfreeze.addPhysics(undefined, undefined, false, true);
+    let unfreeze = this.createBGItem(startingTile, size);
     groups.forEach((group) =>
       unfreeze.setTrigger(group, Events.PLAYER_OVERLAPS_UNFREEZE, null)
     );
