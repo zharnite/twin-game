@@ -12,6 +12,7 @@ import EnemyController from "../../../../Enemies/EnemyController";
 import { Events } from "../../../../Enums/EventEnums";
 import PlayerController from "../../../../Player/PlayerController";
 import { EnemyTypes } from "../../../Enums/EnemyEnums";
+import { GroupTypes } from "../../../Enums/GroupEnums";
 import { PlayerTypes } from "../../../Enums/PlayerEnums";
 import GameLevel from "../GameLevel";
 import { Terrains } from "./Enums/TerrainEnums";
@@ -333,13 +334,15 @@ export default class TerrainManager {
         this.addEnemy(
           EnemyTypes.BOAR,
           this.getLocationFromIndex(i).add(this.singleBlockSize.scaled(0.5)),
-          {}
+          {},
+          GroupTypes.PLAYER_ENEMY
         );
       } else if (spawnBG[i] === Terrains.ENEMY_SPAWN_HELLHAWK) {
         this.addEnemy(
           EnemyTypes.HELLHAWK,
           this.getLocationFromIndex(i).add(this.singleBlockSize.scaled(0.5)),
-          { flyer: true }
+          { flyer: true },
+          GroupTypes.GHOST_ENEMY
         );
       }
     }
@@ -621,16 +624,23 @@ export default class TerrainManager {
   private addEnemy(
     spriteKey: string,
     tilePos: Vec2,
-    aiOptions: Record<string, any>
+    aiOptions: Record<string, any>,
+    group: string
   ): void {
     let enemy = this.level.add.animatedSprite(spriteKey, "primary");
     enemy.position.set(tilePos.x * 32, tilePos.y * 32);
     enemy.scale.set(2, 2);
     enemy.addPhysics();
     enemy.addAI(EnemyController, aiOptions);
-    enemy.setGroup("enemy");
-    enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
-    enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    enemy.setGroup(group);
+    if (group === GroupTypes.ENEMY) {
+      enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
+      enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    } else if (group === GroupTypes.PLAYER_ENEMY) {
+      enemy.setTrigger(PlayerTypes.PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    } else if (group === GroupTypes.GHOST_ENEMY) {
+      enemy.setTrigger(PlayerTypes.GHOST_PLAYER, Events.PLAYER_HIT_ENEMY, null);
+    }
   }
 
   private createBGItem(startingTile: Vec2, size: Vec2): Rect {

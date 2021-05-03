@@ -854,17 +854,6 @@ export default class GameLevel extends Scene {
   }
 
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
-    // When the player collides with a spike, "enemy" is undefined, so we just ignore this check.
-    if (!(enemy === undefined)) {
-      // Do not kill the player if the soul hit a boar, or if the body hit a hellhawk.
-      if (
-        (player.imageId === "PlatformPlayer" && enemy.imageId === "Hellhawk") ||
-        (player.imageId === "PlatformGhostPlayer" && enemy.imageId === "Boar")
-      ) {
-        return;
-      }
-    }
-
     this.playerIsDying = true;
     this.player.tweens.play("dying");
     this.ghostPlayer.tweens.play("dying");
