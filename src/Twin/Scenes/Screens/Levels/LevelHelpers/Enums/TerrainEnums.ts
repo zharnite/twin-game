@@ -44,6 +44,9 @@ export enum Terrains {
   TRAMPOLINE1 = 52,
   TRAMPOLINE2 = 53,
   TRAMPOLINE3 = 54,
+  // Enemy Spawn points
+  ENEMY_SPAWN_BOAR = 55,
+  ENEMY_SPAWN_HELLHAWK = 56,
   // Freeze blocks
   // FREEZE1_INF = 59,
   // UNFREEZE1_INF = 60,
