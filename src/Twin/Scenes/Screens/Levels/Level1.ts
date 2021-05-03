@@ -76,6 +76,12 @@ export default class Level1 extends GameLevel {
 
     // Initialize interactables with their level-dependent properties.
     this.setUpInteractables();
+
+    // TWIN TODO IMPORTANT: If there is no Satan, set the exit location with:
+    // this.terrainManager.setExitLocations(
+    //   this.terrainManager.bodyExitLocation,
+    //   this.terrainManager.soulExitLocation
+    // );
   }
 
   private setUpScene(): void {
