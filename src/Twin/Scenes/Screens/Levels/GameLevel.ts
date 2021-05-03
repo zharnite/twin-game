@@ -24,7 +24,13 @@ import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
-import Game from "../../../../Wolfie2D/Loop/Game";
+import Level1 from "./Level1";
+// import Level2 from "./Level2";
+// import Level3 from "./Level3";
+// import Level4 from "./Level4";
+// import Level5 from "./Level5";
+// import Level6 from "./Level6";
+// import FinalLevel from "./FinalLevel";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -400,15 +406,7 @@ export default class GameLevel extends Scene {
     // Inputs for debugging/testing
     this.handleInputChangeControls();
     this.handleInputToggleInvincibility();
-
-    // Debug
-    // if (Input.isJustPressed("interact")) {
-      // let locs = this.terrainManager.getTileIndexesAboveAnyLocation(
-      //   this.player.position,
-      //   this.player.size
-      // );
-      // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[0], 7);
-      // this.terrainManager.setLayerAtIndexToTile(TilemapLayers.MAIN, locs[1], 7);
+    this.handleInputLevelSwapCheatCode();
   }
 
   private handleInputSwapView(): void {
@@ -466,8 +464,31 @@ export default class GameLevel extends Scene {
   private handleInputToggleInvincibility(): void {
     if (Input.isJustPressed("invincible")) {
       this.playerIsInvincible = !this.playerIsInvincible;
-      this.debugLabel.setText((this.playerIsInvincible) ? "INVINCIBILITY ON" : "");
+      this.debugLabel.setText(
+        this.playerIsInvincible ? "INVINCIBILITY ON" : ""
+      );
     }
+  }
+
+  private handleInputLevelSwapCheatCode(): void {
+    let sceneOptions = SceneOptions.getSceneOptions();
+    if (Input.isKeyJustPressed("1")) {
+      this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+    }
+    // else if (Input.isKeyJustPressed("2")) {
+    //   this.sceneManager.changeToScene(Level2, {}, sceneOptions);
+    // }
+    // else if (Input.isKeyJustPressed("3")) {
+    //   this.sceneManager.changeToScene(Level3, {}, sceneOptions);
+    // } else if (Input.isKeyJustPressed("4")) {
+    //   this.sceneManager.changeToScene(Level4, {}, sceneOptions);
+    // } else if (Input.isKeyJustPressed("5")) {
+    //   this.sceneManager.changeToScene(Level5, {}, sceneOptions);
+    // } else if (Input.isKeyJustPressed("6")) {
+    //   this.sceneManager.changeToScene(Level6, {}, sceneOptions);
+    // } else if (Input.isKeyJustPressed("7")) {
+    //   this.sceneManager.changeToScene(FinalLevel, {}, sceneOptions);
+    // }
   }
 
   /**
