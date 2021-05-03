@@ -155,6 +155,7 @@ export default class GameLevel extends Scene {
       // Newly added
       Events.PLAYER_OVERLAPS_LEVER,
       Events.PLAYER_OVERLAPS_UNFREEZE,
+      Events.PLAYER_OVERLAPS_PORTAL,
       Events.PLAYER_HIT_SPIKE,
       Events.PLAYER_HIT_TRAMPOLINE,
       Events.PLAYER_HIT_FREEZE,
@@ -567,6 +568,12 @@ export default class GameLevel extends Scene {
           }
           break;
 
+        case Events.PLAYER_OVERLAPS_PORTAL:
+          {
+            this.handleEventPlayerOverlapsPortal(deltaT, event);
+          }
+          break;
+
         case Events.PLAYER_HIT_SPIKE:
           {
             this.handleEventPlayerHitSpike(deltaT, event);
@@ -747,6 +754,33 @@ export default class GameLevel extends Scene {
     if (this.ghostPlayer.frozen) {
       this.ghostPlayer.unfreeze();
     }
+  }
+
+  private handleEventPlayerOverlapsPortal(
+    deltaT: number,
+    event: GameEvent
+  ): void {
+    // Only do things when interact [e] is pressed, do nothing otherwise
+    if (!Input.isJustPressed("interact")) {
+      return;
+    }
+
+    // get event info
+    let node = event.data.get("node");
+    let other = event.data.get("other");
+    let blockID = node;
+    let playerID = other;
+    if (node === this.player.id || node === this.ghostPlayer.id) {
+      blockID = other;
+      playerID = node;
+    }
+    let player = this.sceneGraph.getNode(playerID);
+
+    // get out portal world location
+    let portalOutLocation = this.terrainManager.getOutPortalLocation(blockID);
+
+    // teleport to correct location
+    player.position.copy(portalOutLocation);
   }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {

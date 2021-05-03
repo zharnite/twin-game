@@ -11,6 +11,7 @@ export enum Events {
   // New events
   PLAYER_OVERLAPS_LEVER = "PlayerOverlapsLever",
   PLAYER_OVERLAPS_UNFREEZE = "PlayerOverlapsUnfreeze",
+  PLAYER_OVERLAPS_PORTAL = "PlayerOverlapsPortal",
   PLAYER_HIT_SPIKE = "PlayerHitSpike",
   PLAYER_HIT_TRAMPOLINE = "PlayerHitTrampoline",
   PLAYER_HIT_FREEZE = "PlayerHitFreeze",
