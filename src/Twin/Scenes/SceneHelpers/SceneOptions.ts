@@ -1,32 +1,34 @@
+import { GroupTypes } from "../Enums/GroupEnums";
 import { PlayerTypes } from "../Enums/PlayerEnums";
 
-/**
- * SceneOptions for Twin game
- *
- *      g  p  gp e  c
- * g    0  1  1  1  0
- * p    1  0  0  1  1
- * gp   1  0  0  1  1
- * e    1  1  1  0  0
- * c    0  1  1  0  0
- *
- */
 export default class SceneOptions {
   static sceneOptions = {
     physics: {
       groupNames: [
-        "ground",
+        GroupTypes.GROUND,
+        GroupTypes.PLAYER_GROUND,
+        GroupTypes.GHOST_GROUND,
         PlayerTypes.PLAYER,
         PlayerTypes.GHOST_PLAYER,
-        "enemy",
-        "coin",
+        GroupTypes.ENEMY,
+        GroupTypes.PLAYER_ENEMY,
+        GroupTypes.GHOST_ENEMY,
+        GroupTypes.COIN,
+        GroupTypes.PLAYER_COIN,
+        GroupTypes.GHOST_COIN,
       ],
       collisions: [
-        [0, 1, 1, 1, 0],
-        [1, 0, 0, 1, 1],
-        [1, 0, 0, 1, 1],
-        [1, 1, 1, 0, 0],
-        [0, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+        [1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0],
+        [1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
       ],
     },
   };
