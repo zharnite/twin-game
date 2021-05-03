@@ -125,6 +125,8 @@ export default class Level1 extends GameLevel {
       this.terrainManager.getExitLocation(type).x,
       this.terrainManager.getExitLocation(type).y - 8
     );
+
+    console.log(portalSprite);
     return portalSprite;
   }
 

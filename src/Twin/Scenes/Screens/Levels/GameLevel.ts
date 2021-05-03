@@ -877,6 +877,12 @@ export default class GameLevel extends Scene {
       this.soulEndPortalSprite.animation.play("OPENING");
       this.soulEndPortalSprite.animation.queue("OPEN", true);
       this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
+
+      // allow player to exit
+      this.terrainManager.setExitLocations(
+        this.terrainManager.bodyExitLocation,
+        this.terrainManager.soulExitLocation
+      );
     } else {
       this.satan.sprite.animation.stop();
       this.satan.sprite.animation.play("RUBHANDS");
