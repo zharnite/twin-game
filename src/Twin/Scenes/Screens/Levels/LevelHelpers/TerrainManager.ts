@@ -58,7 +58,7 @@ export default class TerrainManager {
   public parseTilemap(): void {
     this.parseDoors();
     this.parseLeversAndLeverDoors();
-    // this.parseCoinBlocks();
+    this.parseUnfreezeBlocks();
   }
 
   /**
@@ -229,6 +229,51 @@ export default class TerrainManager {
     } else if (identifier === "doorbg") {
       doors = doorsAndDoorsBG[1];
       doors.push(door);
+    }
+  }
+
+  private parseUnfreezeBlocks(): void {
+    let unfreezes = this.getLayerTiles(TilemapLayers.FREEZE_BACKGROUND);
+    for (let i = 0; i < unfreezes.length; i++) {
+      // both can interact
+      if (
+        unfreezes[i] === Terrains.UNFREEZE1 ||
+        unfreezes[i] === Terrains.UNFREEZE1_MULTI
+      ) {
+        this.addUnfreeze(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.PLAYER, PlayerTypes.GHOST_PLAYER]
+        );
+      }
+      // only body can interact with unfreeze block 2
+      else if (
+        unfreezes[i] === Terrains.UNFREEZE2 ||
+        unfreezes[i] === Terrains.UNFREEZE2_MULTI
+      ) {
+        this.addUnfreeze(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.PLAYER]
+        );
+      }
+      // only soul can interact with unfreeze block 3
+      else if (
+        unfreezes[i] === Terrains.UNFREEZE3 ||
+        unfreezes[i] === Terrains.UNFREEZE3_MULTI
+      ) {
+        this.addUnfreeze(
+          this.getLocationFromIndex(i)
+            .add(this.singleBlockSize.scaled(0.5))
+            .scale(this.scaleFactor),
+          this.singleBlockSize.scaled(this.scaleFactor),
+          [PlayerTypes.GHOST_PLAYER]
+        );
+      }
     }
   }
 
@@ -434,13 +479,44 @@ export default class TerrainManager {
     return false;
   }
 
+  public hitFreeze(position: Vec2, size: Vec2, id: number): boolean {
+    let layer = this.getLayerTiles(TilemapLayers.MAIN);
+    let tileBelowIndex = this.getTileIndexDirectlyBelowAnyLocation(
+      position,
+      size
+    );
+
+    // Hit both freeze
+    if (layer[tileBelowIndex] === Terrains.FREEZE1) {
+      layer[tileBelowIndex] = Terrains.FREEZE1_USED;
+      return true;
+    }
+    // Body hit freeze
+    else if (
+      layer[tileBelowIndex] === Terrains.FREEZE2 &&
+      id === this.level.getPlayerID()
+    ) {
+      layer[tileBelowIndex] = Terrains.FREEZE2_USED;
+      return true;
+    }
+    // Soul hit freeze
+    else if (
+      layer[tileBelowIndex] === Terrains.FREEZE3 &&
+      id === this.level.getGhostPlayerID()
+    ) {
+      layer[tileBelowIndex] = Terrains.FREEZE3_USED;
+      return true;
+    }
+
+    return false;
+  }
+
   public hitTrampoline(position: Vec2, size: Vec2, id: number): boolean {
     let layer = this.getLayerTiles(TilemapLayers.MAIN);
     let tileBelowIndex = this.getTileIndexDirectlyBelowAnyLocation(
       position,
       size
     );
-    let node = this.level.getSceneGraph().getNode(id);
     // Hit both tramp
     if (layer[tileBelowIndex] === Terrains.TRAMPOLINE1) {
       return true;
@@ -497,6 +573,18 @@ export default class TerrainManager {
     this.levelLeverAreas[leverType] = lever;
   }
 
+  private addUnfreeze(startingTile: Vec2, size: Vec2, groups: string[]): void {
+    let unfreeze = <Rect>this.level.add.graphic(GraphicType.RECT, "primary", {
+      position: startingTile,
+      size: size,
+    });
+    unfreeze.color = Color.TRANSPARENT;
+    unfreeze.addPhysics(undefined, undefined, false, true);
+    groups.forEach((group) =>
+      unfreeze.setTrigger(group, Events.PLAYER_OVERLAPS_UNFREEZE, null)
+    );
+  }
+
   /*** TILE MODIFIERS ***/
   /*** GENERAL BLOCK MODIFIERS ***/
   public setLayerAtIndexToTile(
@@ -534,6 +622,35 @@ export default class TerrainManager {
     let layer = this.getLayerTiles(TilemapLayers.COIN_BLOCKS);
     indexes.forEach((index) =>
       this.setLayerAtIndexWithOffset(TilemapLayers.COIN_BLOCKS, index, 1)
+    );
+  }
+
+  public setUnfreezeBlockUsed(id: number) {
+    let node = this.level.getSceneGraph().getNode(id);
+    let index = this.getIndexFromAnyLocation(node.position);
+    let freezeBG = this.getLayerTiles(TilemapLayers.FREEZE_BACKGROUND);
+
+    // check if this is a single use unfreeze block
+    if (
+      freezeBG[index] === Terrains.UNFREEZE1 ||
+      freezeBG[index] === Terrains.UNFREEZE2 ||
+      freezeBG[index] === Terrains.UNFREEZE3
+    ) {
+      // set tile to used
+      freezeBG[index] = freezeBG[index] + 1;
+    }
+  }
+
+  public isUnfreezeBlockUsed(id: number): boolean {
+    let node = this.level.getSceneGraph().getNode(id);
+    let index = this.getIndexFromAnyLocation(node.position);
+    let freezeBG = this.getLayerTiles(TilemapLayers.FREEZE_BACKGROUND);
+
+    // check if this unfreeze block has already been used
+    return (
+      freezeBG[index] === Terrains.UNFREEZE1_USED ||
+      freezeBG[index] === Terrains.UNFREEZE2_USED ||
+      freezeBG[index] === Terrains.UNFREEZE3_USED
     );
   }
 
