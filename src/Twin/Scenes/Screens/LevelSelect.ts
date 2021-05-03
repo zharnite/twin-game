@@ -8,6 +8,7 @@ import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
 import { ScreenTexts } from "../Enums/ScreenTextEnums";
 import { Levels } from "../Enums/LevelEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class LevelSelect extends Scene {
   private layer: string;
@@ -16,7 +17,10 @@ export default class LevelSelect extends Scene {
   private sceneOptionsObject: any;
   private half: Vec2;
 
-  loadScene(): void {}
+  loadScene(): void {
+    // Load click sfx
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3"); 
+  }
 
   startScene(): void {
     // Create LevelSelect layer
@@ -45,7 +49,8 @@ export default class LevelSelect extends Scene {
       this,
       this.viewport,
       this.layer,
-      this.sceneManager
+      this.sceneManager,
+      this.emitter
     );
     isc.createHeading(ScreenTexts.LEVEL_SELECT);
     isc.createReturnButton();
@@ -97,6 +102,7 @@ export default class LevelSelect extends Scene {
     // Allow onClick for unlocked levels only
     if (this.levelUnlockedMap[levelID]) {
       button.onClick = () => {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
         this.sceneManager.changeToScene(
           <any>this.stringToLevelMap[levelID],
           {},

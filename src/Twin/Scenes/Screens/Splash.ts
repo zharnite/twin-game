@@ -4,6 +4,7 @@ import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 import { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import { Screens } from "../Enums/ScreenEnums";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Splash extends Scene {
   private layer: string;
@@ -12,6 +13,8 @@ export default class Splash extends Scene {
     this.load.image("splashScreen", "assets/images/TwinSplashScreen.png");
     this.load.image("splashScreenText", "assets/images/ClickAnywhereToContinue.png");
     this.load.image("movingBackground", "assets/images/TwinMovingBackground.png");
+    // Load click sfx
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
   }
 
   startScene(): void {
@@ -24,6 +27,7 @@ export default class Splash extends Scene {
 
     // Transparent full screen button to get to MainMenu
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
       this.sceneManager.changeToScene(MainMenu, {});
     };
 
