@@ -1025,6 +1025,26 @@ export default class GameLevel extends Scene {
     return playerOverlap && ghostPlayerOverlap;
   }
 
+  /****** HELPERS FOR LEVEL#'s ******/
+  // Build an animated portal sprite.
+  protected setUpPortalSprite(type: string): AnimatedSprite {
+    let portalSprite = this.add.animatedSprite(
+      type === "body"
+        ? InteractableTypes.LEVEL_END_DOOR
+        : InteractableTypes.LEVEL_END_PORTAL,
+      "primary"
+    );
+    portalSprite.scale.set(2, 2);
+    portalSprite.addPhysics();
+    portalSprite.disablePhysics();
+    portalSprite.position.set(
+      this.terrainManager.getExitLocation(type).x,
+      this.terrainManager.getExitLocation(type).y - 8
+    );
+
+    return portalSprite;
+  }
+
   /****** PUBLIC METHODS ******/
   /*** Getters ***/
   public getPlayerID(): number {

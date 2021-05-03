@@ -1,5 +1,3 @@
-// Twin TODO (optional) - optimize this along with Level2
-
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import { Levels } from "../../Enums/LevelEnums";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
@@ -15,12 +13,17 @@ import Satan from "../../../Interactables/Satan";
 
 export default class Level1 extends GameLevel {
   private level: string;
+  private hasSatan: boolean;
 
   loadScene(): void {
     this.level = Levels.LEVEL_1;
 
+    // TWIN TODO: remove things we don't need to load
+    // Images
     this.load.image("background", "assets/sprites/Twin-Background.png");
     this.load.image("coin", "assets/sprites/coin.png");
+
+    // Spritesheets
     this.load.spritesheet(
       PlayerTypes.PLAYER,
       "assets/spritesheets/platformPlayer.json"
@@ -42,19 +45,13 @@ export default class Level1 extends GameLevel {
       InteractableTypes.LEVEL_END_PORTAL,
       "assets/spritesheets/portal.json"
     );
-
-    // Load satan's spritesheet
     this.load.spritesheet(
       InteractableTypes.MR_SATAN,
       "assets/spritesheets/businessdevil.json"
     );
 
-    // Testing assets
+    // TWIN TODO: Change to actual tilemap
     this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
-    this.load.spritesheet(
-      InteractableTypes.MR_SATAN,
-      "assets/spritesheets/businessdevil.json"
-    );
 
     // load things from parent
     super.loadScene();
@@ -77,11 +74,8 @@ export default class Level1 extends GameLevel {
     // Initialize interactables with their level-dependent properties.
     this.setUpInteractables();
 
-    // TWIN TODO IMPORTANT: If there is no Satan, set the exit location with:
-    // this.terrainManager.setExitLocations(
-    //   this.terrainManager.bodyExitLocation,
-    //   this.terrainManager.soulExitLocation
-    // );
+    // Set exit locations for levels without Satan
+    this.setExits();
   }
 
   private setUpScene(): void {
@@ -103,37 +97,35 @@ export default class Level1 extends GameLevel {
     this.nextLevel = Level2;
   }
 
+  private setExits(): void {
+    if (!this.hasSatan) {
+      this.terrainManager.setExitLocations(
+        this.terrainManager.bodyExitLocation,
+        this.terrainManager.soulExitLocation
+      );
+    }
+  }
+
   private setUpInteractables(): void {
+    // TWIN TODO: set up satan if the level needs satan
+    // this.setUpSatan();
+  }
+
+  private setUpSatan(): void {
+    // Set the satan flag
+    this.hasSatan = true;
+
     // Set Mr. Satan's required coin value and position for this level.
     this.satan.setRequiredCoinValue(3);
     this.satan.setTilePosition(new Vec2(15, 14));
     this.satan.sprite.animation.play("IDLE", true);
+
     // Place the level end portal in the world over the body and soul exit tile locations.
     this.bodyEndPortalSprite = this.setUpPortalSprite("body");
     this.soulEndPortalSprite = this.setUpPortalSprite("soul");
     this.bodyEndPortalSprite.animation.play("OPENING");
     this.bodyEndPortalSprite.animation.queue("OPEN", true);
     this.soulEndPortalSprite.animation.play("CLOSED", true);
-  }
-
-  // Build an animated portal sprite.
-  private setUpPortalSprite(type: string): AnimatedSprite {
-    let portalSprite = this.add.animatedSprite(
-      type === "body"
-        ? InteractableTypes.LEVEL_END_DOOR
-        : InteractableTypes.LEVEL_END_PORTAL,
-      "primary"
-    );
-    portalSprite.scale.set(2, 2);
-    portalSprite.addPhysics();
-    portalSprite.disablePhysics();
-    portalSprite.position.set(
-      this.terrainManager.getExitLocation(type).x,
-      this.terrainManager.getExitLocation(type).y - 8
-    );
-
-    console.log(portalSprite);
-    return portalSprite;
   }
 
   updateScene(deltaT: number): void {
