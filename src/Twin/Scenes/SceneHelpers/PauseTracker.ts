@@ -37,7 +37,7 @@ export default class PauseTracker {
     return this.isPaused;
   }
 
-  toggle(): void {
+  toggle(): boolean {
     if (!this.isPaused) {
       this.viewport.setZoomLevel(1);
       this.layers.forEach((layer) => {
@@ -61,5 +61,7 @@ export default class PauseTracker {
     }
 
     this.isPaused = !this.isPaused;
+    // Return the pause value so we can stop and start game music.
+    return this.isPaused;
   }
 }
