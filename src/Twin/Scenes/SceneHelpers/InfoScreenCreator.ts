@@ -4,12 +4,15 @@ import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import { ScreenTexts } from "../Enums/ScreenTextEnums";
 import MainMenu from "../Screens/MainMenu";
 import SceneItemCreator from "./SceneItemCreator";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Emitter from "../../../Wolfie2D/Events/Emitter";
 
 export default class InfoScreenCreator {
   private scene: Scene;
   private viewport: Viewport;
   private layer: string;
   private sceneManager: SceneManager;
+  private emitter: Emitter;
 
   /**
    * This class helps constructs an information screen (Controls.ts, Credits.ts, Help.ts)
@@ -22,12 +25,14 @@ export default class InfoScreenCreator {
     scene: Scene,
     viewport: Viewport,
     layer: string,
-    sceneManager: SceneManager
+    sceneManager: SceneManager,
+    emitter: Emitter
   ) {
     this.scene = scene;
     this.viewport = viewport;
     this.layer = layer;
     this.sceneManager = sceneManager;
+    this.emitter = emitter;
   }
 
   /**
@@ -61,6 +66,7 @@ export default class InfoScreenCreator {
       730,
       ScreenTexts.RETURN
     ).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(MainMenu, {});
     };
   }

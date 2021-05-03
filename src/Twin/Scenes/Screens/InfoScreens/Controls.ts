@@ -8,6 +8,8 @@ export default class Controls extends Scene {
 
   loadScene(): void {
     this.load.object("Controls", "assets/texts/controls.json");
+    // Load click sfx
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
   }
 
   startScene(): void {
@@ -24,7 +26,8 @@ export default class Controls extends Scene {
       this,
       this.viewport,
       this.layer,
-      this.sceneManager
+      this.sceneManager,
+      this.emitter
     );
     isc.createScreen(ScreenTexts.CONTROLS);
   }

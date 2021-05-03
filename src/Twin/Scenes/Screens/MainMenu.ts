@@ -1,5 +1,3 @@
-// Twin TODO (optional) - optimize
-
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Controls from "./InfoScreens/Controls";
@@ -7,11 +5,15 @@ import Credits from "./InfoScreens/Credits";
 import Help from "./InfoScreens/Help";
 import LevelSelect from "./LevelSelect";
 import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class MainMenu extends Scene {
   animatedSprite: AnimatedSprite;
 
-  loadScene(): void {}
+  loadScene(): void {
+    // Load click sfx
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
+  }
 
   startScene(): void {
     let layer = "Main";
@@ -37,6 +39,7 @@ export default class MainMenu extends Scene {
       550,
       "PLAY GAME"
     ).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(LevelSelect, {});
     };
 
@@ -48,6 +51,7 @@ export default class MainMenu extends Scene {
       610,
       "CONTROLS"
     ).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Controls, {});
     };
 
@@ -59,6 +63,7 @@ export default class MainMenu extends Scene {
       670,
       "HELP"
     ).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Help, {});
     };
 
@@ -70,6 +75,7 @@ export default class MainMenu extends Scene {
       730,
       "CREDITS"
     ).onClick = () => {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Credits, {});
     };
   }

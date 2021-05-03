@@ -8,6 +8,8 @@ export default class Help extends Scene {
 
   loadScene(): void {
     this.load.object("Help", "assets/texts/help.json");
+    // Load click sfx
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
   }
 
   startScene(): void {
@@ -24,7 +26,8 @@ export default class Help extends Scene {
       this,
       this.viewport,
       this.layer,
-      this.sceneManager
+      this.sceneManager,
+      this.emitter
     );
     isc.createScreen(ScreenTexts.HELP);
   }

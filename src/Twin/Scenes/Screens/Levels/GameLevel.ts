@@ -14,7 +14,6 @@ import Scene from "../../../../Wolfie2D/Scene/Scene";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Color from "../../../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
-import EnemyController from "../../../Enemies/EnemyController";
 import { Events } from "../../../Enums/EventEnums";
 import Satan from "../../../Interactables/Satan";
 import PlayerController from "../../../Player/PlayerController";
@@ -24,6 +23,7 @@ import { ScreenTexts } from "../../Enums/ScreenTextEnums";
 import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import Level1 from "./Level1";
 // import Level2 from "./Level2";
 // import Level3 from "./Level3";
@@ -88,6 +88,15 @@ export default class GameLevel extends Scene {
     this.load.object("Controls", "assets/texts/controls.json");
     this.load.object("Help", "assets/texts/help.json");
     this.load.object("Credits", "assets/texts/credits.json");
+    // Load music
+    this.load.audio("twinMusic", "assets/sounds/music/twinMusic.mp3");
+    // Load SFX
+    this.load.audio("boar", "assets/sounds/sfx/boar.mp3");
+    this.load.audio("hellhawk", "assets/sounds/sfx/hellhawk.mp3");
+    this.load.audio("coin", "assets/sounds/sfx/coinNoise.mp3");
+    this.load.audio("jump", "assets/sounds/sfx/jump.mp3");
+    this.load.audio("switchToHuman", "assets/sounds/sfx/switchToHuman.mp3");
+    this.load.audio("switchToSoul", "assets/sounds/sfx/switchToSoul.mp3");
   }
 
   startScene(): void {
@@ -417,6 +426,12 @@ export default class GameLevel extends Scene {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
+      if (this.followNodes[this.followNodeIndex].imageId === "PlatformPlayer") {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "switchToHuman", loop: false});
+      }
+      else {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "switchToSoul", loop: false});
+      }
     }
   }
 
@@ -864,6 +879,8 @@ export default class GameLevel extends Scene {
   protected incPlayerCoins(amt: number): void {
     GameLevel.coinCount += amt;
     this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
+    // Play coin sound effect
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false});
   }
 
   // Check if the player has enough coins to open the level end portal.
