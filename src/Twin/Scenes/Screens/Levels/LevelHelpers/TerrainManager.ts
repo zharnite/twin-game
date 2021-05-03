@@ -31,6 +31,8 @@ export default class TerrainManager {
 
   // Level specific variables
   // Entrance and exit locations
+  private bothEntranceLocation: Vec2;
+  private bothExitLocation: Vec2;
   private bodyEntranceLocation: Vec2;
   private bodyExitLocation: Vec2;
   private soulEntranceLocation: Vec2;
@@ -70,13 +72,6 @@ export default class TerrainManager {
   }
 
   /**
-   * Returns the specified exit location.
-   */
-  public getExitLocation(type: string): Vec2 {
-    return type === "body" ? this.bodyExitLocation : this.soulExitLocation;
-  }
-
-  /**
    * Parses entrance and exits
    */
   private parseDoors(): void {
@@ -86,7 +81,11 @@ export default class TerrainManager {
 
     // Parse each relevant tile
     for (let i = 0; i < tiles.length; i++) {
-      if (tiles[i] === Terrains.BODY_ENTRANCE) {
+      if (tiles[i] === Terrains.BOTH_ENTRANCE) {
+        this.bothEntranceLocation = this.getLocationFromIndex(i);
+      } else if (tiles[i] === Terrains.BOTH_EXIT) {
+        this.bothExitLocation = this.getLocationFromIndex(i);
+      } else if (tiles[i] === Terrains.BODY_ENTRANCE) {
         this.bodyEntranceLocation = this.getLocationFromIndex(i);
       } else if (tiles[i] === Terrains.BODY_EXIT) {
         this.bodyExitLocation = this.getLocationFromIndex(i);
@@ -97,21 +96,31 @@ export default class TerrainManager {
       }
     }
 
-    // Initialize spawn and exit locations
-    this.setSpawnLocations();
-    this.setExitLocations();
+    // check for both extrance and exit locations
+    if (this.bothEntranceLocation && this.bothExitLocation) {
+      this.setSpawnLocations(
+        this.bothEntranceLocation,
+        this.bothEntranceLocation.clone()
+      );
+      this.setExitLocations(
+        this.bothExitLocation,
+        this.bothExitLocation.clone()
+      );
+      return;
+    }
+
+    // Initialize spawn and exit locations for both
+    this.setSpawnLocations(
+      this.bodyEntranceLocation,
+      this.soulEntranceLocation
+    );
+    this.setExitLocations(this.bodyExitLocation, this.soulExitLocation);
   }
 
-  private setSpawnLocations(): void {
+  private setSpawnLocations(bodyEntrance: Vec2, soulEntrance: Vec2): void {
     // Modify entrance location to be centered for the player's spawn point
-    let bodySpawn = new Vec2(
-      this.bodyEntranceLocation.x + 0.5,
-      this.bodyEntranceLocation.y
-    );
-    let soulSpawn = new Vec2(
-      this.soulEntranceLocation.x + 0.5,
-      this.soulEntranceLocation.y
-    );
+    let bodySpawn = new Vec2(bodyEntrance.x + 0.5, bodyEntrance.y);
+    let soulSpawn = new Vec2(soulEntrance.x + 0.5, soulEntrance.y);
 
     // Scale the spawn locations to the game size
     bodySpawn.scale(this.scaleFactor);
@@ -122,23 +131,19 @@ export default class TerrainManager {
     this.level.setGhostPlayerSpawn(soulSpawn, true);
   }
 
-  private setExitLocations(): void {
+  private setExitLocations(bodyExit: Vec2, soulExit: Vec2): void {
     // Modify exit location to be centered
-    this.bodyExitLocation
-      .add(this.singleBlockSize.scaled(0.5))
-      .scale(this.scaleFactor);
-    this.soulExitLocation
-      .add(this.singleBlockSize.scaled(0.5))
-      .scale(this.scaleFactor);
+    bodyExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
+    soulExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
 
     // Add the exit locations
     this.addExit(
-      this.bodyExitLocation,
+      bodyExit,
       this.singleBlockSize.scaled(this.scaleFactor),
       PlayerTypes.PLAYER
     );
     this.addExit(
-      this.soulExitLocation,
+      soulExit,
       this.singleBlockSize.scaled(this.scaleFactor),
       PlayerTypes.GHOST_PLAYER
     );
@@ -512,6 +517,20 @@ export default class TerrainManager {
     let portalOutID = layer[portalIndex] + 1;
     let index = this.portalIDToIndex.get(portalOutID);
     return this.getWorldLocationFromIndex(index);
+  }
+
+  /**
+   * Returns the specified exit location.
+   */
+  public getExitLocation(type: string): Vec2 {
+    let layer = this.getLayerTiles(TilemapLayers.DOORS);
+    if (type === "body") {
+      return this.bodyExitLocation;
+    } else if (type === "soul") {
+      return this.soulExitLocation;
+    } else if (type === "both") {
+      return this.bothExitLocation;
+    }
   }
 
   public indexesThatContainsCoinBlocks(indexes: number[]): number[] {
