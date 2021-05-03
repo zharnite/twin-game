@@ -31,12 +31,12 @@ export default class TerrainManager {
 
   // Level specific variables
   // Entrance and exit locations
-  private bothEntranceLocation: Vec2;
-  private bothExitLocation: Vec2;
-  private bodyEntranceLocation: Vec2;
-  private bodyExitLocation: Vec2;
-  private soulEntranceLocation: Vec2;
-  private soulExitLocation: Vec2;
+  public bothEntranceLocation: Vec2;
+  public bothExitLocation: Vec2;
+  public bodyEntranceLocation: Vec2;
+  public bodyExitLocation: Vec2;
+  public soulEntranceLocation: Vec2;
+  public soulExitLocation: Vec2;
   // Exits
   public levelEndAreas: { [character: string]: Rect };
   // Levers
@@ -114,7 +114,7 @@ export default class TerrainManager {
       this.bodyEntranceLocation,
       this.soulEntranceLocation
     );
-    this.setExitLocations(this.bodyExitLocation, this.soulExitLocation);
+    // this.setExitLocations(this.bodyExitLocation, this.soulExitLocation);
   }
 
   private setSpawnLocations(bodyEntrance: Vec2, soulEntrance: Vec2): void {
@@ -131,7 +131,7 @@ export default class TerrainManager {
     this.level.setGhostPlayerSpawn(soulSpawn, true);
   }
 
-  private setExitLocations(bodyExit: Vec2, soulExit: Vec2): void {
+  public setExitLocations(bodyExit: Vec2, soulExit: Vec2): void {
     // Modify exit location to be centered
     bodyExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
     soulExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
@@ -523,13 +523,21 @@ export default class TerrainManager {
    * Returns the specified exit location.
    */
   public getExitLocation(type: string): Vec2 {
-    let layer = this.getLayerTiles(TilemapLayers.DOORS);
     if (type === "body") {
-      return this.bodyExitLocation;
+      return this.bodyExitLocation
+        .clone()
+        .add(this.singleBlockSize.scaled(0.5))
+        .scaled(this.scaleFactor);
     } else if (type === "soul") {
-      return this.soulExitLocation;
+      return this.soulExitLocation
+        .clone()
+        .add(this.singleBlockSize.scaled(0.5))
+        .scaled(this.scaleFactor);
     } else if (type === "both") {
-      return this.bothExitLocation;
+      return this.bothExitLocation
+        .clone()
+        .add(this.singleBlockSize.scaled(0.5))
+        .scaled(this.scaleFactor);
     }
   }
 
