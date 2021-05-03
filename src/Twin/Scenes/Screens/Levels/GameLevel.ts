@@ -97,6 +97,11 @@ export default class GameLevel extends Scene {
     this.load.audio("jump", "assets/sounds/sfx/jump.mp3");
     this.load.audio("switchToHuman", "assets/sounds/sfx/switchToHuman.mp3");
     this.load.audio("switchToSoul", "assets/sounds/sfx/switchToSoul.mp3");
+    this.load.audio("freeze", "assets/sounds/sfx/freeze.mp3");
+    this.load.audio("levelEnd", "assets/sounds/sfx/levelEnd.mp3");
+    this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
+    this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
+    this.load.audio("restart", "assets/sounds/sfx/restart.mp3")
   }
 
   startScene(): void {
@@ -131,6 +136,9 @@ export default class GameLevel extends Scene {
     this.playerIsInvincible = false;
 
     GameLevel.coinCount = 0;
+
+    // Scene has started, so start playing music
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true});
   }
 
   protected initLayers(): void {
@@ -437,13 +445,23 @@ export default class GameLevel extends Scene {
 
   private handleInputRestart(): void {
     if (Input.isJustPressed("restart")) {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "restart", loop: false});
+      this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
       this.restartLevel();
     }
   }
 
   private handleInputPause(): void {
     if (Input.isJustPressed("pause")) {
-      this.pauseTracker.toggle();
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "pause", loop: false});
+      let isPaused = this.pauseTracker.toggle();
+      // Saving stopping the game music for benchmark 4 becuase I can't get it to work right now and don't have the time.
+      // if (isPaused) {
+        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
+      // }
+      // else {
+        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true});
+      // }
     }
   }
 
@@ -700,6 +718,7 @@ export default class GameLevel extends Scene {
       // The player has reached the end of the level
       this.levelEndTimer.start();
       this.levelEndLabel.tweens.play("slideIn");
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelEnd", loop: false});
     }
   }
 
@@ -726,6 +745,9 @@ export default class GameLevel extends Scene {
     if (!Input.isJustPressed("interact")) {
       return;
     }
+
+    // Play lever interaction sound effect
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lever", loop: false});
 
     // Get the node id (body or soul) which toggled the switch
     let id = event.data.get("node");
@@ -803,6 +825,7 @@ export default class GameLevel extends Scene {
   }
 
   private handleEventPlayerHitFreeze(deltaT: number, event: GameEvent): void {
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "freeze", loop: false});
     let node = event.data.get("node");
     if (!node.frozen) {
       node.freeze();
@@ -869,6 +892,13 @@ export default class GameLevel extends Scene {
   }
 
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "restart", loop: false});
+    if (enemy.imageId === "Boar") {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "boar", loop: false, holdReference: false});
+    }
+    else {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hellhawk", loop: false, holdReference: false});
+    }
     this.playerIsDying = true;
     this.player.tweens.play("dying");
     this.ghostPlayer.tweens.play("dying");
@@ -879,8 +909,10 @@ export default class GameLevel extends Scene {
   protected incPlayerCoins(amt: number): void {
     GameLevel.coinCount += amt;
     this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
-    // Play coin sound effect
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false});
+    // Play coin sound effect if you are gaining coins.
+    if (amt > 0) {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false});
+    }
   }
 
   // Check if the player has enough coins to open the level end portal.

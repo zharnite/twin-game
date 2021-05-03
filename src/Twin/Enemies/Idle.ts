@@ -1,4 +1,5 @@
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { Events } from "../Enums/EventEnums";
 import { EnemyStates } from "./EnemyController";
@@ -29,6 +30,7 @@ export default class Idle extends OnGround {
         Math.abs(this.owner.position.y - playerPos.y) < 8 * this.PLAYER_DETECTION_RADIUS &&
         playerType === "PlatformPlayer"
       ) {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "boar", loop: false, holdReference: false});
         this.finished(EnemyStates.WALK);
       }
     }

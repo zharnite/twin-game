@@ -115,6 +115,7 @@ export default class AudioManager {
      */
     protected stopSound(key: string): void {
         let sound = this.currentSounds.get(key);
+        console.log(sound);
         if(sound){
             sound.stop();
             this.currentSounds.delete(key);

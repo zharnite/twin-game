@@ -1,4 +1,5 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
@@ -8,6 +9,7 @@ export default class Jump extends InAir {
 
   onEnter(options: Record<string, any>): void {
     this.owner.animation.play("JUMP", true);
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "jump", loop: false, holdReference: false});
   }
 
   handleInput(event: GameEvent): void {}

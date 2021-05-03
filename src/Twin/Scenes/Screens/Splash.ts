@@ -15,6 +15,8 @@ export default class Splash extends Scene {
     this.load.image("movingBackground", "assets/images/TwinMovingBackground.png");
     // Load click sfx
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
+    // Load startup jingle
+    this.load.audio("startup", "assets/sounds/sfx/gameStartup.mp3");
   }
 
   startScene(): void {
@@ -25,12 +27,14 @@ export default class Splash extends Scene {
     // Add background image
     this.createBackground();
 
+    // Play startup sfx
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "startup", loop: false});
+
     // Transparent full screen button to get to MainMenu
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
       this.sceneManager.changeToScene(MainMenu, {});
     };
-
   }
 
   /**
