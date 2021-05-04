@@ -24,13 +24,8 @@ import PauseTracker from "../../SceneHelpers/PauseTracker";
 import SceneOptions from "../../SceneHelpers/SceneOptions";
 import TerrainManager from "./LevelHelpers/TerrainManager";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
-import Level1 from "./Level1";
-// import Level2 from "./Level2";
-// import Level3 from "./Level3";
-// import Level4 from "./Level4";
-// import Level5 from "./Level5";
-// import Level6 from "./Level6";
-// import FinalLevel from "./FinalLevel";
+import LevelTracker from "../../SceneHelpers/LevelTracker";
+import { Levels } from "../../Enums/LevelEnums";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -101,8 +96,8 @@ export default class GameLevel extends Scene {
     this.load.audio("levelEnd", "assets/sounds/sfx/levelEnd.mp3");
     this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
     this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
-    this.load.audio("restart", "assets/sounds/sfx/restart.mp3")
-    this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3")
+    this.load.audio("restart", "assets/sounds/sfx/restart.mp3");
+    this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3");
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
   }
 
@@ -139,12 +134,19 @@ export default class GameLevel extends Scene {
 
     GameLevel.coinCount = 0;
 
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "menuButton",
+      loop: false,
+    });
 
     // Scene has started, so start playing music
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true, holdReference: true});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "twinMusic",
+      loop: true,
+      holdReference: true,
+    });
 
-    this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "startup"});
+    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "startup" });
   }
 
   protected initLayers(): void {
@@ -441,29 +443,41 @@ export default class GameLevel extends Scene {
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
-        key: (this.followNodes[this.followNodeIndex].imageId === "PlatformPlayer") ? "switchToHuman" : "switchToSoul", 
-        loop: false
+        key:
+          this.followNodes[this.followNodeIndex].imageId === "PlatformPlayer"
+            ? "switchToHuman"
+            : "switchToSoul",
+        loop: false,
       });
     }
   }
 
   private handleInputRestart(): void {
     if (Input.isJustPressed("restart")) {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "restart", loop: false});
-      this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "restart",
+        loop: false,
+      });
+      this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" });
       this.restartLevel();
     }
   }
 
   private handleInputPause(): void {
     if (Input.isJustPressed("pause")) {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "pause", loop: false});
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "pause",
+        loop: false,
+      });
       let isPaused = this.pauseTracker.toggle();
       if (isPaused) {
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
-      }
-      else {
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" });
+      } else {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+          key: "twinMusic",
+          loop: true,
+          holdReference: true,
+        });
       }
     }
   }
@@ -510,24 +524,51 @@ export default class GameLevel extends Scene {
   }
 
   private handleInputLevelSwapCheatCode(): void {
+    let stringToLevelMap = LevelTracker.getStringToLevels();
     let sceneOptions = SceneOptions.getSceneOptions();
     if (Input.isKeyJustPressed("1")) {
-      this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_1],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("2")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_2],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("3")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_3],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("4")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_4],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("5")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_5],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("6")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.LEVEL_6],
+        {},
+        sceneOptions
+      );
+    } else if (Input.isKeyJustPressed("7")) {
+      this.sceneManager.changeToScene(
+        <any>stringToLevelMap[Levels.FINAL_LEVEL],
+        {},
+        sceneOptions
+      );
     }
-    // else if (Input.isKeyJustPressed("2")) {
-    //   this.sceneManager.changeToScene(Level2, {}, sceneOptions);
-    // }
-    // else if (Input.isKeyJustPressed("3")) {
-    //   this.sceneManager.changeToScene(Level3, {}, sceneOptions);
-    // } else if (Input.isKeyJustPressed("4")) {
-    //   this.sceneManager.changeToScene(Level4, {}, sceneOptions);
-    // } else if (Input.isKeyJustPressed("5")) {
-    //   this.sceneManager.changeToScene(Level5, {}, sceneOptions);
-    // } else if (Input.isKeyJustPressed("6")) {
-    //   this.sceneManager.changeToScene(Level6, {}, sceneOptions);
-    // } else if (Input.isKeyJustPressed("7")) {
-    //   this.sceneManager.changeToScene(FinalLevel, {}, sceneOptions);
-    // }
   }
 
   /**
@@ -721,7 +762,10 @@ export default class GameLevel extends Scene {
       // The player has reached the end of the level
       this.levelEndTimer.start();
       this.levelEndLabel.tweens.play("slideIn");
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "levelEnd", loop: false});
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "levelEnd",
+        loop: false,
+      });
     }
   }
 
@@ -750,7 +794,10 @@ export default class GameLevel extends Scene {
     }
 
     // Play lever interaction sound effect
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lever", loop: false});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "lever",
+      loop: false,
+    });
 
     // Get the node id (body or soul) which toggled the switch
     let id = event.data.get("node");
@@ -828,7 +875,10 @@ export default class GameLevel extends Scene {
   }
 
   private handleEventPlayerHitFreeze(deltaT: number, event: GameEvent): void {
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "freeze", loop: false});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "freeze",
+      loop: false,
+    });
     let node = event.data.get("node");
     if (!node.frozen) {
       node.freeze();
@@ -897,13 +947,17 @@ export default class GameLevel extends Scene {
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
     // Play the right enemy sound effect if the player died by an enemy.
     if (!(enemy === undefined)) {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, 
-        {key: (enemy.imageId === "Boar") ? "boar" : "hellhawk", 
-        loop: false, 
-        holdReference: false
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: enemy.imageId === "Boar" ? "boar" : "hellhawk",
+        loop: false,
+        holdReference: false,
       });
     }
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDeath", loop: false, holdReference: false});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "playerDeath",
+      loop: false,
+      holdReference: false,
+    });
     this.playerIsDying = true;
     this.player.tweens.play("dying");
     this.ghostPlayer.tweens.play("dying");
@@ -916,7 +970,10 @@ export default class GameLevel extends Scene {
     this.coinCountLabel.text = ScreenTexts.COINS + " " + GameLevel.coinCount;
     // Play coin sound effect if you are gaining coins.
     if (amt > 0) {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false});
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "coin",
+        loop: false,
+      });
     }
   }
 
