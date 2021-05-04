@@ -896,7 +896,7 @@ export default class GameLevel extends Scene {
 
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
     // Play the right enemy sound effect if the player died by an enemy.
-    if (!(enemy.imageId === undefined)) {
+    if (!(enemy === undefined)) {
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, 
         {key: (enemy.imageId === "Boar") ? "boar" : "hellhawk", 
         loop: false, 
