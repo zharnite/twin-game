@@ -804,7 +804,6 @@ export default class GameLevel extends Scene {
 
     // Get the lever that the player overlaps with
     let leverid = this.getOverlappingLever(id);
-    console.log(leverid);
 
     // Toggle lever and doors
     if (leverid) {
