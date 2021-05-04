@@ -47,13 +47,8 @@ export enum Terrains {
   // Enemy Spawn points
   ENEMY_SPAWN_BOAR = 55,
   ENEMY_SPAWN_HELLHAWK = 56,
+  ENEMY_SPAWN_SATAN = 57,
   // Freeze blocks
-  // FREEZE1_INF = 59,
-  // UNFREEZE1_INF = 60,
-  // FREEZE2_INF = 61,
-  // UNFREEZE2_INF = 62,
-  // FREEZE3_INF = 63,
-  // UNFREEZE3_INF = 64,
   FREEZE1 = 65,
   FREEZE1_USED = 66,
   UNFREEZE1 = 67,
