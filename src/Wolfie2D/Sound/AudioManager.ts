@@ -98,12 +98,12 @@ export default class AudioManager {
     protected playSound(key: string, loop: boolean, holdReference: boolean): void {
         let sound = this.createSound(key);
 
-        if(loop){
+        if (loop) {
             sound.loop = true;
         }
 
         // Add a reference of the new sound to a map. This will allow us to stop a looping or long sound at a later time
-        if(holdReference){
+        if (holdReference) {
             this.currentSounds.add(key, sound);
         }
         
@@ -115,8 +115,7 @@ export default class AudioManager {
      */
     protected stopSound(key: string): void {
         let sound = this.currentSounds.get(key);
-        console.log(sound);
-        if(sound){
+        if (sound) {
             sound.stop();
             this.currentSounds.delete(key);
         }

@@ -28,7 +28,7 @@ export default class Splash extends Scene {
     this.createBackground();
 
     // Play startup sfx
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "startup", loop: false});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "startup", loop: false, holdReference: true});
 
     // Transparent full screen button to get to MainMenu
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
