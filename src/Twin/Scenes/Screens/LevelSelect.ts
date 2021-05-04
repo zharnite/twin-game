@@ -42,6 +42,8 @@ export default class LevelSelect extends Scene {
 
     // Buttons for each level
     this.createLevelButtons();
+
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
   }
 
   private createHeadingAndReturn(): void {
@@ -50,7 +52,6 @@ export default class LevelSelect extends Scene {
       this.viewport,
       this.layer,
       this.sceneManager,
-      this.emitter
     );
     isc.createHeading(ScreenTexts.LEVEL_SELECT);
     isc.createReturnButton();

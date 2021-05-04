@@ -24,6 +24,8 @@ export default class MainMenu extends Scene {
 
     // Create menu buttons
     this.createMenuButtons(layer);
+    
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
   }
 
   /**
@@ -39,7 +41,6 @@ export default class MainMenu extends Scene {
       550,
       "PLAY GAME"
     ).onClick = () => {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(LevelSelect, {});
     };
 
@@ -51,7 +52,6 @@ export default class MainMenu extends Scene {
       610,
       "CONTROLS"
     ).onClick = () => {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Controls, {});
     };
 
@@ -63,7 +63,6 @@ export default class MainMenu extends Scene {
       670,
       "HELP"
     ).onClick = () => {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Help, {});
     };
 
@@ -75,7 +74,6 @@ export default class MainMenu extends Scene {
       730,
       "CREDITS"
     ).onClick = () => {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
       this.sceneManager.changeToScene(Credits, {});
     };
   }

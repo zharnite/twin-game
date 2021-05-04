@@ -54,8 +54,6 @@ export default class Splash extends Scene {
     let splashText = this.add.sprite("splashScreenText", "splashText");
     splashText.position.set(splashText.boundary.halfSize.x, splashText.boundary.halfSize.y);
 
-
-
     // Add fade in animations for all images
     background.tweens.add("moveLeft", {
       startDelay: 0,
