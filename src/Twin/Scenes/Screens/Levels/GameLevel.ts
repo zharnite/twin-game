@@ -142,7 +142,9 @@ export default class GameLevel extends Scene {
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
 
     // Scene has started, so start playing music
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true, holdReference: true});
+
+    this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "startup"});
   }
 
   protected initLayers(): void {
@@ -438,12 +440,10 @@ export default class GameLevel extends Scene {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
-      if (this.followNodes[this.followNodeIndex].imageId === "PlatformPlayer") {
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "switchToHuman", loop: false});
-      }
-      else {
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "switchToSoul", loop: false});
-      }
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: (this.followNodes[this.followNodeIndex].imageId === "PlatformPlayer") ? "switchToHuman" : "switchToSoul", 
+        loop: false
+      });
     }
   }
 
@@ -459,13 +459,12 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("pause")) {
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "pause", loop: false});
       let isPaused = this.pauseTracker.toggle();
-      // Saving stopping the game music for benchmark 4 becuase I can't get it to work right now and don't have the time.
-      // if (isPaused) {
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
-      // }
-      // else {
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true});
-      // }
+      if (isPaused) {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "twinMusic"});
+      }
+      else {
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true, holdReference: true});
+      }
     }
   }
 
