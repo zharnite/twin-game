@@ -51,7 +51,7 @@ export default class Level1 extends GameLevel {
     );
 
     // TWIN TODO: Change to actual tilemap
-    this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
+    this.load.tilemap(this.level, "assets/tilemaps/benchmark_3_demo.json");
 
     // load things from parent
     super.loadScene();

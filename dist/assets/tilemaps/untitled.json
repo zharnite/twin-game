@@ -3,7 +3,8 @@
     {
      "export":
         {
-         "target":"."
+         "format":"json",
+         "target":"benchmark_3_demo.json"
         }
     },
  "height":16,
