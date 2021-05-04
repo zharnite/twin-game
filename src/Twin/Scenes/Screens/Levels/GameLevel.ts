@@ -102,6 +102,8 @@ export default class GameLevel extends Scene {
     this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
     this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
     this.load.audio("restart", "assets/sounds/sfx/restart.mp3")
+    this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3")
+    this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
   }
 
   startScene(): void {
@@ -136,6 +138,8 @@ export default class GameLevel extends Scene {
     this.playerIsInvincible = false;
 
     GameLevel.coinCount = 0;
+
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
 
     // Scene has started, so start playing music
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "twinMusic", loop: true});
@@ -892,13 +896,15 @@ export default class GameLevel extends Scene {
   }
 
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "restart", loop: false});
-    if (enemy.imageId === "Boar") {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "boar", loop: false, holdReference: false});
+    // Play the right enemy sound effect if the player died by an enemy.
+    if (!(enemy.imageId === undefined)) {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, 
+        {key: (enemy.imageId === "Boar") ? "boar" : "hellhawk", 
+        loop: false, 
+        holdReference: false
+      });
     }
-    else {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hellhawk", loop: false, holdReference: false});
-    }
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "playerDeath", loop: false, holdReference: false});
     this.playerIsDying = true;
     this.player.tweens.play("dying");
     this.ghostPlayer.tweens.play("dying");

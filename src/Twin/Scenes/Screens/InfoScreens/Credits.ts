@@ -1,3 +1,4 @@
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import Scene from "../../../../Wolfie2D/Scene/Scene";
 import { Screens } from "../../Enums/ScreenEnums";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
@@ -19,6 +20,8 @@ export default class Credits extends Scene {
 
     // Create screen objects
     this.createScreen();
+
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
   }
 
   private createScreen(): void {
@@ -27,7 +30,6 @@ export default class Credits extends Scene {
       this.viewport,
       this.layer,
       this.sceneManager,
-      this.emitter
     );
     isc.createScreen(ScreenTexts.CREDITS);
   }

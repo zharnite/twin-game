@@ -2,6 +2,7 @@ import Scene from "../../../../Wolfie2D/Scene/Scene";
 import { Screens } from "../../Enums/ScreenEnums";
 import InfoScreenCreator from "../../SceneHelpers/InfoScreenCreator";
 import { ScreenTexts } from "../../Enums/ScreenTextEnums";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 export default class Help extends Scene {
   private layer: string;
@@ -19,6 +20,8 @@ export default class Help extends Scene {
 
     // Create screen objects
     this.createScreen();
+
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton"});
   }
 
   private createScreen(): void {
@@ -27,7 +30,6 @@ export default class Help extends Scene {
       this.viewport,
       this.layer,
       this.sceneManager,
-      this.emitter
     );
     isc.createScreen(ScreenTexts.HELP);
   }
