@@ -484,8 +484,9 @@ export default class GameLevel extends Scene {
   private handleInputInteract(): void {
     if (Input.isJustPressed("interact")) {
       if (
-        this.player.boundary.overlaps(this.satan.sprite.boundary) ||
-        this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
+        this.satan &&
+        (this.player.boundary.overlaps(this.satan.sprite.boundary) ||
+          this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary))
       ) {
         this.satanCoinCheck();
       }
