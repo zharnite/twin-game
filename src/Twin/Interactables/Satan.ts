@@ -34,6 +34,6 @@ export default class Satan {
   }
 
   setTilePosition(tilePos: Vec2): void {
-    this.sprite.position.set(tilePos.x * 32, tilePos.y * 32);
+    this.sprite.position.set(tilePos.x, tilePos.y);
   }
 }
