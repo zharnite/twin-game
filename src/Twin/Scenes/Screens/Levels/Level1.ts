@@ -104,7 +104,7 @@ export default class Level1 extends GameLevel {
 
   private setUpInteractables(): void {
     // TWIN TODO: set up satan if the level needs satan
-    // this.setUpSatan();
+    this.setUpSatan();
   }
 
   protected setUpSatan(): void {
@@ -112,7 +112,7 @@ export default class Level1 extends GameLevel {
     this.initSatan();
 
     // Set Mr. Satan's required coin value
-    this.satan.setRequiredCoinValue(3);
+    this.satan.setRequiredCoinValue(4);
 
     // Set up from parent class
     super.setUpSatan();
