@@ -22,7 +22,7 @@ export default class InfoScreenCreator {
     scene: Scene,
     viewport: Viewport,
     layer: string,
-    sceneManager: SceneManager,
+    sceneManager: SceneManager
   ) {
     this.scene = scene;
     this.viewport = viewport;
@@ -60,6 +60,18 @@ export default class InfoScreenCreator {
       1000,
       730,
       ScreenTexts.RETURN
+    ).onClick = () => {
+      this.sceneManager.changeToScene(MainMenu, {});
+    };
+  }
+
+  public createContinueButton() {
+    SceneItemCreator.createButton(
+      this.scene,
+      this.layer,
+      1000,
+      730,
+      ScreenTexts.CONTINUE
     ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
     };

@@ -5,14 +5,21 @@ import { TweenableProperties } from "../../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import { Screens } from "../Enums/ScreenEnums";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Starting from "./Starting";
 
 export default class Splash extends Scene {
   private layer: string;
 
   loadScene(): void {
     this.load.image("splashScreen", "assets/images/TwinSplashScreen.png");
-    this.load.image("splashScreenText", "assets/images/ClickAnywhereToContinue.png");
-    this.load.image("movingBackground", "assets/images/TwinMovingBackground.png");
+    this.load.image(
+      "splashScreenText",
+      "assets/images/ClickAnywhereToContinue.png"
+    );
+    this.load.image(
+      "movingBackground",
+      "assets/images/TwinMovingBackground.png"
+    );
     // Load click sfx
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
     // Load startup jingle
@@ -28,12 +35,19 @@ export default class Splash extends Scene {
     this.createBackground();
 
     // Play startup sfx
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "startup", loop: false, holdReference: true});
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "startup",
+      loop: false,
+      holdReference: true,
+    });
 
-    // Transparent full screen button to get to MainMenu
+    // Transparent full screen button to get to Starting comic
     SceneItemCreator.createScreenButton(this, this.layer).onClick = () => {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
-      this.sceneManager.changeToScene(MainMenu, {});
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "menuButton",
+        loop: false,
+      });
+      this.sceneManager.changeToScene(Starting, {});
     };
   }
 
@@ -44,7 +58,10 @@ export default class Splash extends Scene {
     // Create background layer and attach background image to center
     this.addLayer("background");
     let background = this.add.sprite("movingBackground", "background");
-    background.position.set(background.boundary.halfSize.x, background.boundary.halfSize.y);
+    background.position.set(
+      background.boundary.halfSize.x,
+      background.boundary.halfSize.y
+    );
 
     this.addLayer("splash");
     let splash = this.add.sprite("splashScreen", "splash");
@@ -52,7 +69,10 @@ export default class Splash extends Scene {
 
     this.addLayer("splashText");
     let splashText = this.add.sprite("splashScreenText", "splashText");
-    splashText.position.set(splashText.boundary.halfSize.x, splashText.boundary.halfSize.y);
+    splashText.position.set(
+      splashText.boundary.halfSize.x,
+      splashText.boundary.halfSize.y
+    );
 
     // Add fade in animations for all images
     background.tweens.add("moveLeft", {
