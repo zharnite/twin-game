@@ -38,7 +38,6 @@ export default class EaseFunctions {
         return 0.5 + Math.pow(2 * x - 1, pow) / 2;
     }
 
-    // Custom ease animation for the "click anywhere to continue" text.
     private static easeInWithDelay(x: number): number {
         return (x > 0.5) ? (x - 0.5) * 2 : 0;
     }
@@ -48,7 +47,7 @@ export default class EaseFunctions {
     }
 
     private static playerDying(x: number): number {
-        return (x > 0.25) ? 1 : (x * 4);
+        return (x > 0.33) ? 1 : (x * 3);
     }
 }
 

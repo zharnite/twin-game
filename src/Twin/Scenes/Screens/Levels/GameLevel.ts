@@ -306,7 +306,7 @@ export default class GameLevel extends Scene {
     // Create player's dying tween.
     this.player.tweens.add("dying", {
       startDelay: 0,
-      duration: 2000,
+      duration: 3000,
       effects: [
         {
           property: TweenableProperties.scaleX,
@@ -351,7 +351,7 @@ export default class GameLevel extends Scene {
     // Create player's dying tween.
     this.ghostPlayer.tweens.add("dying", {
       startDelay: 0,
-      duration: 2000,
+      duration: 3000,
       effects: [
         {
           property: TweenableProperties.scaleX,
