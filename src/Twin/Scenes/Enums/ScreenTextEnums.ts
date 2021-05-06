@@ -19,4 +19,5 @@ export enum ScreenTexts {
   LEVEL_5 = "LEVEL 5",
   LEVEL_6 = "LEVEL 6",
   FINAL_LEVEL = "FINAL LEVEL",
+  CONTINUE = "CONTINUE",
 }

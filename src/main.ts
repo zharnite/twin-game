@@ -16,7 +16,7 @@ import Splash from "./Twin/Scenes/Screens/Splash";
       { name: "jump", keys: ["w", "space"] },
       { name: "run", keys: ["shift"] },
       { name: "restart", keys: ["r"] },
-      { name: "swap view", keys: ["v"] }, 
+      { name: "swap view", keys: ["v", "s"] },
       { name: "pause", keys: ["escape", "p"] },
       { name: "interact", keys: ["e"] },
       // Cheat codes

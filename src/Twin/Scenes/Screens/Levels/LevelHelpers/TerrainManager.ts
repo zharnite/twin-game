@@ -541,6 +541,18 @@ export default class TerrainManager {
     }
   }
 
+  public getSatanLocation(): Vec2 {
+    let layer = this.getLayerTiles(TilemapLayers.ENEMY_SPAWN_BACKGROUND);
+    for (let i = 0; i < layer.length; i++) {
+      if (layer[i] === Terrains.ENEMY_SPAWN_SATAN) {
+        return this.getLocationFromIndex(i)
+          .add(this.singleBlockSize.scaled(0.5, 0))
+          .scaled(this.scaleFactor);
+      }
+    }
+    return null;
+  }
+
   public indexesThatContainsCoinBlocks(indexes: number[]): number[] {
     let validIndexes: number[] = [];
     let layer = this.getLayerTiles(TilemapLayers.COIN_BLOCKS);

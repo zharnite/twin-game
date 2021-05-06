@@ -16,15 +16,7 @@ export default class LevelTracker {
 
   static getLevels(): { [level in Levels]: boolean } {
     if (!this.levels) {
-      this.levels = {
-        [Levels.LEVEL_1]: true,
-        [Levels.LEVEL_2]: false,
-        [Levels.LEVEL_3]: false,
-        [Levels.LEVEL_4]: false,
-        [Levels.LEVEL_5]: false,
-        [Levels.LEVEL_6]: false,
-        [Levels.FINAL_LEVEL]: false,
-      };
+      this.initLevels();
     }
     return this.levels;
   }
@@ -39,6 +31,7 @@ export default class LevelTracker {
         [Levels.LEVEL_5]: Level5,
         [Levels.LEVEL_6]: Level6,
         [Levels.FINAL_LEVEL]: FinalLevel,
+        [Levels.COMPLETE]: null,
       };
     }
     return this.stringToLevels;
@@ -62,6 +55,7 @@ export default class LevelTracker {
       [Levels.LEVEL_5]: true,
       [Levels.LEVEL_6]: true,
       [Levels.FINAL_LEVEL]: true,
+      [Levels.COMPLETE]: true,
     };
 
     return true;
@@ -73,5 +67,29 @@ export default class LevelTracker {
    */
   static unlockLevel(level: Levels) {
     this.levels[level] = true;
+  }
+
+  static isLevelComplete(level: Levels) {
+    if (!this.levels) {
+      this.initLevels();
+    }
+    return LevelTracker.levels[level];
+  }
+
+  static isGameComplete() {
+    return this.isLevelComplete(Levels.COMPLETE);
+  }
+
+  static initLevels() {
+    this.levels = {
+      [Levels.LEVEL_1]: true,
+      [Levels.LEVEL_2]: false,
+      [Levels.LEVEL_3]: false,
+      [Levels.LEVEL_4]: false,
+      [Levels.LEVEL_5]: false,
+      [Levels.LEVEL_6]: false,
+      [Levels.FINAL_LEVEL]: false,
+      [Levels.COMPLETE]: false,
+    };
   }
 }
