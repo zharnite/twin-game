@@ -881,7 +881,9 @@ export default class GameLevel extends Scene {
   }
 
   private handleEventPlayerHitSpike(deltaT: number, event: GameEvent): void {
-    this.emitter.fireEvent(Events.PLAYER_HIT_ENEMY);
+    this.emitter.fireEvent(Events.PLAYER_HIT_ENEMY, {
+      node: event.data.get("node"),
+    });
   }
 
   private handleEventPlayerHitFreeze(deltaT: number, event: GameEvent): void {
@@ -912,7 +914,9 @@ export default class GameLevel extends Scene {
 
     // Spike block
     if (this.terrainManager.hitSpike(node.position, node.size, node.id)) {
-      this.emitter.fireEvent(Events.PLAYER_HIT_SPIKE);
+      this.emitter.fireEvent(Events.PLAYER_HIT_SPIKE, {
+        node: node.id,
+      });
       return;
     }
 
@@ -994,6 +998,9 @@ export default class GameLevel extends Scene {
   }
 
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
+    // change the view to the dying player
+    this.viewport.follow(player);
+
     // Play the right enemy sound effect if the player died by an enemy.
     if (!(enemy === undefined)) {
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
@@ -1027,6 +1034,10 @@ export default class GameLevel extends Scene {
   }
 
   protected respawnPlayer(): void {
+    // change the viewport back to original player
+    this.viewport.follow(this.followNodes[this.followNodeIndex]);
+
+    // set respawn locations
     this.player.position.copy(this.playerSpawn);
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
   }
