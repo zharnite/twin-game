@@ -4,6 +4,7 @@ import { InteractableTypes } from "../../Enums/InteractableEnums";
 import { Levels } from "../../Enums/LevelEnums";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
+import Ending from "../Ending";
 import GameLevel from "./GameLevel";
 import TerrainManager from "./LevelHelpers/TerrainManager";
 
@@ -89,7 +90,7 @@ export default class FinalLevel extends GameLevel {
   private initLevelVariables(): void {
     // Set up current and next level
     this.currentLevel = FinalLevel;
-    this.nextLevel = null;
+    this.nextLevel = <any>Ending;
 
     // Unlock this level when entered
     LevelTracker.unlockLevel(Levels.FINAL_LEVEL);
