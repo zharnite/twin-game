@@ -1,4 +1,3 @@
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Scene from "../../../Wolfie2D/Scene/Scene";
 import Controls from "./InfoScreens/Controls";
 import Credits from "./InfoScreens/Credits";
@@ -6,13 +5,20 @@ import Help from "./InfoScreens/Help";
 import LevelSelect from "./LevelSelect";
 import SceneItemCreator from "../SceneHelpers/SceneItemCreator";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import LevelTracker from "../SceneHelpers/LevelTracker";
 
 export default class MainMenu extends Scene {
-  animatedSprite: AnimatedSprite;
-
   loadScene(): void {
     // Load click sfx
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
+
+    if (LevelTracker.isGameComplete()) {
+      // Load after game complete bg
+      this.load.image("menuScreen", "assets/images/MenuBGComplete.png");
+    } else {
+      // Load before game complete bg
+      this.load.image("menuScreen", "assets/images/MenuBGIncomplete.png");
+    }
   }
 
   startScene(): void {
@@ -24,8 +30,22 @@ export default class MainMenu extends Scene {
 
     // Create menu buttons
     this.createMenuButtons(layer);
-    
-    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menuButton", loop: false});
+
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "menuButton",
+      loop: false,
+    });
+
+    // Add background image
+    this.createBackground();
+  }
+
+  public createBackground(): void {
+    // Create background layer and attach background image to center
+    let hs = this.viewport.getHalfSize();
+    this.addLayer("background");
+    let background = this.add.sprite("menuScreen", "background");
+    background.position.set(hs.x, hs.y);
   }
 
   /**

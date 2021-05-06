@@ -4,12 +4,12 @@ import { InteractableTypes } from "../../Enums/InteractableEnums";
 import { Levels } from "../../Enums/LevelEnums";
 import { PlayerTypes } from "../../Enums/PlayerEnums";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
+import Ending from "../Ending";
 import GameLevel from "./GameLevel";
 import TerrainManager from "./LevelHelpers/TerrainManager";
 
 export default class FinalLevel extends GameLevel {
   private level: string;
-  private hasSatan: boolean;
 
   loadScene(): void {
     this.level = Levels.FINAL_LEVEL;
@@ -90,14 +90,15 @@ export default class FinalLevel extends GameLevel {
   private initLevelVariables(): void {
     // Set up current and next level
     this.currentLevel = FinalLevel;
-    this.nextLevel = null;
+    this.nextLevel = <any>Ending;
 
     // Unlock this level when entered
     LevelTracker.unlockLevel(Levels.FINAL_LEVEL);
   }
 
   private setExits(): void {
-    if (!this.hasSatan) {
+    // Set up exits if there are no satans
+    if (!this.satan) {
       this.terrainManager.setExitLocations(
         this.terrainManager.bodyExitLocation,
         this.terrainManager.soulExitLocation
@@ -110,22 +111,15 @@ export default class FinalLevel extends GameLevel {
     // this.setUpSatan();
   }
 
-  private setUpSatan(): void {
-    // Set the satan flag
-    this.hasSatan = true;
+  protected setUpSatan(): void {
+    // Initialize Satan
+    this.initSatan();
 
-    // Set Mr. Satan's required coin value and position for this level.
-    // TWIN TODO: Uncomment and change the values to be level specific
-    // this.satan.setRequiredCoinValue(3);
-    // this.satan.setTilePosition(new Vec2(15, 14));
-    this.satan.sprite.animation.play("IDLE", true);
+    // Set Mr. Satan's required coin value
+    this.satan.setRequiredCoinValue(3);
 
-    // Place the level end portal in the world over the body and soul exit tile locations.
-    this.bodyEndPortalSprite = this.setUpPortalSprite("body");
-    this.soulEndPortalSprite = this.setUpPortalSprite("soul");
-    this.bodyEndPortalSprite.animation.play("OPENING");
-    this.bodyEndPortalSprite.animation.queue("OPEN", true);
-    this.soulEndPortalSprite.animation.play("CLOSED", true);
+    // Set up from parent class
+    super.setUpSatan();
   }
 
   updateScene(deltaT: number): void {

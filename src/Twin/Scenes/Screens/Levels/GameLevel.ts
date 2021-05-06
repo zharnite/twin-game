@@ -107,7 +107,6 @@ export default class GameLevel extends Scene {
     this.initViewport();
     this.initPlayer();
     this.initGhostPlayer();
-    this.initInteractables();
     this.subscribeToEvents();
     this.addUI();
 
@@ -291,7 +290,7 @@ export default class GameLevel extends Scene {
     // Spawn location
     this.player.position.copy(this.playerSpawn);
 
-    this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+    this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(12, 15)));
     this.player.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
@@ -336,7 +335,7 @@ export default class GameLevel extends Scene {
     // Spawn location
     this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
 
-    this.ghostPlayer.addPhysics(new AABB(Vec2.ZERO, new Vec2(15, 15)));
+    this.ghostPlayer.addPhysics(new AABB(Vec2.ZERO, new Vec2(12, 15)));
     this.ghostPlayer.addAI(PlayerController, {
       playerType: "platformer",
       tilemap: "Main",
@@ -364,7 +363,7 @@ export default class GameLevel extends Scene {
     });
   }
 
-  protected initInteractables(): void {
+  protected initSatan(): void {
     // Initialize Mr. Satan variables that do not change from level to level (scale, sprite, physics, etc.).
     let satanSprite = this.add.animatedSprite(
       InteractableTypes.MR_SATAN,
@@ -485,8 +484,9 @@ export default class GameLevel extends Scene {
   private handleInputInteract(): void {
     if (Input.isJustPressed("interact")) {
       if (
-        this.player.boundary.overlaps(this.satan.sprite.boundary) ||
-        this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary)
+        this.satan &&
+        (this.player.boundary.overlaps(this.satan.sprite.boundary) ||
+          this.ghostPlayer.boundary.overlaps(this.satan.sprite.boundary))
       ) {
         this.satanCoinCheck();
       }
@@ -806,7 +806,9 @@ export default class GameLevel extends Scene {
     let leverid = this.getOverlappingLever(id);
 
     // Toggle lever and doors
-    this.terrainManager.toggleLever(id, leverid);
+    if (leverid) {
+      this.terrainManager.toggleLever(id, leverid);
+    }
   }
 
   private handleEventPlayerOverlapsUnfreeze(
@@ -944,6 +946,45 @@ export default class GameLevel extends Scene {
     }
   }
 
+  /****** GAME RELATED ******/
+  /*** SATAN CODE ***/
+  protected setUpSatan(): void {
+    // Set position and play animation
+    this.satan.setTilePosition(this.terrainManager.getSatanLocation());
+    this.satan.sprite.animation.play("IDLE", true);
+
+    // Place the level end portal in the world over the body and soul exit tile locations.
+    this.bodyEndPortalSprite = this.setUpPortalSprite("body");
+    this.soulEndPortalSprite = this.setUpPortalSprite("soul");
+    this.bodyEndPortalSprite.animation.play("OPENING");
+    this.bodyEndPortalSprite.animation.queue("OPEN", true);
+    this.soulEndPortalSprite.animation.play("CLOSED", true);
+  }
+
+  // Check if the player has enough coins to open the level end portal.
+  protected satanCoinCheck(): void {
+    if (GameLevel.coinCount >= this.satan.getRequiredCoinValue()) {
+      this.satan.sprite.animation.stop();
+      this.satan.sprite.animation.play("SHOW_PORTAL");
+      this.satan.sprite.animation.queue("IDLE");
+      // For right now, he just opens up the soul portal. We can decide which portal we want him to open when we make the levels.
+      this.soulEndPortalSprite.animation.stop();
+      this.soulEndPortalSprite.animation.play("OPENING");
+      this.soulEndPortalSprite.animation.queue("OPEN", true);
+      this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
+
+      // allow player to exit
+      this.terrainManager.setExitLocations(
+        this.terrainManager.bodyExitLocation,
+        this.terrainManager.soulExitLocation
+      );
+    } else {
+      this.satan.sprite.animation.stop();
+      this.satan.sprite.animation.play("RUBHANDS");
+      this.satan.sprite.animation.queue("IDLE");
+    }
+  }
+
   protected playerDies(player: AnimatedSprite, enemy: AnimatedSprite) {
     // Play the right enemy sound effect if the player died by an enemy.
     if (!(enemy === undefined)) {
@@ -974,30 +1015,6 @@ export default class GameLevel extends Scene {
         key: "coin",
         loop: false,
       });
-    }
-  }
-
-  // Check if the player has enough coins to open the level end portal.
-  protected satanCoinCheck(): void {
-    if (GameLevel.coinCount >= this.satan.getRequiredCoinValue()) {
-      this.satan.sprite.animation.stop();
-      this.satan.sprite.animation.play("SHOW_PORTAL");
-      this.satan.sprite.animation.queue("IDLE");
-      // For right now, he just opens up the soul portal. We can decide which portal we want him to open when we make the levels.
-      this.soulEndPortalSprite.animation.stop();
-      this.soulEndPortalSprite.animation.play("OPENING");
-      this.soulEndPortalSprite.animation.queue("OPEN", true);
-      this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
-
-      // allow player to exit
-      this.terrainManager.setExitLocations(
-        this.terrainManager.bodyExitLocation,
-        this.terrainManager.soulExitLocation
-      );
-    } else {
-      this.satan.sprite.animation.stop();
-      this.satan.sprite.animation.play("RUBHANDS");
-      this.satan.sprite.animation.queue("IDLE");
     }
   }
 
