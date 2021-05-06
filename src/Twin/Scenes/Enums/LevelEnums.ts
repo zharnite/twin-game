@@ -6,4 +6,5 @@ export enum Levels {
   LEVEL_5 = "Level 5",
   LEVEL_6 = "Level 6",
   FINAL_LEVEL = "Final Level",
+  COMPLETE = "Complete",
 }

@@ -1,6 +1,8 @@
 import Scene from "../../../Wolfie2D/Scene/Scene";
+import { Levels } from "../Enums/LevelEnums";
 import { Screens } from "../Enums/ScreenEnums";
 import InfoScreenCreator from "../SceneHelpers/InfoScreenCreator";
+import LevelTracker from "../SceneHelpers/LevelTracker";
 
 export default class Ending extends Scene {
   private layer: string;
@@ -20,6 +22,9 @@ export default class Ending extends Scene {
 
     // Create return button
     this.createReturn();
+
+    // Game completed
+    LevelTracker.unlockLevel(Levels.COMPLETE);
   }
 
   public createBackground(): void {
