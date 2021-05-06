@@ -132,6 +132,7 @@ export default class GameLevel extends Scene {
     this.playerIsInvincible = false;
 
     GameLevel.coinCount = 0;
+    this.incPlayerCoins(0);
 
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
       key: "menuButton",
@@ -434,6 +435,7 @@ export default class GameLevel extends Scene {
     this.handleInputChangeControls();
     this.handleInputToggleInvincibility();
     this.handleInputLevelSwapCheatCode();
+    this.handleInputAddCoins(100);
   }
 
   private handleInputSwapView(): void {
@@ -568,6 +570,12 @@ export default class GameLevel extends Scene {
         {},
         sceneOptions
       );
+    }
+  }
+
+  private handleInputAddCoins(coins: number) {
+    if (Input.isKeyJustPressed("0")) {
+      this.incPlayerCoins(coins);
     }
   }
 
