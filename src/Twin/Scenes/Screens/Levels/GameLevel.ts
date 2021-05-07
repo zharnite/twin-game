@@ -986,10 +986,12 @@ export default class GameLevel extends Scene {
       this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
 
       // allow player to exit
-      this.terrainManager.setExitLocations(
-        this.terrainManager.bodyExitLocation,
-        this.terrainManager.soulExitLocation
-      );
+      if (!this.terrainManager.exitsSet) {
+        this.terrainManager.setExitLocations(
+          this.terrainManager.bodyExitLocation,
+          this.terrainManager.soulExitLocation
+        );
+      }
     } else {
       this.satan.sprite.animation.stop();
       this.satan.sprite.animation.play("RUBHANDS");

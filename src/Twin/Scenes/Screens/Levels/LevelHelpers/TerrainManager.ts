@@ -37,6 +37,7 @@ export default class TerrainManager {
   public bodyExitLocation: Vec2;
   public soulEntranceLocation: Vec2;
   public soulExitLocation: Vec2;
+  public exitsSet: boolean;
   // Exits
   public levelEndAreas: { [character: string]: Rect };
   // Levers
@@ -54,6 +55,9 @@ export default class TerrainManager {
     // Static variables
     this.scaleFactor = this.tilemap.tilewidth * 2;
     this.singleBlockSize = new Vec2(1, 1);
+
+    // Exit
+    this.exitsSet = false;
 
     console.log(this.tilemap);
   }
@@ -132,6 +136,9 @@ export default class TerrainManager {
   }
 
   public setExitLocations(bodyExit: Vec2, soulExit: Vec2): void {
+    // Set exits
+    this.exitsSet = true;
+
     // Modify exit location to be centered
     bodyExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
     soulExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
