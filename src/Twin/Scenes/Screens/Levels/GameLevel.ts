@@ -87,7 +87,7 @@ export default class GameLevel extends Scene {
     this.load.audio("twinMusic", "assets/sounds/music/twinMusic.mp3");
     // Load SFX
     this.load.audio("boar", "assets/sounds/sfx/boar.mp3");
-    this.load.audio("hellhawk", "assets/sounds/sfx/hellhawk.mp3");
+    this.load.audio("hellhawk", "assets/sounds/sfx/hellHawk.mp3");
     this.load.audio("coin", "assets/sounds/sfx/coinNoise.mp3");
     this.load.audio("jump", "assets/sounds/sfx/jump.mp3");
     this.load.audio("switchToHuman", "assets/sounds/sfx/switchToHuman.mp3");
