@@ -69,8 +69,8 @@ export default class InfoScreenCreator {
     SceneItemCreator.createButton(
       this.scene,
       this.layer,
-      1000,
-      730,
+      1005,
+      765,
       ScreenTexts.CONTINUE
     ).onClick = () => {
       this.sceneManager.changeToScene(MainMenu, {});
