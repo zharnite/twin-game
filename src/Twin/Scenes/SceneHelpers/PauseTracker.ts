@@ -4,6 +4,7 @@ import Map from "../../../Wolfie2D/DataTypes/Map";
 import PauseOverlay from "./PauseOverlay";
 import Viewport from "../../../Wolfie2D/SceneGraph/Viewport";
 import SceneManager from "../../../Wolfie2D/Scene/SceneManager";
+import GameLevel from "../Screens/Levels/GameLevel";
 
 export default class PauseTracker {
   private isPaused: boolean;
@@ -12,6 +13,9 @@ export default class PauseTracker {
   private viewport: Viewport;
   private sceneManager: SceneManager;
   private layers: Map<Layer>;
+  private playerFrozen: boolean;
+  private ghostPlayerFrozen: boolean;
+  private level: GameLevel;
 
   constructor(
     scene: Scene,
@@ -31,6 +35,7 @@ export default class PauseTracker {
       this,
       sceneManager
     );
+    this.level = <GameLevel>scene;
   }
 
   paused(): boolean {
@@ -38,6 +43,13 @@ export default class PauseTracker {
   }
 
   toggle(): boolean {
+    let playerNode = this.level
+      .getSceneGraph()
+      .getNode(this.level.getPlayerID());
+    let ghostPlayerNode = this.level
+      .getSceneGraph()
+      .getNode(this.level.getGhostPlayerID());
+
     if (!this.isPaused) {
       this.viewport.setZoomLevel(1);
       this.layers.forEach((layer) => {
@@ -45,17 +57,33 @@ export default class PauseTracker {
         this.scene
           .getLayer(layer)
           .getItems()
-          .forEach((item) => item.freeze());
+          .forEach((item) => {
+            if (item === playerNode) {
+              this.playerFrozen = playerNode.frozen;
+            } else if (item === ghostPlayerNode) {
+              this.ghostPlayerFrozen = ghostPlayerNode.frozen;
+            }
+            item.freeze();
+          });
       });
       this.pauseOverlay.createPauseOverlay();
     } else {
       this.viewport.setZoomLevel(2);
+
       this.layers.forEach((layer) => {
         this.scene.getLayer(layer).enable();
         this.scene
           .getLayer(layer)
           .getItems()
-          .forEach((item) => item.unfreeze());
+          .forEach((item) => {
+            if (item === playerNode && this.playerFrozen) {
+              // Do nothing if item is the player and player is frozen
+            } else if (item === ghostPlayerNode && this.ghostPlayerFrozen) {
+              // Do nothing if item is the ghost player and ghost player is frozen
+            } else {
+              item.unfreeze();
+            }
+          });
       });
       this.pauseOverlay.removePauseOverlay();
     }
