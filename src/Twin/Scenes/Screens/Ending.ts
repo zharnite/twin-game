@@ -17,6 +17,9 @@ export default class Ending extends Scene {
     this.layer = Screens.ENDING;
     this.addUILayer(this.layer);
 
+    let size = this.viewport.getHalfSize();
+    this.viewport.setFocus(size);
+
     // Add background image
     this.createBackground();
 
