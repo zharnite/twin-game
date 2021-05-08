@@ -139,14 +139,15 @@ export default class GameLevel extends Scene {
       loop: false,
     });
 
-    // Scene has started, so start playing music
+    // Scene has started, so stop any old music and start playing new music
+    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "startup" });
+    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" })
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
       key: "twinMusic",
       loop: true,
       holdReference: true,
     });
 
-    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "startup" });
   }
 
   protected initLayers(): void {
