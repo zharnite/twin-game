@@ -15,6 +15,9 @@ export default class Starting extends Scene {
     this.layer = Screens.STARTING;
     this.addUILayer(this.layer);
 
+    let size = this.viewport.getHalfSize();
+    this.viewport.setFocus(size);
+
     // Add background image
     this.createBackground();
 

@@ -14,10 +14,10 @@ export default class MainMenu extends Scene {
 
     if (LevelTracker.isGameComplete()) {
       // Load after game complete bg
-      this.load.image("menuScreen", "assets/images/MenuBGComplete.png");
+      this.load.image("menuScreen", "assets/images/menuBGComplete.png");
     } else {
       // Load before game complete bg
-      this.load.image("menuScreen", "assets/images/MenuBGIncomplete.png");
+      this.load.image("menuScreen", "assets/images/menuBGIncomplete.png");
     }
   }
 
