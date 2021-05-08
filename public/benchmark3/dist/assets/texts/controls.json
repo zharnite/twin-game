@@ -3,10 +3,10 @@
   "Controls": [
     "[A] - Move left                                       ",
     "[D] - Move right                                      ",
-    "[W]/[Space] - Jump                                    ",
+    "[Space] - Jump                                        ",
     "[R] - Restart level                                   ",
     "[Esc]/[P] - Pause                                     ",
-    "[S]/[V] - Swap between Body and Soul                  ",
+    "[V] - Swap between Body and Soul                      ",
     "[E] - Use Object / Interact                           ",
     "                                                      "
   ]
