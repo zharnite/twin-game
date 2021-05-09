@@ -1,0 +1,26 @@
+{
+  "name": "Hellhawk",
+  "spriteSheetImage": "hellhawk.png",
+  "spriteWidth": 17,
+  "spriteHeight": 11,
+  "columns": 1,
+  "rows": 3,
+  "durationType": "time",
+  "animations": [
+    {
+      "name": "IDLE",
+      "frames": [
+        { "index": 0, "duration": 540 }
+      ]
+    },
+    {
+      "name": "FLY",
+      "frames": [
+        { "index": 0, "duration": 8 },
+        { "index": 1, "duration": 8 },
+        { "index": 2, "duration": 8 },
+        { "index": 1, "duration": 8 }
+      ]
+    }
+  ]
+}
