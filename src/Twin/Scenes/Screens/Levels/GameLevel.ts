@@ -26,6 +26,7 @@ import TerrainManager from "./LevelHelpers/TerrainManager";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
 import { Levels } from "../../Enums/LevelEnums";
+import Game from "../../../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
@@ -771,6 +772,7 @@ export default class GameLevel extends Scene {
       // The player has reached the end of the level
       this.levelEndTimer.start();
       this.levelEndLabel.tweens.play("slideIn");
+      this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" });
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
         key: "levelEnd",
         loop: false,
