@@ -47,7 +47,7 @@ export default class Level2 extends GameLevel {
     );
 
     // TWIN TODO: Change to actual tilemap
-    this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
+    this.load.tilemap(this.level, "assets/tilemaps/level2.json");
 
     // load things from parent
     super.loadScene();
@@ -108,7 +108,7 @@ export default class Level2 extends GameLevel {
 
   private setUpInteractables(): void {
     // TWIN TODO: set up satan if the level needs satan
-    this.setUpSatan();
+    // this.setUpSatan();
   }
 
   protected setUpSatan(): void {
