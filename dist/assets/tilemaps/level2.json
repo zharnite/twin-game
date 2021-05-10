@@ -3,7 +3,8 @@
     {
      "export":
         {
-         "format":"json"
+         "format":"json",
+         "target":"."
         }
     },
  "height":16,
@@ -226,139 +227,10 @@
          "draworder":"topdown",
          "id":9,
          "name":"Coins",
-         "objects":[
-                {
-                 "gid":33,
-                 "height":16,
-                 "id":3,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Group",
-                         "type":"string",
-                         "value":"coin"
-                        }, 
-                        {
-                         "name":"HasPhysics",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"IsCollidable",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"IsTrigger",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"TriggerGroup",
-                         "type":"string",
-                         "value":"Player, GhostPlayer"
-                        }, 
-                        {
-                         "name":"TriggerOnEnter",
-                         "type":"string",
-                         "value":"PlayerHitCoin"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":235,
-                 "y":237.5
-                }, 
-                {
-                 "gid":33,
-                 "height":16,
-                 "id":5,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Group",
-                         "type":"string",
-                         "value":"coin"
-                        }, 
-                        {
-                         "name":"HasPhysics",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"IsCollidable",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"IsTrigger",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"TriggerGroup",
-                         "type":"string",
-                         "value":"Player, GhostPlayer"
-                        }, 
-                        {
-                         "name":"TriggerOnEnter",
-                         "type":"string",
-                         "value":"PlayerHitCoin"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":310.5,
-                 "y":238.5
-                }, 
-                {
-                 "gid":33,
-                 "height":16,
-                 "id":6,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Group",
-                         "type":"string",
-                         "value":"coin"
-                        }, 
-                        {
-                         "name":"HasPhysics",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"IsCollidable",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"IsTrigger",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"TriggerGroup",
-                         "type":"string",
-                         "value":"Player, GhostPlayer"
-                        }, 
-                        {
-                         "name":"TriggerOnEnter",
-                         "type":"string",
-                         "value":"PlayerHitCoin"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":159,
-                 "y":238.5
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
