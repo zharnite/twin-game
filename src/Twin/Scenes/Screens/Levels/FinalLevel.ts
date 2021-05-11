@@ -1,4 +1,5 @@
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import SceneOptions from "../../../../Wolfie2D/Scene/SceneOptions";
 import { EnemyTypes } from "../../Enums/EnemyEnums";
 import { InteractableTypes } from "../../Enums/InteractableEnums";
 import { Levels } from "../../Enums/LevelEnums";
@@ -7,11 +8,18 @@ import LevelTracker from "../../SceneHelpers/LevelTracker";
 import Ending from "../Ending";
 import GameLevel from "./GameLevel";
 import TerrainManager from "./LevelHelpers/TerrainManager";
+import SO from "../../SceneHelpers/SceneOptions";
+import BasicPhysicsManager from "../../../../Wolfie2D/Physics/BasicPhysicsManager";
 
 export default class FinalLevel extends GameLevel {
   private level: string;
 
   loadScene(): void {
+    // Set 2 characters to not collide on each other for the final level
+    this.sceneOptions = SceneOptions.parse(SO.getSceneOptionsFinalLevel());
+    delete this.physicsManager;
+    this.physicsManager = new BasicPhysicsManager(this.sceneOptions.physics);
+
     this.level = Levels.FINAL_LEVEL;
 
     // TWIN TODO: remove things we don't need to load
