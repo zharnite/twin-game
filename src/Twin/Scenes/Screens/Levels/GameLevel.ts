@@ -79,6 +79,9 @@ export default class GameLevel extends Scene {
   // Mr. Satan stuff
   protected satan: Satan;
 
+  // White rectangle for flashes
+  protected white: Rect;
+
   loadScene(): void {
     // load pause items
     this.load.object("Controls", "assets/texts/controls.json");
@@ -96,11 +99,15 @@ export default class GameLevel extends Scene {
     this.load.audio("freeze", "assets/sounds/sfx/freeze.mp3");
     this.load.audio("thaw", "assets/sounds/sfx/thaw.mp3");
     this.load.audio("levelEnd", "assets/sounds/sfx/levelEnd.mp3");
+    this.load.audio("levelEndFail", "assets/sounds/sfx/levelEndFail.mp3");
     this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
     this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
     this.load.audio("restart", "assets/sounds/sfx/restart.mp3");
     this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3");
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
+    this.load.audio("foundSecret", "assets/sounds/sfx/foundSecret.mp3");
+    this.load.audio("usePortal", "assets/sounds/sfx/usePortal.mp3");
+  
   }
 
   startScene(): void {
@@ -228,6 +235,7 @@ export default class GameLevel extends Scene {
     this.levelEndLabel.fontSize = 48;
     this.levelEndLabel.font = "Squarely";
 
+
     // Add a tween to move the label on screen
     this.levelEndLabel.tweens.add("slideIn", {
       startDelay: 0,
@@ -279,6 +287,30 @@ export default class GameLevel extends Scene {
         },
       ],
       onEnd: Events.LEVEL_START,
+    });
+
+    // White rect for flashes
+    this.white = <Rect>this.add.graphic(
+      GraphicType.RECT,
+      "UI",
+      {
+        position: new Vec2(0, 0),
+        size: new Vec2(1200, 800),
+      }
+    );
+    this.white.color = new Color(255, 255, 255);
+    this.white.alpha = 0.0;
+    this.white.tweens.add("flash", {
+      startDelay: 0,
+      duration: 500,
+      effects: [
+        {
+          property: TweenableProperties.alpha,
+          start: 0,
+          end: 1,
+          ease: EaseFunctionType.FLASH,
+        },
+      ],
     });
   }
 
@@ -766,6 +798,10 @@ export default class GameLevel extends Scene {
 
     // Determines if both characters are colliding with exit
     if (!this.isLevelComplete()) {
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "levelEndFail",
+        loop: false,
+      });
       return;
     }
 
@@ -883,6 +919,16 @@ export default class GameLevel extends Scene {
 
     // get out portal world location
     let portalOutLocation = this.terrainManager.getOutPortalLocation(blockID);
+
+    // Play portal sound effect
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "usePortal",
+      loop: false,
+    });
+
+    // Flash screen
+    this.white.alpha = 1.0;
+    this.white.tweens.play("flash");
 
     // teleport to correct location
     player.position.copy(portalOutLocation);

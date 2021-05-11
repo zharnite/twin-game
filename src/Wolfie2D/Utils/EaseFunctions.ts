@@ -38,16 +38,20 @@ export default class EaseFunctions {
         return 0.5 + Math.pow(2 * x - 1, pow) / 2;
     }
 
-    private static easeInWithDelay(x: number): number {
+    private static easeInWithDelay (x: number): number {
         return (x > 0.5) ? (x - 0.5) * 2 : 0;
     }
 
-    private static linear(x: number): number {
+    private static linear (x: number): number {
         return x;
     }
 
-    private static playerDying(x: number): number {
+    private static playerDying (x: number): number {
         return (x > 0.33) ? 1 : (x * 3);
+    }
+
+    private static flash (x: number): number {
+        return (x > 0.0 && x < 0.1)? 1 : (1 - x);
     }
 }
 
@@ -69,4 +73,5 @@ export enum EaseFunctionType {
     EASE_IN_WITH_DELAY = "easeInWithDelay",
     LINEAR = "linear",
     PLAYER_DYING = "playerDying",
+    FLASH = "flash",
 }
