@@ -94,6 +94,7 @@ export default class GameLevel extends Scene {
     this.load.audio("switchToHuman", "assets/sounds/sfx/switchToHuman.mp3");
     this.load.audio("switchToSoul", "assets/sounds/sfx/switchToSoul.mp3");
     this.load.audio("freeze", "assets/sounds/sfx/freeze.mp3");
+    this.load.audio("thaw", "assets/sounds/sfx/thaw.mp3");
     this.load.audio("levelEnd", "assets/sounds/sfx/levelEnd.mp3");
     this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
     this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
@@ -854,6 +855,10 @@ export default class GameLevel extends Scene {
     if (this.ghostPlayer.frozen) {
       this.ghostPlayer.unfreeze();
     }
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "thaw",
+      loop: false,
+    });
   }
 
   private handleEventPlayerOverlapsPortal(
