@@ -99,7 +99,6 @@ export default class GameLevel extends Scene {
     this.load.audio("freeze", "assets/sounds/sfx/freeze.mp3");
     this.load.audio("thaw", "assets/sounds/sfx/thaw.mp3");
     this.load.audio("levelEnd", "assets/sounds/sfx/levelEnd.mp3");
-    this.load.audio("levelEndFail", "assets/sounds/sfx/levelEndFail.mp3");
     this.load.audio("lever", "assets/sounds/sfx/lever.mp3");
     this.load.audio("pause", "assets/sounds/sfx/pause.mp3");
     this.load.audio("restart", "assets/sounds/sfx/restart.mp3");
@@ -107,7 +106,7 @@ export default class GameLevel extends Scene {
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
     this.load.audio("foundSecret", "assets/sounds/sfx/foundSecret.mp3");
     this.load.audio("usePortal", "assets/sounds/sfx/usePortal.mp3");
-  
+    this.load.audio("boing", "assets/sounds/sfx/boing.mp3");
   }
 
   startScene(): void {
@@ -798,10 +797,6 @@ export default class GameLevel extends Scene {
 
     // Determines if both characters are colliding with exit
     if (!this.isLevelComplete()) {
-      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
-        key: "levelEndFail",
-        loop: false,
-      });
       return;
     }
 
@@ -961,6 +956,10 @@ export default class GameLevel extends Scene {
     if (node === this.ghostPlayer) {
       pc.velocity.y = pc.JUMP_HEIGHT * 5;
     }
+    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+      key: "boing",
+      loop: false,
+    });
   }
 
   private handleEventPlayerOnGround(deltaT: number, event: GameEvent): void {
