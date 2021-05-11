@@ -104,7 +104,7 @@ export default class GameLevel extends Scene {
     this.load.audio("restart", "assets/sounds/sfx/restart.mp3");
     this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3");
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
-    this.load.audio("foundSecret", "assets/sounds/sfx/foundSecret.mp3");
+    this.load.audio("satanOpensPortal", "assets/sounds/sfx/satanOpensPortal.mp3");
     this.load.audio("usePortal", "assets/sounds/sfx/usePortal.mp3");
     this.load.audio("boing", "assets/sounds/sfx/boing.mp3");
   }
@@ -229,7 +229,7 @@ export default class GameLevel extends Scene {
     });
     this.levelEndLabel.size.set(1200, 60);
     this.levelEndLabel.borderRadius = 0;
-    this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
+    this.levelEndLabel.backgroundColor = new Color(0, 0, 0);
     this.levelEndLabel.textColor = Color.WHITE;
     this.levelEndLabel.fontSize = 48;
     this.levelEndLabel.font = "Squarely";
@@ -238,7 +238,7 @@ export default class GameLevel extends Scene {
     // Add a tween to move the label on screen
     this.levelEndLabel.tweens.add("slideIn", {
       startDelay: 0,
-      duration: 1000,
+      duration: 750,
       effects: [
         {
           property: TweenableProperties.posX,
@@ -1037,6 +1037,11 @@ export default class GameLevel extends Scene {
       this.soulEndPortalSprite.animation.play("OPENING");
       this.soulEndPortalSprite.animation.queue("OPEN", true);
       this.incPlayerCoins(this.satan.getRequiredCoinValue() * -1);
+      this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
+        key: "satanOpensPortal",
+        loop: false,
+        holdReference: false,
+      });
 
       // allow player to exit
       if (!this.terrainManager.exitsSet) {
