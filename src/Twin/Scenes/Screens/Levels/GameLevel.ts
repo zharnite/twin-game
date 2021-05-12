@@ -104,7 +104,10 @@ export default class GameLevel extends Scene {
     this.load.audio("restart", "assets/sounds/sfx/restart.mp3");
     this.load.audio("playerDeath", "assets/sounds/sfx/death.mp3");
     this.load.audio("menuButton", "assets/sounds/sfx/menuButton.mp3");
-    this.load.audio("satanOpensPortal", "assets/sounds/sfx/satanOpensPortal.mp3");
+    this.load.audio(
+      "satanOpensPortal",
+      "assets/sounds/sfx/satanOpensPortal.mp3"
+    );
     this.load.audio("usePortal", "assets/sounds/sfx/usePortal.mp3");
     this.load.audio("boing", "assets/sounds/sfx/boing.mp3");
   }
@@ -149,13 +152,12 @@ export default class GameLevel extends Scene {
 
     // Scene has started, so stop any old music and start playing new music
     this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "startup" });
-    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" })
+    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: "twinMusic" });
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
       key: "twinMusic",
       loop: true,
       holdReference: true,
     });
-
   }
 
   protected initLayers(): void {
@@ -234,7 +236,6 @@ export default class GameLevel extends Scene {
     this.levelEndLabel.fontSize = 48;
     this.levelEndLabel.font = "Squarely";
 
-
     // Add a tween to move the label on screen
     this.levelEndLabel.tweens.add("slideIn", {
       startDelay: 0,
@@ -289,14 +290,10 @@ export default class GameLevel extends Scene {
     });
 
     // White rect for flashes
-    this.white = <Rect>this.add.graphic(
-      GraphicType.RECT,
-      "UI",
-      {
-        position: new Vec2(0, 0),
-        size: new Vec2(1200, 800),
-      }
-    );
+    this.white = <Rect>this.add.graphic(GraphicType.RECT, "UI", {
+      position: new Vec2(0, 0),
+      size: new Vec2(1200, 800),
+    });
     this.white.color = new Color(255, 255, 255);
     this.white.alpha = 0.0;
     this.white.tweens.add("flash", {
@@ -1000,9 +997,8 @@ export default class GameLevel extends Scene {
     );
 
     // Check if the ceilings are coin blocks
-    let coinBlocks = this.terrainManager.indexesThatContainsCoinBlocks(
-      ceilingIndexes
-    );
+    let coinBlocks =
+      this.terrainManager.indexesThatContainsCoinBlocks(ceilingIndexes);
     if (coinBlocks.length > 0) {
       this.emitter.fireEvent(Events.PLAYER_HIT_COIN_BLOCK, {
         coinBlocks: coinBlocks,
@@ -1112,8 +1108,8 @@ export default class GameLevel extends Scene {
   }
 
   unloadScene(): void {
-    // Reset zoom level. Only game levels have a zoom level of 2.
-    this.viewport.setZoomLevel(1);
+    this.viewport.setZoomLevel(1); // Reset zoom level. Only game levels have a zoom level of 2.
+    this.viewport.follow(null); // Reset viewport
   }
 
   /****** ANIMATION/TWEEN METHODS ******/

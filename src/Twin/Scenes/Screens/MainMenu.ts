@@ -25,10 +25,6 @@ export default class MainMenu extends Scene {
     let layer = "Main";
     this.addUILayer(layer);
 
-    let size = this.viewport.getHalfSize();
-    this.viewport.setFocus(size.clone());
-    this.viewport.setCenter(size.clone());
-
     // Create menu buttons
     this.createMenuButtons(layer);
 
@@ -44,11 +40,9 @@ export default class MainMenu extends Scene {
   public createBackground(): void {
     // Create background layer and attach background image to center
     let hs = this.viewport.getHalfSize();
-    let center = this.viewport.getCenter();
     this.addLayer("background");
     let background = this.add.sprite("menuScreen", "background");
-    // background.position.set(hs.x, hs.y);
-    background.position.set(center.x, center.y);
+    background.position.set(hs.x, hs.y);
   }
 
   /**
