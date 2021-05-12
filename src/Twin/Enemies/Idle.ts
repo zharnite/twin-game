@@ -27,7 +27,7 @@ export default class Idle extends OnGround {
       let playerType = event.data.get("imageId");
       if (
         Math.abs(this.owner.position.x - playerPos.x) < 16 * this.PLAYER_DETECTION_RADIUS && 
-        Math.abs(this.owner.position.y - playerPos.y) < 8 * this.PLAYER_DETECTION_RADIUS &&
+        Math.abs(this.owner.position.y - playerPos.y) < 12 * this.PLAYER_DETECTION_RADIUS &&
         playerType === "PlatformPlayer"
       ) {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "boar", loop: false, holdReference: false});
