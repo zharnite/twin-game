@@ -26,7 +26,8 @@ export default class MainMenu extends Scene {
     this.addUILayer(layer);
 
     let size = this.viewport.getHalfSize();
-    this.viewport.setFocus(size);
+    this.viewport.setFocus(size.clone());
+    this.viewport.setCenter(size.clone());
 
     // Create menu buttons
     this.createMenuButtons(layer);
@@ -43,9 +44,11 @@ export default class MainMenu extends Scene {
   public createBackground(): void {
     // Create background layer and attach background image to center
     let hs = this.viewport.getHalfSize();
+    let center = this.viewport.getCenter();
     this.addLayer("background");
     let background = this.add.sprite("menuScreen", "background");
-    background.position.set(hs.x, hs.y);
+    // background.position.set(hs.x, hs.y);
+    background.position.set(center.x, center.y);
   }
 
   /**
@@ -54,48 +57,28 @@ export default class MainMenu extends Scene {
    */
   createMenuButtons(layer: string): void {
     // Play button
-    SceneItemCreator.createButton(
-      this,
-      layer,
-      1000,
-      550,
-      "PLAY GAME"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(LevelSelect, {});
-    };
+    SceneItemCreator.createButton(this, layer, 1000, 550, "PLAY GAME").onClick =
+      () => {
+        this.sceneManager.changeToScene(LevelSelect, {});
+      };
 
     // Controls button
-    SceneItemCreator.createButton(
-      this,
-      layer,
-      1000,
-      610,
-      "CONTROLS"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(Controls, {});
-    };
+    SceneItemCreator.createButton(this, layer, 1000, 610, "CONTROLS").onClick =
+      () => {
+        this.sceneManager.changeToScene(Controls, {});
+      };
 
     // Help button
-    SceneItemCreator.createButton(
-      this,
-      layer,
-      1000,
-      670,
-      "HELP"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(Help, {});
-    };
+    SceneItemCreator.createButton(this, layer, 1000, 670, "HELP").onClick =
+      () => {
+        this.sceneManager.changeToScene(Help, {});
+      };
 
     // Credits button
-    SceneItemCreator.createButton(
-      this,
-      layer,
-      1000,
-      730,
-      "CREDITS"
-    ).onClick = () => {
-      this.sceneManager.changeToScene(Credits, {});
-    };
+    SceneItemCreator.createButton(this, layer, 1000, 730, "CREDITS").onClick =
+      () => {
+        this.sceneManager.changeToScene(Credits, {});
+      };
   }
 
   updateScene(): void {}
