@@ -9,7 +9,7 @@ export default abstract class EnemyState extends State {
 	owner: GameNode;
 	gravity: number = 10000;
 	parent: EnemyController;
-	PLAYER_DETECTION_RADIUS = 14;
+	PLAYER_DETECTION_RADIUS = 18;
 
 	constructor(parent: StateMachine, owner: GameNode){
 		super(parent);

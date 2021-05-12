@@ -103,7 +103,6 @@ export default class Level1 extends GameLevel {
   }
 
   private setUpInteractables(): void {
-    // TWIN TODO: set up satan if the level needs satan
     this.setUpSatan();
   }
 
