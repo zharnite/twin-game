@@ -79,10 +79,8 @@ export default class GameLevel extends Scene {
   // Mr. Satan stuff
   protected satan: Satan;
 
-  // Rectangles for doing stuff
+  // White rectangle for flashes
   protected white: Rect;
-  protected bodyIcon: Rect;
-  protected soulIcon: Rect;
 
   loadScene(): void {
     // load pause items
@@ -291,7 +289,7 @@ export default class GameLevel extends Scene {
       onEnd: Events.LEVEL_START,
     });
 
-    // White rect for portal flashes
+    // White rect for flashes
     this.white = <Rect>this.add.graphic(GraphicType.RECT, "UI", {
       position: new Vec2(0, 0),
       size: new Vec2(1200, 800),
@@ -307,31 +305,6 @@ export default class GameLevel extends Scene {
           start: 0,
           end: 1,
           ease: EaseFunctionType.FLASH,
-        },
-      ],
-    });
-    // Red square to blink above body when swapping to them
-    this.player.tweens.add("blink", {
-      startDelay: 200,
-      duration: 700,
-      effects: [
-        {
-          property: TweenableProperties.alpha,
-          start: 0,
-          end: 1,
-          ease: EaseFunctionType.BLINK,
-        },
-      ],
-    });
-    this.ghostPlayer.tweens.add("blink", {
-      startDelay: 200,
-      duration: 700,
-      effects: [
-        {
-          property: TweenableProperties.alpha,
-          start: 0,
-          end: 1,
-          ease: EaseFunctionType.BLINK,
         },
       ],
     });
@@ -471,7 +444,7 @@ export default class GameLevel extends Scene {
       this.player.position.y > 100 * 64 ||
       this.ghostPlayer.position.y > 100 * 64
     ) {
-      this.restartLevel();
+      this.respawnPlayer();
     }
   }
 
@@ -500,13 +473,6 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("swap view")) {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
-      // Play either the body or soul icon blink, depending on who is being swapped to.
-      if (this.followNodeIndex == 0) {
-        this.player.tweens.play("blink");
-      }
-      else {
-        this.ghostPlayer.tweens.play("blink");
-      }
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
         key:
@@ -666,7 +632,7 @@ export default class GameLevel extends Scene {
             this.ghostPlayer.scaleX = 2;
             this.player.unfreeze();
             this.ghostPlayer.unfreeze();
-            this.restartLevel();
+            this.respawnPlayer();
           }
           break;
 
@@ -757,6 +723,11 @@ export default class GameLevel extends Scene {
   private handleEventPlayerHitEnemy(deltaT: number, event: GameEvent): void {
     let node = this.sceneGraph.getNode(event.data.get("node"));
     let other = this.sceneGraph.getNode(event.data.get("other"));
+
+    // if both node and other exist, and they player and enemy don't overlap, player does not die
+    if (node && other && !node.boundary.overlaps(other.boundary)) {
+      return;
+    }
 
     // If the player is invincible (debug) or already dying, we don't want this function to trigger.
     if (this.playerIsDying || this.playerIsInvincible) {
@@ -1123,14 +1094,14 @@ export default class GameLevel extends Scene {
     }
   }
 
-  // protected respawnPlayer(): void {
-  //   // change the viewport back to original player
-  //   this.viewport.follow(this.followNodes[this.followNodeIndex]);
+  protected respawnPlayer(): void {
+    // change the viewport back to original player
+    this.viewport.follow(this.followNodes[this.followNodeIndex]);
 
-  //   // set respawn locations
-  //   this.player.position.copy(this.playerSpawn);
-  //   this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
-  // }
+    // set respawn locations
+    this.player.position.copy(this.playerSpawn);
+    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+  }
 
   protected restartLevel(): void {
     GameLevel.coinCount = 0;
