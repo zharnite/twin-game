@@ -11,12 +11,12 @@ import Splash from "./Twin/Scenes/Screens/Splash";
     canvasSize: { x: 1200, y: 800 }, // The size of the game
     clearColor: { r: 0, g: 0, b: 0 }, // The color the game clears to
     inputs: [
-      { name: "left", keys: ["a"] },
-      { name: "right", keys: ["d"] },
-      { name: "jump", keys: ["w", "space"] },
+      { name: "left", keys: ["a", "arrowleft"] },
+      { name: "right", keys: ["d", "arrowright"] },
+      { name: "jump", keys: ["w", "space", "arrowup"] },
       { name: "run", keys: ["shift"] },
       { name: "restart", keys: ["l"] },
-      { name: "swap view", keys: ["v", "s"] },
+      { name: "swap view", keys: ["v", "s", "arrowdown"] },
       { name: "pause", keys: ["escape", "p"] },
       { name: "interact", keys: ["e"] },
       // Cheat codes
