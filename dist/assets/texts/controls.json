@@ -1,13 +1,13 @@
 {
   "layer": "Controls",
   "Controls": [
-    "[A] - Move left                                       ",
-    "[D] - Move right                                      ",
-    "[Space] - Jump                                        ",
+    "[A]/[Left Arrow] - Move left                          ",
+    "[D]/[Right Arrow] - Move right                        ",
+    "[Space]/[Up Arrow] - Jump                             ",
+    "[S]/[Down Arrow] - Swap between Body and Soul         ",
+    "[E] - Use Object / Interact                           ",
     "[L] - Restart level                                   ",
     "[Esc]/[P] - Pause                                     ",
-    "[S] - Swap between Body and Soul                      ",
-    "[E] - Use Object / Interact                           ",
     "                                                      "
   ]
 }
