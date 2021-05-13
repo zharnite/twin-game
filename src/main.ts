@@ -20,7 +20,7 @@ import Splash from "./Twin/Scenes/Screens/Splash";
       { name: "pause", keys: ["escape", "p"] },
       { name: "interact", keys: ["e"] },
       // Cheat codes
-      { name: "change control", keys: ["c"] }, // temporarily freezes one of the characters
+      { name: "change control", keys: ["k"] }, // temporarily freezes one of the characters
       { name: "unlock", keys: ["u"] }, // unlocks all levels
       { name: "invincible", keys: ["i"] }, // make both players invincible
     ],
