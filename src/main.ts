@@ -15,7 +15,7 @@ import Splash from "./Twin/Scenes/Screens/Splash";
       { name: "right", keys: ["d"] },
       { name: "jump", keys: ["w", "space"] },
       { name: "run", keys: ["shift"] },
-      { name: "restart", keys: ["r"] },
+      { name: "restart", keys: ["l"] },
       { name: "swap view", keys: ["v", "s"] },
       { name: "pause", keys: ["escape", "p"] },
       { name: "interact", keys: ["e"] },
