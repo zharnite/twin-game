@@ -60,6 +60,10 @@ export default class EaseFunctions {
         if (0.5 < x && x < 0.75) { return 0; }
         else { return 1; }
     }
+
+    private static freeze(x: number): number {
+        return 0.5;
+    }
 }
 
 export enum EaseFunctionType {
@@ -82,4 +86,5 @@ export enum EaseFunctionType {
     PLAYER_DYING = "playerDying",
     FLASH = "flash",
     BLINK = "blink",
+    FREEZE = "freeze",
 }

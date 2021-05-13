@@ -310,28 +310,27 @@ export default class GameLevel extends Scene {
         },
       ],
     });
-    // Red square to blink above body when swapping to them
-    this.player.tweens.add("blink", {
-      startDelay: 200,
-      duration: 700,
+    this.player.tweens.add("freeze", {
+      startDelay: 0,
+      duration: 500,
       effects: [
         {
           property: TweenableProperties.alpha,
-          start: 0,
+          start: 1,
           end: 1,
-          ease: EaseFunctionType.BLINK,
+          ease: EaseFunctionType.FREEZE,
         },
       ],
     });
-    this.ghostPlayer.tweens.add("blink", {
-      startDelay: 200,
-      duration: 700,
+    this.ghostPlayer.tweens.add("freeze", {
+      startDelay: 0,
+      duration: 500,
       effects: [
         {
           property: TweenableProperties.alpha,
           start: 0,
           end: 1,
-          ease: EaseFunctionType.BLINK,
+          ease: EaseFunctionType.FREEZE,
         },
       ],
     });
@@ -500,12 +499,9 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("swap view")) {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
-      // Play either the body or soul icon blink, depending on who is being swapped to.
-      if (this.followNodeIndex === 0) {
-        this.player.tweens.play("blink");
-      } else {
-        this.ghostPlayer.tweens.play("blink");
-      }
+      // Play either the body or soul icon flash, depending on who is being swapped to.
+      if (this.followNodeIndex === 0) { this.player.animation.play("SWAP"); } 
+      else { this.ghostPlayer.animation.play("SWAP"); }
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
         key:
@@ -917,9 +913,11 @@ export default class GameLevel extends Scene {
     // unfreeze all players
     if (this.player.frozen) {
       this.player.unfreeze();
+      this.player.alpha = 1.0;
     }
     if (this.ghostPlayer.frozen) {
       this.ghostPlayer.unfreeze();
+      this.ghostPlayer.alpha = 1.0;
     }
     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
       key: "thaw",
@@ -977,6 +975,9 @@ export default class GameLevel extends Scene {
     });
     let node = event.data.get("node");
     if (!node.frozen) {
+      if (node instanceof AnimatedSprite) {
+        node.tweens.play("freeze");
+      }
       node.freeze();
     }
   }
@@ -1126,15 +1127,6 @@ export default class GameLevel extends Scene {
       });
     }
   }
-
-  // protected respawnPlayer(): void {
-  //   // change the viewport back to original player
-  //   this.viewport.follow(this.followNodes[this.followNodeIndex]);
-
-  //   // set respawn locations
-  //   this.player.position.copy(this.playerSpawn);
-  //   this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
-  // }
 
   protected restartLevel(): void {
     GameLevel.coinCount = 0;
