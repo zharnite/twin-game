@@ -501,10 +501,9 @@ export default class GameLevel extends Scene {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
       // Play either the body or soul icon blink, depending on who is being swapped to.
-      if (this.followNodeIndex == 0) {
+      if (this.followNodeIndex === 0) {
         this.player.tweens.play("blink");
-      }
-      else {
+      } else {
         this.ghostPlayer.tweens.play("blink");
       }
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
@@ -757,6 +756,11 @@ export default class GameLevel extends Scene {
   private handleEventPlayerHitEnemy(deltaT: number, event: GameEvent): void {
     let node = this.sceneGraph.getNode(event.data.get("node"));
     let other = this.sceneGraph.getNode(event.data.get("other"));
+
+    // if both node and other exist, and they player and enemy don't overlap, player does not die
+    if (node && other && !node.boundary.overlaps(other.boundary)) {
+      return;
+    }
 
     // If the player is invincible (debug) or already dying, we don't want this function to trigger.
     if (this.playerIsDying || this.playerIsInvincible) {
