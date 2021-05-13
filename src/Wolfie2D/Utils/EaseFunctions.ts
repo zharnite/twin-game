@@ -53,6 +53,13 @@ export default class EaseFunctions {
     private static flash (x: number): number {
         return (x > 0.0 && x < 0.1)? 1 : (1 - x);
     }
+
+    private static blink(x: number): number {
+        if (x < 0.25) { return 0; }
+        if (0.25 < x && x < 0.5) { return 1; }
+        if (0.5 < x && x < 0.75) { return 0; }
+        else { return 1; }
+    }
 }
 
 export enum EaseFunctionType {
@@ -74,4 +81,5 @@ export enum EaseFunctionType {
     LINEAR = "linear",
     PLAYER_DYING = "playerDying",
     FLASH = "flash",
+    BLINK = "blink",
 }
