@@ -444,7 +444,7 @@ export default class GameLevel extends Scene {
       this.player.position.y > 100 * 64 ||
       this.ghostPlayer.position.y > 100 * 64
     ) {
-      this.respawnPlayer();
+      this.restartLevel();
     }
   }
 
@@ -632,7 +632,7 @@ export default class GameLevel extends Scene {
             this.ghostPlayer.scaleX = 2;
             this.player.unfreeze();
             this.ghostPlayer.unfreeze();
-            this.respawnPlayer();
+            this.restartLevel();
           }
           break;
 
@@ -1089,14 +1089,14 @@ export default class GameLevel extends Scene {
     }
   }
 
-  protected respawnPlayer(): void {
-    // change the viewport back to original player
-    this.viewport.follow(this.followNodes[this.followNodeIndex]);
+  // protected respawnPlayer(): void {
+  //   // change the viewport back to original player
+  //   this.viewport.follow(this.followNodes[this.followNodeIndex]);
 
-    // set respawn locations
-    this.player.position.copy(this.playerSpawn);
-    this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
-  }
+  //   // set respawn locations
+  //   this.player.position.copy(this.playerSpawn);
+  //   this.ghostPlayer.position.copy(this.ghostPlayerSpawn);
+  // }
 
   protected restartLevel(): void {
     GameLevel.coinCount = 0;
