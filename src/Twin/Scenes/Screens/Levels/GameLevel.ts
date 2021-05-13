@@ -79,8 +79,10 @@ export default class GameLevel extends Scene {
   // Mr. Satan stuff
   protected satan: Satan;
 
-  // White rectangle for flashes
+  // Rectangles for doing stuff
   protected white: Rect;
+  protected bodyIcon: Rect;
+  protected soulIcon: Rect;
 
   loadScene(): void {
     // load pause items
@@ -289,7 +291,7 @@ export default class GameLevel extends Scene {
       onEnd: Events.LEVEL_START,
     });
 
-    // White rect for flashes
+    // White rect for portal flashes
     this.white = <Rect>this.add.graphic(GraphicType.RECT, "UI", {
       position: new Vec2(0, 0),
       size: new Vec2(1200, 800),
@@ -305,6 +307,31 @@ export default class GameLevel extends Scene {
           start: 0,
           end: 1,
           ease: EaseFunctionType.FLASH,
+        },
+      ],
+    });
+    // Red square to blink above body when swapping to them
+    this.player.tweens.add("blink", {
+      startDelay: 200,
+      duration: 700,
+      effects: [
+        {
+          property: TweenableProperties.alpha,
+          start: 0,
+          end: 1,
+          ease: EaseFunctionType.BLINK,
+        },
+      ],
+    });
+    this.ghostPlayer.tweens.add("blink", {
+      startDelay: 200,
+      duration: 700,
+      effects: [
+        {
+          property: TweenableProperties.alpha,
+          start: 0,
+          end: 1,
+          ease: EaseFunctionType.BLINK,
         },
       ],
     });
@@ -473,6 +500,12 @@ export default class GameLevel extends Scene {
     if (Input.isJustPressed("swap view")) {
       this.followNodeIndex++;
       this.followNodeIndex = this.followNodeIndex % this.followNodes.length;
+      // Play either the body or soul icon blink, depending on who is being swapped to.
+      if (this.followNodeIndex === 0) {
+        this.player.tweens.play("blink");
+      } else {
+        this.ghostPlayer.tweens.play("blink");
+      }
       this.viewport.follow(this.followNodes[this.followNodeIndex]);
       this.emitter.fireEvent(GameEventType.PLAY_SOUND, {
         key:
