@@ -115,7 +115,7 @@ export default class Level4 extends GameLevel {
     this.initSatan();
 
     // Set Mr. Satan's required coin value
-    this.satan.setRequiredCoinValue(9);
+    this.satan.setRequiredCoinValue(8);
 
     // Set up from parent class
     super.setUpSatan();
