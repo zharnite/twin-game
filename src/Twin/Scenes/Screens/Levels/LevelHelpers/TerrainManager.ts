@@ -106,10 +106,8 @@ export default class TerrainManager {
         this.bothEntranceLocation,
         this.bothEntranceLocation.clone()
       );
-      this.setExitLocations(
-        this.bothExitLocation,
-        this.bothExitLocation.clone()
-      );
+      this.bodyExitLocation = this.bothExitLocation.clone();
+      this.soulExitLocation = this.bothExitLocation.clone();
       return;
     }
 
