@@ -26,7 +26,6 @@ import TerrainManager from "./LevelHelpers/TerrainManager";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import LevelTracker from "../../SceneHelpers/LevelTracker";
 import { Levels } from "../../Enums/LevelEnums";
-import Game from "../../../../Wolfie2D/Loop/Game";
 
 export default class GameLevel extends Scene {
   // Every level will have a player, which will be an animated sprite
