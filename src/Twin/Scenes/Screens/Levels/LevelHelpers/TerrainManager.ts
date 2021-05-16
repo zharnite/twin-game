@@ -139,6 +139,9 @@ export default class TerrainManager {
     // Set exits
     this.exitsSet = true;
 
+    console.log(bodyExit);
+    console.log(soulExit);
+
     // Modify exit location to be centered
     bodyExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);
     soulExit.add(this.singleBlockSize.scaled(0.5)).scale(this.scaleFactor);

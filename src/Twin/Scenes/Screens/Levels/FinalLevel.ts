@@ -55,7 +55,7 @@ export default class FinalLevel extends GameLevel {
     );
 
     // TWIN TODO: Change to actual tilemap
-    this.load.tilemap(this.level, "assets/tilemaps/untitled.json");
+    this.load.tilemap(this.level, "assets/tilemaps/level_final.json");
 
     // load things from parent
     super.loadScene();
